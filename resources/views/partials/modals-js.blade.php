@@ -3,14 +3,28 @@ let guestsCount = {{ request('guests', 2) }};
 let roomsCount = {{ request('rooms', 1) }};
 
 function openModal(id) {
-    document.getElementById(id).classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
+    const modal = document.getElementById(id);
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
 }
 
 function closeModals() {
-    document.querySelectorAll('.modal').forEach(m => m.classList.add('hidden'));
+    document.querySelectorAll('.modal').forEach(m => {
+        m.classList.add('hidden');
+        m.style.display = 'none';
+    });
     document.body.style.overflow = '';
 }
+
+// Close on Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeModals();
+    }
+});
 
 function selectCity(city) {
     const citySelect = document.getElementById('citySelect');
@@ -174,11 +188,18 @@ document.addEventListener('DOMContentLoaded', function() {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.5);
-    display: flex;
     align-items: center;
     justify-content: center;
     z-index: 50;
     padding: 1rem;
+}
+
+.modal.hidden {
+    display: none !important;
+}
+
+.modal:not(.hidden) {
+    display: flex;
 }
 
 .modal-box {

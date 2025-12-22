@@ -1,4 +1,4 @@
-<div id="dateModal" class="modal hidden">
+<div id="dateModal" class="modal hidden" style="display: none;">
     <div class="modal-box">
         <div class="flex justify-between items-center mb-6">
             <h3 class="modal-title text-xl font-bold text-gray-900">Даты поездки</h3>

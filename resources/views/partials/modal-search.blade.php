@@ -1,4 +1,4 @@
-<div id="searchModal" class="modal hidden">
+<div id="searchModal" class="modal hidden" style="display: none;">
     <div class="modal-box">
         <div class="flex justify-between items-center mb-4">
             <h3 class="modal-title text-xl font-bold text-gray-900">Выберите город</h3>
