@@ -30,8 +30,12 @@ class HomeController extends Controller
         $hotels = $query->with('rooms')->latest()->paginate(12);
 
         if ($request->ajax()) {
+            $html = '';
+            foreach ($hotels as $hotel) {
+                $html .= view('partials.hotel-card', compact('hotel'))->render();
+            }
             return response()->json([
-                'html' => view('partials.hotel-cards', compact('hotels'))->render(),
+                'html' => $html,
                 'has_more' => $hotels->hasMorePages(),
             ]);
         }
