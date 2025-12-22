@@ -6,6 +6,7 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Inter', 'Nunito', ui-sans-serif, system-ui, sans-serif;
-    --color-primary: #38b000;
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --color-primary: #0066cc;
+    --color-primary-dark: #0052a3;
 }

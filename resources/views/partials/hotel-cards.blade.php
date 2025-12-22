@@ -1,7 +1,7 @@
 @foreach($hotels as $hotel)
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition overflow-hidden cursor-pointer"
+    <div class="bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer"
          onclick="window.location='{{ route('hotels.show', $hotel) }}'">
-        <div class="relative h-48 bg-gray-200 dark:bg-gray-700">
+        <div class="relative h-48 bg-gray-200">
             @if($hotel->image)
                 <img src="{{ asset('storage/' . $hotel->image) }}" alt="{{ $hotel->name }}" class="w-full h-full object-cover">
             @else
@@ -13,7 +13,7 @@
             @endif
             @auth
                 <button onclick="event.stopPropagation(); toggleFavorite({{ $hotel->id }})" 
-                        class="absolute top-2 right-2 p-2 bg-white dark:bg-gray-800 rounded-full shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                        class="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition">
                     <svg class="w-5 h-5 {{ $hotel->isFavoritedBy(auth()->id()) ? 'text-red-500 fill-current' : 'text-gray-400' }}" 
                          fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
@@ -22,21 +22,24 @@
             @endauth
         </div>
         <div class="p-4">
-            <h3 class="text-xl font-semibold mb-1">{{ $hotel->name }}</h3>
-            <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">{{ $hotel->city }}</p>
+            <h3 class="text-lg font-semibold text-gray-900 mb-1 line-clamp-1">{{ $hotel->name }}</h3>
+            <p class="text-sm text-gray-600 mb-2">{{ $hotel->city }}</p>
             @if($hotel->rating)
-                <div class="flex items-center mb-2">
-                    <span class="text-yellow-400">★</span>
-                    <span class="ml-1">{{ number_format($hotel->rating, 1) }}</span>
+                <div class="flex items-center mb-3">
+                    <span class="text-yellow-400 text-sm">★</span>
+                    <span class="ml-1 text-sm text-gray-700 font-medium">{{ number_format($hotel->rating, 1) }}</span>
                 </div>
             @endif
-            <div class="flex justify-between items-center">
-                <span class="text-lg font-bold text-[#38b000]">
-                    {{ number_format($hotel->min_price, 0) }} ₸/night
-                </span>
-                <span class="text-sm text-gray-600 dark:text-gray-400">
-                    {{ $hotel->rooms->count() }} rooms
-                </span>
+            <div class="flex justify-between items-center pt-2 border-t border-gray-100">
+                <div>
+                    <div class="text-lg font-bold text-gray-900">
+                        {{ number_format($hotel->min_price, 0) }} ₸
+                    </div>
+                    <div class="text-xs text-gray-500">за ночь</div>
+                </div>
+                <div class="text-sm text-gray-600">
+                    {{ $hotel->rooms->count() }} номеров
+                </div>
             </div>
         </div>
     </div>
@@ -59,4 +62,3 @@ function toggleFavorite(hotelId) {
 }
 </script>
 @endauth
-
