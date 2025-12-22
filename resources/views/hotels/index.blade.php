@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
-@section('title', 'Hotels - Kazakh Hotels')
+@section('title', 'Каталог отелей - Kazakh Hotels')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <h1 class="text-3xl font-bold mb-6">Hotels Catalog</h1>
+    <h1 class="text-3xl font-bold mb-6 text-gray-900">Каталог отелей</h1>
 
     <div class="flex flex-col lg:flex-row gap-8">
         <!-- Filters Sidebar -->
         <div class="lg:w-64">
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
-                <h2 class="text-xl font-bold mb-4">Filters</h2>
+            <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+                <h2 class="text-xl font-bold mb-4 text-gray-900">Фильтры</h2>
                 
                 <form method="GET" action="{{ route('hotels.index') }}" class="space-y-4">
                     <!-- City -->
@@ -51,11 +51,11 @@
                         </select>
                     </div>
 
-                    <button type="submit" class="w-full px-4 py-2 bg-[#38b000] text-white rounded-lg hover:bg-[#2d8a00] transition">
-                        Apply Filters
+                    <button type="submit" class="w-full px-4 py-2 bg-[#0066cc] text-white rounded-md hover:bg-[#0052a3] transition">
+                        Применить фильтры
                     </button>
-                    <a href="{{ route('hotels.index') }}" class="block text-center text-sm text-gray-600 dark:text-gray-400 hover:text-[#38b000]">
-                        Clear Filters
+                    <a href="{{ route('hotels.index') }}" class="block text-center text-sm text-gray-600 hover:text-[#0066cc] mt-2">
+                        Сбросить фильтры
                     </a>
                 </form>
             </div>
@@ -65,12 +65,12 @@
         <div class="flex-1">
             <!-- Sorting -->
             <div class="mb-4 flex justify-between items-center">
-                <p class="text-gray-600 dark:text-gray-400">{{ $hotels->total() }} hotels found</p>
-                <select id="sort-select" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700">
-                    <option value="popularity" {{ request('sort') == 'popularity' ? 'selected' : '' }}>Popularity</option>
-                    <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
-                    <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
-                    <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>Rating</option>
+                <p class="text-gray-600">{{ $hotels->total() }} отелей найдено</p>
+                <select id="sort-select" class="px-4 py-2 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-[#0066cc] focus:border-[#0066cc] outline-none">
+                    <option value="popularity" {{ request('sort') == 'popularity' ? 'selected' : '' }}>Популярность</option>
+                    <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Цена: по возрастанию</option>
+                    <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Цена: по убыванию</option>
+                    <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>Рейтинг</option>
                 </select>
             </div>
 
