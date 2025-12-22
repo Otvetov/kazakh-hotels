@@ -1,19 +1,25 @@
 @foreach($hotels as $hotel)
-    <div class="bg-white rounded-lg overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer"
+    <div class="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all cursor-pointer"
          onclick="window.location='{{ route('hotels.show', $hotel) }}'">
-        <div class="relative h-48 bg-gray-200">
+        <div class="relative h-48 overflow-hidden">
             @if($hotel->image)
-                <img src="{{ asset('storage/' . $hotel->image) }}" alt="{{ $hotel->name }}" class="w-full h-full object-cover">
+                <img src="{{ asset('storage/' . $hotel->image) }}" alt="{{ $hotel->name }}" 
+                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
             @else
-                <div class="w-full h-full flex items-center justify-center text-gray-400">
-                    <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
+                    <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                     </svg>
                 </div>
             @endif
+            @if($hotel->rating)
+                <div class="absolute top-4 left-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                    <span class="text-sm font-medium text-gray-900 dark:text-white">⭐ {{ number_format($hotel->rating, 1) }}</span>
+                </div>
+            @endif
             @auth
                 <button onclick="event.stopPropagation(); toggleFavorite({{ $hotel->id }})" 
-                        class="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition">
+                        class="absolute top-4 right-4 p-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full shadow-md hover:bg-white dark:hover:bg-gray-800 transition">
                     <svg class="w-5 h-5 {{ $hotel->isFavoritedBy(auth()->id()) ? 'text-red-500 fill-current' : 'text-gray-400' }}" 
                          fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
@@ -21,23 +27,20 @@
                 </button>
             @endauth
         </div>
-        <div class="p-4">
-            <h3 class="text-lg font-semibold text-gray-900 mb-1 line-clamp-1">{{ $hotel->name }}</h3>
-            <p class="text-sm text-gray-600 mb-2">{{ $hotel->city }}</p>
-            @if($hotel->rating)
-                <div class="flex items-center mb-3">
-                    <span class="text-yellow-400 text-sm">★</span>
-                    <span class="ml-1 text-sm text-gray-700 font-medium">{{ number_format($hotel->rating, 1) }}</span>
-                </div>
+        <div class="p-5">
+            <h3 class="text-gray-900 dark:text-white font-semibold mb-2 text-lg">{{ $hotel->name }}</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">{{ $hotel->city }}</p>
+            @if($hotel->description)
+                <p class="text-sm text-gray-500 dark:text-gray-500 line-clamp-2 mb-3">{{ $hotel->description }}</p>
             @endif
-            <div class="flex justify-between items-center pt-2 border-t border-gray-100">
+            <div class="flex justify-between items-center pt-3 border-t border-gray-100 dark:border-gray-700">
                 <div>
-                    <div class="text-lg font-bold text-gray-900">
+                    <div class="text-lg font-bold text-gray-900 dark:text-white">
                         {{ number_format($hotel->min_price, 0) }} ₸
                     </div>
-                    <div class="text-xs text-gray-500">за ночь</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">за ночь</div>
                 </div>
-                <div class="text-sm text-gray-600">
+                <div class="text-sm text-gray-600 dark:text-gray-400">
                     {{ $hotel->rooms->count() }} номеров
                 </div>
             </div>
