@@ -321,12 +321,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Load more hotels
+    // Load more hotels with animations
     const loadMoreBtn = document.getElementById('load-more');
     if (loadMoreBtn) {
         let page = 2;
+        let isLoading = false;
+
         loadMoreBtn.addEventListener('click', function() {
-            fetch(`{{ route('home') }}?page=${page}`, {
+            if (isLoading) return;
+            
+            isLoading = true;
+            loadMoreBtn.disabled = true;
+            const originalContent = loadMoreBtn.innerHTML;
+            loadMoreBtn.innerHTML = '<span>Загрузка...</span>';
+
+            fetch(`{{ route('hotels.index') }}?page=${page}`, {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
                     'Accept': 'application/json'
@@ -334,12 +343,55 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById('hotels-container').insertAdjacentHTML('beforeend', data.html);
-                if (!data.has_more) {
+                const container = document.getElementById('hotels-container');
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = data.html;
+                
+                const newCards = Array.from(tempDiv.children);
+                newCards.forEach((card, index) => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    container.appendChild(card);
+                    
+                    setTimeout(() => {
+                        card.style.transition = 'all 0.5s ease';
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, index * 50);
+                });
+                
+                if (!data.has_more || !data.html) {
                     loadMoreBtn.remove();
+                } else {
+                    page++;
+                    isLoading = false;
+                    loadMoreBtn.disabled = false;
+                    loadMoreBtn.innerHTML = originalContent;
                 }
-                page++;
+            })
+            .catch(error => {
+                console.error('Error loading hotels:', error);
+                isLoading = false;
+                loadMoreBtn.disabled = false;
+                loadMoreBtn.innerHTML = originalContent;
+                alert('Ошибка при загрузке отелей. Попробуйте еще раз.');
             });
+        });
+    }
+
+    // Update check-out min date when check-in changes
+    const checkInDate = document.getElementById('check-in-date');
+    const checkOutDate = document.getElementById('check-out-date');
+    if (checkInDate && checkOutDate) {
+        checkInDate.addEventListener('change', function() {
+            if (this.value) {
+                const minDate = new Date(this.value);
+                minDate.setDate(minDate.getDate() + 1);
+                checkOutDate.min = minDate.toISOString().split('T')[0];
+                if (checkOutDate.value && checkOutDate.value <= this.value) {
+                    checkOutDate.value = '';
+                }
+            }
         });
     }
 
@@ -355,4 +407,61 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+<style>
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-modal {
+    animation: modalFadeIn 0.2s ease-out;
+}
+
+/* Smooth scroll for hotels container */
+#hotels-container {
+    scroll-behavior: smooth;
+}
+
+/* Card hover effects */
+#hotels-container > div {
+    transition: all 0.3s ease;
+}
+
+#hotels-container > div:hover {
+    transform: translateY(-4px);
+}
+
+/* Hero background animation */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+.bg-gradient-to-br {
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-gradient-to-br::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1));
+    animation: float 6s ease-in-out infinite;
+}
+</style>
 @endsection
