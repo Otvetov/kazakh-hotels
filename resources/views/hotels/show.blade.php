@@ -121,10 +121,10 @@
                                 </div>
 
                                 @auth
-                                    <a href="{{ route('bookings.create', ['room_id' => $room->id]) }}" 
-                                       class="block w-full py-2 text-center bg-[#38b000] text-white rounded-lg hover:bg-[#2d8c00] transition-colors">
+                                    <button onclick="openBookingModal({{ $room->id }})" 
+                                            class="w-full py-2 bg-[#38b000] text-white rounded-lg hover:bg-[#2d8c00] transition-colors">
                                         Забронировать
-                                    </a>
+                                    </button>
                                 @else
                                     <a href="{{ route('login') }}" 
                                        class="block w-full py-2 text-center bg-[#38b000] text-white rounded-lg hover:bg-[#2d8c00] transition-colors">
@@ -143,8 +143,131 @@
     </div>
 </div>
 
+{{-- Booking Date Modal --}}
 @auth
+<div id="bookingDateModal" class="modal hidden" style="display: none;">
+    <div class="modal-box" style="max-width: 42rem;">
+        <div class="flex items-center justify-between p-6 border-b border-gray-200">
+            <h2 class="text-gray-900 text-xl font-bold">Выберите даты проживания</h2>
+            <button onclick="closeBookingModal()" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="p-6 space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Дата заезда</label>
+                <input
+                    type="date"
+                    id="bookingCheckIn"
+                    min="{{ date('Y-m-d') }}"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#38b000] focus:border-transparent"
+                />
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Дата выезда</label>
+                <input
+                    type="date"
+                    id="bookingCheckOut"
+                    min="{{ date('Y-m-d', strtotime('+1 day')) }}"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#38b000] focus:border-transparent"
+                />
+            </div>
+
+            <div class="flex gap-3 pt-4">
+                <button
+                    onclick="proceedToBooking()"
+                    class="flex-1 py-3 bg-[#38b000] text-white rounded-xl hover:bg-[#2d8c00] transition font-semibold"
+                >
+                    Продолжить
+                </button>
+                <button
+                    onclick="closeBookingModal()"
+                    class="px-6 py-3 text-gray-700 border-2 border-gray-300 rounded-xl hover:border-gray-400 transition"
+                >
+                    Отмена
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+let selectedRoomId = null;
+
+function openBookingModal(roomId) {
+    selectedRoomId = roomId;
+    const modal = document.getElementById('bookingDateModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeBookingModal() {
+    const modal = document.getElementById('bookingDateModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+    selectedRoomId = null;
+    document.getElementById('bookingCheckIn').value = '';
+    document.getElementById('bookingCheckOut').value = '';
+}
+
+function proceedToBooking() {
+    const checkIn = document.getElementById('bookingCheckIn').value;
+    const checkOut = document.getElementById('bookingCheckOut').value;
+
+    if (!checkIn || !checkOut) {
+        alert('Пожалуйста, выберите даты заезда и выезда');
+        return;
+    }
+
+    if (new Date(checkOut) <= new Date(checkIn)) {
+        alert('Дата выезда должна быть позже даты заезда');
+        return;
+    }
+
+    if (!selectedRoomId) {
+        alert('Ошибка: номер не выбран');
+        return;
+    }
+
+    // Redirect to booking page with parameters
+    const url = new URL('{{ route("bookings.create") }}', window.location.origin);
+    url.searchParams.set('room_id', selectedRoomId);
+    url.searchParams.set('check_in', checkIn);
+    url.searchParams.set('check_out', checkOut);
+    
+    window.location.href = url.toString();
+}
+
+// Close modal on outside click
+document.getElementById('bookingDateModal')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeBookingModal();
+    }
+});
+
+// Update check-out min date when check-in changes
+document.getElementById('bookingCheckIn')?.addEventListener('change', function() {
+    if (this.value) {
+        const minDate = new Date(this.value);
+        minDate.setDate(minDate.getDate() + 1);
+        const checkOut = document.getElementById('bookingCheckOut');
+        checkOut.min = minDate.toISOString().split('T')[0];
+        if (checkOut.value && checkOut.value <= this.value) {
+            checkOut.value = '';
+        }
+    }
+});
+
 function toggleFavorite(hotelId) {
     fetch(`/favorite/${hotelId}/toggle`, {
         method: 'POST',
@@ -172,6 +295,47 @@ function toggleFavorite(hotelId) {
     });
 }
 </script>
+
+<style>
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    padding: 1rem;
+}
+
+.modal.hidden {
+    display: none !important;
+}
+
+.modal:not(.hidden) {
+    display: flex;
+}
+
+.modal-box {
+    background: white;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+</style>
 @endauth
 @endsection
 
