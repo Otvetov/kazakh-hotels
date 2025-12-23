@@ -4,169 +4,142 @@
 
 @section('content')
 <div class="min-h-screen bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Back Button -->
+        <button
+            onclick="window.history.back()"
+            class="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6"
+        >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            <span>Назад</span>
+        </button>
+
         <!-- Hotel Header -->
-        <div class="mb-8">
-            <div class="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6">
-                <div class="flex-1">
-                    <h1 class="text-3xl md:text-4xl font-bold mb-2 text-gray-900">{{ $hotel->name }}</h1>
-                    <div class="flex flex-wrap items-center gap-3 text-gray-600">
-                        <div class="flex items-center gap-1">
+        <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-8">
+            <div class="relative h-96">
+                @if($hotel->image)
+                    <img
+                        src="{{ asset('storage/' . $hotel->image) }}"
+                        alt="{{ $hotel->name }}"
+                        class="w-full h-full object-cover"
+                    />
+                @else
+                    <div class="w-full h-full flex items-center justify-center bg-gray-200">
+                        <svg class="w-24 h-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                        </svg>
+                    </div>
+                @endif
+                @if($hotel->rating)
+                    <div class="absolute top-6 right-6 bg-white px-4 py-2 rounded-full flex items-center gap-2">
+                        <svg class="w-5 h-5 fill-yellow-400 text-yellow-400" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-1.07 3.927a1 1 0 01-.39 1.18l-3.462 2.462c-.969.69-2.157-.38-1.902-1.81l1.07-3.292a1 1 0 00-.95-.69H5.577c-.969 0-1.371-1.24-.588-1.81l3.462-2.462a1 1 0 01.39-1.18z"/>
+                        </svg>
+                        <span class="text-gray-900 font-semibold">{{ number_format($hotel->rating, 1) }}</span>
+                    </div>
+                @endif
+            </div>
+
+            <div class="p-8">
+                <div class="flex items-start justify-between mb-4">
+                    <div>
+                        <h1 class="text-gray-900 mb-2 text-2xl font-bold">{{ $hotel->name }}</h1>
+                        @if($hotel->stars)
+                            <div class="flex items-center gap-1 mb-3">
+                                @for($i = 0; $i < $hotel->stars; $i++)
+                                    <svg class="w-5 h-5 fill-yellow-400 text-yellow-400" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-1.07 3.927a1 1 0 01-.39 1.18l-3.462 2.462c-.969.69-2.157-.38-1.902-1.81l1.07-3.292a1 1 0 00-.95-.69H5.577c-.969 0-1.371-1.24-.588-1.81l3.462-2.462a1 1 0 01.39-1.18z"/>
+                                    </svg>
+                                @endfor
+                            </div>
+                        @endif
+                        <div class="flex items-center gap-2 text-gray-600">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
-                            <span>{{ $hotel->address }}, {{ $hotel->city }}</span>
+                            <span>{{ $hotel->city }}, {{ $hotel->address }}</span>
                         </div>
-                        @if($hotel->rating)
-                            <div class="flex items-center gap-1 bg-white px-3 py-1 rounded-full shadow-sm">
-                                <span class="text-yellow-400">⭐</span>
-                                <span class="font-semibold text-gray-900">{{ number_format($hotel->rating, 1) }}</span>
-                            </div>
-                        @endif
                     </div>
                 </div>
-                @auth
-                    <button onclick="toggleFavorite({{ $hotel->id }})" 
-                            class="p-3 bg-white rounded-full shadow-md hover:shadow-lg transition flex-shrink-0">
-                        <svg class="w-6 h-6 {{ $isFavorited ? 'text-red-500 fill-current' : 'text-gray-400' }}" 
-                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                        </svg>
-                    </button>
-                @endauth
+
+                @if($hotel->description)
+                    <p class="text-gray-600 leading-relaxed">
+                        {{ $hotel->description }}
+                    </p>
+                @endif
             </div>
-
-            <!-- Hotel Image -->
-            @if($hotel->image)
-                <div class="rounded-2xl overflow-hidden mb-6 shadow-lg">
-                    <img src="{{ asset('storage/' . $hotel->image) }}" alt="{{ $hotel->name }}" class="w-full h-64 md:h-96 object-cover">
-                </div>
-            @endif
-
-            <!-- Description -->
-            @if($hotel->description)
-                <div class="mb-8 bg-white rounded-2xl shadow-sm p-6">
-                    <h2 class="text-2xl font-bold mb-4 text-gray-900">О гостинице</h2>
-                    <p class="text-gray-700 leading-relaxed">{{ $hotel->description }}</p>
-                </div>
-            @endif
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Rooms Table -->
-            <div class="lg:col-span-2">
-                <h2 class="text-2xl font-bold mb-6 text-gray-900">Доступные номера</h2>
-                <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-                    <div class="divide-y divide-gray-100">
-                        @forelse($hotel->rooms as $room)
-                            <div class="p-6 hover:bg-gray-50 transition">
-                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                                    <div class="flex-1">
-                                        <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $room->name }}</h3>
-                                        <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-                                            <div class="flex items-center gap-1">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                                                </svg>
-                                                <span>{{ $room->capacity }} {{ $room->capacity == 1 ? 'гость' : 'гостей' }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                                        <div class="text-right">
-                                            <div class="text-2xl font-bold text-gray-900">{{ number_format($room->price_per_night, 0) }} ₸</div>
-                                            <div class="text-sm text-gray-500">за ночь</div>
-                                        </div>
-                                        @auth
-                                            <a href="{{ route('bookings.create', ['room_id' => $room->id]) }}" 
-                                               class="px-6 py-3 bg-[#0066cc] text-white rounded-xl hover:bg-[#0052a3] transition font-semibold whitespace-nowrap">
-                                                Забронировать
-                                            </a>
-                                        @else
-                                            <a href="{{ route('login') }}" 
-                                               class="px-6 py-3 bg-[#0066cc] text-white rounded-xl hover:bg-[#0052a3] transition font-semibold whitespace-nowrap">
-                                                Войти для бронирования
-                                            </a>
-                                        @endauth
-                                    </div>
-                                </div>
-                            </div>
-                        @empty
-                            <div class="p-12 text-center">
-                                <p class="text-gray-500">Номера пока не добавлены</p>
-                            </div>
-                        @endforelse
-                    </div>
-                </div>
-            </div>
+        <!-- Available Rooms -->
+        <div class="mb-8">
+            <h2 class="text-gray-900 mb-6 text-xl font-bold">Доступные номера</h2>
 
-            <!-- Reviews Section -->
-            <div>
-                <h2 class="text-2xl font-bold mb-6 text-gray-900">Отзывы</h2>
-                
-                @auth
-                    <div class="bg-white rounded-2xl shadow-sm p-6 mb-6">
-                        <h3 class="font-semibold mb-4 text-gray-900">Оставить отзыв</h3>
-                        <form action="{{ route('reviews.store') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="hotel_id" value="{{ $hotel->id }}">
+            @if($hotel->rooms->count() === 0)
+                <div class="bg-white rounded-2xl shadow-sm p-8 text-center">
+                    <p class="text-gray-500">Нет доступных номеров</p>
+                </div>
+            @else
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach($hotel->rooms as $room)
+                        <div class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow">
+                            @if($room->image)
+                                <div class="h-48 overflow-hidden">
+                                    <img
+                                        src="{{ asset('storage/' . $room->image) }}"
+                                        alt="{{ $room->name }}"
+                                        class="w-full h-full object-cover"
+                                    />
+                                </div>
+                            @endif
                             
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium mb-2 text-gray-700">Оценка</label>
-                                <select name="rating" required class="w-full px-4 py-2 border border-gray-300 rounded-xl bg-white focus:ring-2 focus:ring-[#0066cc] focus:border-[#0066cc] outline-none">
-                                    <option value="">Выберите оценку</option>
-                                    <option value="5">5 звёзд</option>
-                                    <option value="4">4 звезды</option>
-                                    <option value="3">3 звезды</option>
-                                    <option value="2">2 звезды</option>
-                                    <option value="1">1 звезда</option>
-                                </select>
-                            </div>
+                            <div class="p-6">
+                                <h3 class="text-gray-900 mb-2 font-semibold">{{ $room->name }}</h3>
+                                
+                                <div class="flex items-center gap-2 text-sm text-gray-600 mb-4">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                    </svg>
+                                    <span>До {{ $room->capacity }} {{ $room->capacity == 1 ? 'гостя' : 'гостей' }}</span>
+                                </div>
 
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium mb-2 text-gray-700">Комментарий</label>
-                                <textarea name="comment" required rows="4" 
-                                          class="w-full px-4 py-2 border border-gray-300 rounded-xl bg-white focus:ring-2 focus:ring-[#0066cc] focus:border-[#0066cc] outline-none"
-                                          placeholder="Поделитесь своим опытом..."></textarea>
-                            </div>
+                                @if($room->description)
+                                    <p class="text-sm text-gray-600 mb-4 line-clamp-2">
+                                        {{ $room->description }}
+                                    </p>
+                                @endif
 
-                            <button type="submit" class="w-full px-4 py-3 bg-[#0066cc] text-white rounded-xl hover:bg-[#0052a3] transition font-semibold">
-                                Отправить отзыв
-                            </button>
-                        </form>
-                    </div>
-                @endauth
-
-                <div class="space-y-4">
-                    @forelse($hotel->reviews as $review)
-                        <div class="bg-white rounded-2xl shadow-sm p-5">
-                            <div class="flex items-start justify-between mb-3">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-12 h-12 rounded-full bg-[#0066cc] flex items-center justify-center text-white font-semibold flex-shrink-0">
-                                        {{ strtoupper(substr($review->user->name, 0, 1)) }}
-                                    </div>
+                                <div class="flex items-center justify-between mb-4">
                                     <div>
-                                        <p class="font-semibold text-gray-900">{{ $review->user->name }}</p>
-                                        <div class="flex items-center gap-1 mt-1">
-                                            @for($i = 0; $i < 5; $i++)
-                                                <span class="text-yellow-400 text-sm {{ $i < $review->rating ? '' : 'opacity-30' }}">⭐</span>
-                                            @endfor
+                                        <div class="text-gray-500 text-sm">За ночь</div>
+                                        <div class="text-gray-900 font-semibold">
+                                            {{ number_format($room->price_per_night, 0) }} ₸
                                         </div>
                                     </div>
                                 </div>
-                                <span class="text-sm text-gray-500 flex-shrink-0">{{ $review->created_at->format('d.m.Y') }}</span>
+
+                                @auth
+                                    <a href="{{ route('bookings.create', ['room_id' => $room->id]) }}" 
+                                       class="block w-full py-2 text-center bg-[#38b000] text-white rounded-lg hover:bg-[#2d8c00] transition-colors">
+                                        Забронировать
+                                    </a>
+                                @else
+                                    <a href="{{ route('login') }}" 
+                                       class="block w-full py-2 text-center bg-[#38b000] text-white rounded-lg hover:bg-[#2d8c00] transition-colors">
+                                        Войти для бронирования
+                                    </a>
+                                @endauth
                             </div>
-                            <p class="text-gray-700 leading-relaxed">{{ $review->comment }}</p>
                         </div>
-                    @empty
-                        <div class="bg-white rounded-2xl shadow-sm p-12 text-center">
-                            <p class="text-gray-500">Пока нет отзывов. Будьте первым!</p>
-                        </div>
-                    @endforelse
+                    @endforeach
                 </div>
-            </div>
+            @endif
         </div>
+
+        <!-- Reviews Section -->
+        @include('partials.review-section', ['hotel' => $hotel])
     </div>
 </div>
 
