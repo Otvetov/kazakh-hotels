@@ -89,13 +89,13 @@
                                 <div>
                                     <div class="text-xs text-gray-500 mb-1">Заезд</div>
                                     <div class="text-sm text-gray-900 font-medium">
-                                        {{ $booking->check_in->format('d M Y') }}
+                                        {{ $booking->check_in->locale('ru')->translatedFormat('d M Y') }}
                                     </div>
                                 </div>
                                 <div>
                                     <div class="text-xs text-gray-500 mb-1">Выезд</div>
                                     <div class="text-sm text-gray-900 font-medium">
-                                        {{ $booking->check_out->format('d M Y') }}
+                                        {{ $booking->check_out->locale('ru')->translatedFormat('d M Y') }}
                                     </div>
                                 </div>
                                 <div>
