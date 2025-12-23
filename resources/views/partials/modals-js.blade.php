@@ -64,13 +64,29 @@ function saveDates() {
 }
 
 function changeGuests(delta) {
-    guestsCount = Math.max(1, guestsCount + delta);
+    guestsCount = Math.max(1, Math.min(10, guestsCount + delta));
     document.getElementById('guestsCount').textContent = guestsCount;
+    // Update button states
+    const minusBtn = event.target.closest('button').parentElement.querySelector('button:first-child');
+    const plusBtn = event.target.closest('button').parentElement.querySelector('button:last-child');
+    if (minusBtn) minusBtn.disabled = guestsCount <= 1;
+    if (plusBtn) plusBtn.disabled = guestsCount >= 10;
 }
 
 function changeRooms(delta) {
-    roomsCount = Math.max(1, roomsCount + delta);
+    roomsCount = Math.max(1, Math.min(5, roomsCount + delta));
     document.getElementById('roomsCount').textContent = roomsCount;
+    // Update button states
+    const minusBtn = event.target.closest('button').parentElement.querySelector('button:first-child');
+    const plusBtn = event.target.closest('button').parentElement.querySelector('button:last-child');
+    if (minusBtn) minusBtn.disabled = roomsCount <= 1;
+    if (plusBtn) plusBtn.disabled = roomsCount >= 5;
+}
+
+function selectCityAndClose(city) {
+    document.getElementById('cityValue').textContent = city;
+    document.getElementById('cityInput').value = city;
+    closeModals();
 }
 
 function saveGuests() {
@@ -86,16 +102,62 @@ function saveGuests() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // City search filter
+    // City search filter with AJAX
     const citySelect = document.getElementById('citySelect');
+    const searchResults = document.getElementById('search-results');
+    const popularCities = document.getElementById('popular-cities');
+    const citiesListResults = document.getElementById('cities-list-results');
+    
     if (citySelect) {
+        let searchTimeout;
         citySelect.addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const cities = document.querySelectorAll('.city-option');
-            cities.forEach(city => {
-                const cityName = city.textContent.toLowerCase();
-                city.style.display = cityName.includes(searchTerm) ? 'block' : 'none';
-            });
+            const searchTerm = e.target.value.trim();
+            
+            clearTimeout(searchTimeout);
+            
+            if (!searchTerm) {
+                searchResults.classList.add('hidden');
+                popularCities.classList.remove('hidden');
+                return;
+            }
+            
+            searchTimeout = setTimeout(() => {
+                // Show loading
+                citiesListResults.innerHTML = '<div class="text-center py-4 text-gray-500">Поиск...</div>';
+                searchResults.classList.remove('hidden');
+                popularCities.classList.add('hidden');
+                
+                // Fetch cities from server
+                fetch(`{{ route('hotels.index') }}?city=${encodeURIComponent(searchTerm)}&ajax=1`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.cities && data.cities.length > 0) {
+                        citiesListResults.innerHTML = data.cities.map(city => `
+                            <button
+                                onclick="selectCityAndClose('${city}')"
+                                class="w-full flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors text-left"
+                            >
+                                <svg class="w-5 h-5 text-[#38b000]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                <span class="text-gray-900">${city}</span>
+                            </button>
+                        `).join('');
+                    } else {
+                        citiesListResults.innerHTML = '<div class="text-center py-4 text-gray-500">Ничего не найдено</div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error searching cities:', error);
+                    citiesListResults.innerHTML = '<div class="text-center py-4 text-gray-500">Ошибка поиска</div>';
+                });
+            }, 300);
         });
     }
 
@@ -188,10 +250,11 @@ document.addEventListener('DOMContentLoaded', function() {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.5);
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     z-index: 50;
     padding: 1rem;
+    padding-top: 5rem;
 }
 
 .modal.hidden {
@@ -200,6 +263,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .modal:not(.hidden) {
     display: flex;
+    animation: modalFadeIn 0.3s ease-out;
 }
 
 .modal-box {
@@ -207,20 +271,30 @@ document.addEventListener('DOMContentLoaded', function() {
     padding: 24px;
     border-radius: 16px;
     width: 100%;
-    max-width: 400px;
+    max-width: 500px;
     max-height: 90vh;
     overflow-y: auto;
-    animation: modalFadeIn 0.2s ease-out;
+    animation: modalSlideIn 0.3s ease-out;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 @keyframes modalFadeIn {
     from {
         opacity: 0;
-        transform: scale(0.95);
     }
     to {
         opacity: 1;
-        transform: scale(1);
+    }
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
 
