@@ -45,30 +45,39 @@ class BookingController extends Controller
      */
     public function store(StoreBookingRequest $request)
     {
-        $room = Room::findOrFail($request->room_id);
+        try {
+            $room = Room::with('hotel')->findOrFail($request->room_id);
 
-        // Check availability
-        if (!$room->isAvailableForDates($request->check_in, $request->check_out)) {
-            return back()->withErrors(['error' => 'Room is not available for selected dates.']);
+            // Check availability
+            if (!$room->isAvailableForDates($request->check_in, $request->check_out)) {
+                return back()
+                    ->withInput()
+                    ->withErrors(['error' => 'Номер недоступен на выбранные даты. Пожалуйста, выберите другие даты.']);
+            }
+
+            // Calculate total price
+            $checkIn = \Carbon\Carbon::parse($request->check_in);
+            $checkOut = \Carbon\Carbon::parse($request->check_out);
+            $nights = $checkIn->diffInDays($checkOut);
+            $totalPrice = $room->price_per_night * $nights;
+
+            $booking = Booking::create([
+                'user_id' => Auth::id(),
+                'room_id' => $room->id,
+                'check_in' => $request->check_in,
+                'check_out' => $request->check_out,
+                'guests' => $request->guests,
+                'total_price' => $totalPrice,
+                'status' => 'pending',
+            ]);
+
+            return redirect()->route('bookings.show', $booking)
+                ->with('success', 'Бронирование успешно создано!');
+        } catch (\Exception $e) {
+            return back()
+                ->withInput()
+                ->withErrors(['error' => 'Произошла ошибка при создании бронирования: ' . $e->getMessage()]);
         }
-
-        // Calculate total price
-        $checkIn = \Carbon\Carbon::parse($request->check_in);
-        $checkOut = \Carbon\Carbon::parse($request->check_out);
-        $nights = $checkIn->diffInDays($checkOut);
-        $totalPrice = $room->price_per_night * $nights;
-
-        $booking = Booking::create([
-            'user_id' => Auth::id(),
-            'room_id' => $room->id,
-            'check_in' => $request->check_in,
-            'check_out' => $request->check_out,
-            'guests' => $request->guests,
-            'total_price' => $totalPrice,
-            'status' => 'pending',
-        ]);
-
-        return redirect()->route('bookings.show', $booking)->with('success', 'Booking created successfully!');
     }
 
     /**

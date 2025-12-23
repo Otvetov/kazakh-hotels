@@ -10,6 +10,18 @@
             <p class="text-gray-600">Проверьте детали и завершите бронирование</p>
         </div>
 
+        {{-- Display validation errors --}}
+        @if($errors->any())
+            <div class="mb-6 bg-red-50 border border-red-200 text-red-800 px-6 py-4 rounded-xl">
+                <h3 class="font-semibold mb-2">Ошибки валидации:</h3>
+                <ul class="list-disc list-inside space-y-1">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {{-- Main Content --}}
             <div class="lg:col-span-2 space-y-6">
@@ -166,8 +178,8 @@
                                 </div>
                             </div>
 
-                            <button type="submit" form="booking-form" class="w-full py-4 bg-[#38b000] text-white rounded-xl hover:bg-[#2d8c00] transition font-semibold shadow-lg hover:shadow-xl">
-                                Забронировать
+                            <button type="submit" form="booking-form" id="booking-submit-btn" class="w-full py-4 bg-[#38b000] text-white rounded-xl hover:bg-[#2d8c00] transition font-semibold shadow-lg hover:shadow-xl disabled:bg-gray-300 disabled:cursor-not-allowed">
+                                <span id="booking-btn-text">Забронировать</span>
                             </button>
 
                             <div class="bg-gray-50 rounded-xl p-4 space-y-2">
@@ -251,6 +263,29 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initial calculation
     calculatePrice();
+
+    // Handle form submission
+    const form = document.getElementById('booking-form');
+    const submitBtn = document.getElementById('booking-submit-btn');
+    const btnText = document.getElementById('booking-btn-text');
+    
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // Validate dates are present
+            const checkIn = checkInInput.value;
+            const checkOut = checkOutInput.value;
+            
+            if (!checkIn || !checkOut) {
+                e.preventDefault();
+                alert('Пожалуйста, выберите даты заезда и выезда.');
+                return false;
+            }
+            
+            // Disable button and show loading state
+            submitBtn.disabled = true;
+            btnText.textContent = 'Оформление...';
+        });
+    }
 });
 </script>
 @endsection
