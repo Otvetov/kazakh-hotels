@@ -1,71 +1,61 @@
 @extends('layouts.app')
 
-@section('title', 'Booking Details - Kazakh Hotels')
+@section('title', 'Бронирование успешно - Kazakh Hotels')
 
 @section('content')
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <h1 class="text-3xl font-bold mb-8">Booking Confirmation</h1>
-
-    <div class="bg-green-100 dark:bg-green-900 border border-green-400 dark:border-green-700 text-green-700 dark:text-green-200 px-6 py-4 rounded-lg mb-6">
-        <p class="font-semibold">✓ Your booking has been created successfully!</p>
-        <p class="text-sm mt-1">Booking ID: #{{ $booking->id }}</p>
-    </div>
-
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
-        <h2 class="text-2xl font-semibold mb-4">Booking Details</h2>
+<div class="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div class="bg-white rounded-2xl shadow-xl p-12 max-w-md w-full text-center">
+        <div class="w-20 h-20 bg-[#38b000]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg class="w-10 h-10 text-[#38b000]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+        </div>
+        <h2 class="text-gray-900 text-2xl font-bold mb-3">Бронирование успешно!</h2>
+        <p class="text-gray-600 mb-8">
+            Ваше бронирование принято и ожидает подтверждения. Вы можете просмотреть детали в личном кабинете.
+        </p>
         
-        <div class="space-y-4">
-            <div>
-                <p class="text-sm text-gray-600 dark:text-gray-400">Hotel</p>
-                <p class="text-lg font-semibold">{{ $booking->room->hotel->name }}</p>
-            </div>
-
-            <div>
-                <p class="text-sm text-gray-600 dark:text-gray-400">Room</p>
-                <p class="text-lg font-semibold">{{ $booking->room->name }}</p>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Check-in</p>
-                    <p class="text-lg font-semibold">{{ $booking->check_in->format('M d, Y') }}</p>
+        <div class="bg-gray-50 rounded-xl p-4 mb-6 text-left">
+            <div class="space-y-2 text-sm">
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Отель:</span>
+                    <span class="text-gray-900 font-medium">{{ $booking->room->hotel->name }}</span>
                 </div>
-                <div>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Check-out</p>
-                    <p class="text-lg font-semibold">{{ $booking->check_out->format('M d, Y') }}</p>
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Номер:</span>
+                    <span class="text-gray-900 font-medium">{{ $booking->room->name }}</span>
                 </div>
-            </div>
-
-            <div>
-                <p class="text-sm text-gray-600 dark:text-gray-400">Guests</p>
-                <p class="text-lg font-semibold">{{ $booking->guests }}</p>
-            </div>
-
-            <div>
-                <p class="text-sm text-gray-600 dark:text-gray-400">Total Price</p>
-                <p class="text-2xl font-bold text-[#38b000]">{{ number_format($booking->total_price, 0) }} ₸</p>
-            </div>
-
-            <div>
-                <p class="text-sm text-gray-600 dark:text-gray-400">Status</p>
-                <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold 
-                    {{ $booking->status === 'confirmed' ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' : 
-                       ($booking->status === 'cancelled' ? 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200' : 
-                        'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200') }}">
-                    {{ ucfirst($booking->status) }}
-                </span>
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Даты:</span>
+                    <span class="text-gray-900 font-medium">
+                        {{ $booking->check_in->format('d.m.Y') }} - {{ $booking->check_out->format('d.m.Y') }}
+                    </span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Гостей:</span>
+                    <span class="text-gray-900 font-medium">{{ $booking->guests }}</span>
+                </div>
+                <div class="flex justify-between pt-2 border-t border-gray-200">
+                    <span class="text-gray-900 font-semibold">Итого:</span>
+                    <span class="text-[#38b000] font-bold text-lg">{{ number_format($booking->total_price, 0) }} ₸</span>
+                </div>
             </div>
         </div>
-
-        <div class="mt-6 flex gap-4">
-            <a href="{{ route('bookings.index') }}" class="px-6 py-3 bg-[#38b000] text-white rounded-lg hover:bg-[#2d8a00] transition">
-                View All Bookings
+        
+        <div class="space-y-3">
+            <a
+                href="{{ route('bookings.index') }}"
+                class="block w-full py-3 bg-[#38b000] text-white rounded-xl hover:bg-[#2d8c00] transition-colors font-semibold"
+            >
+                Перейти в профиль
             </a>
-            <a href="{{ route('hotels.show', $booking->room->hotel) }}" class="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition">
-                Back to Hotel
+            <a
+                href="{{ route('home') }}"
+                class="block w-full py-3 text-gray-700 border-2 border-gray-300 rounded-xl hover:border-[#38b000] hover:text-[#38b000] transition-colors font-semibold"
+            >
+                На главную
             </a>
         </div>
     </div>
 </div>
 @endsection
-

@@ -22,3 +22,11 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Documentation files (internal use only)
+COMMIT_HISTORY.md
+REORGANIZE_COMMITS.md
+reorganize_commits.sh
+API_DOCUMENTATION.md
+GITHUB_SETUP.md
+DATABASE_SETUP.md

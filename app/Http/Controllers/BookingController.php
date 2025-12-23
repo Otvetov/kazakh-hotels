@@ -20,7 +20,21 @@ class BookingController extends Controller
             $room = Room::with('hotel')->findOrFail($request->room_id);
         }
 
-        return view('bookings.create', compact('room'));
+        $checkIn = $request->get('check_in');
+        $checkOut = $request->get('check_out');
+        $guests = $request->get('guests', $room ? $room->capacity : 2);
+
+        // Calculate nights and total price if dates are provided
+        $nights = 0;
+        $totalPrice = 0;
+        if ($checkIn && $checkOut && $room) {
+            $checkInDate = \Carbon\Carbon::parse($checkIn);
+            $checkOutDate = \Carbon\Carbon::parse($checkOut);
+            $nights = $checkInDate->diffInDays($checkOutDate);
+            $totalPrice = $room->price_per_night * $nights;
+        }
+
+        return view('bookings.create', compact('room', 'checkIn', 'checkOut', 'guests', 'nights', 'totalPrice'));
     }
 
     /**
