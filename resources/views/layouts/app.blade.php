@@ -20,39 +20,43 @@
             <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between items-center h-16">
                     <div class="flex items-center space-x-8">
-                        <a href="{{ route('home') }}" class="text-2xl font-bold text-[#0066cc]">Kazakh Hotels</a>
+                        <a href="{{ route('home') }}" class="flex items-center gap-2">
+                            <div class="bg-[#38b000] p-2 rounded-lg">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                                </svg>
+                            </div>
+                            <span class="text-xl font-bold text-gray-900">Kazakh Hotels</span>
+                        </a>
                         <div class="hidden md:flex space-x-6">
-                            <a href="{{ route('home') }}" class="text-gray-700 hover:text-[#0066cc] transition py-2">Главная</a>
-                            <a href="{{ route('hotels.index') }}" class="text-gray-700 hover:text-[#0066cc] transition py-2">Отели</a>
+                            <a href="{{ route('home') }}" class="text-gray-700 hover:text-[#38b000] transition py-2">Главная</a>
+                            <a href="{{ route('hotels.index') }}" class="text-gray-700 hover:text-[#38b000] transition py-2">Отели</a>
                             @auth
-                                <a href="{{ route('favorites.index') }}" class="text-gray-700 hover:text-[#0066cc] transition py-2">Избранное</a>
-                                <a href="{{ route('bookings.index') }}" class="text-gray-700 hover:text-[#0066cc] transition py-2">Брони</a>
+                                <a href="{{ route('favorites.index') }}" class="text-gray-700 hover:text-[#38b000] transition py-2">Избранное</a>
+                                <a href="{{ route('bookings.index') }}" class="text-gray-700 hover:text-[#38b000] transition py-2">Бронирования</a>
                             @endauth
+                            @if(auth()->check() && auth()->user()->isAdmin())
+                                <a href="{{ route('admin.index') }}" class="text-gray-700 hover:text-[#38b000] transition py-2">Админ-панель</a>
+                            @endif
                         </div>
                     </div>
                     <div class="flex items-center space-x-4">
                         @auth
-                            <div class="relative group">
-                                <button class="flex items-center space-x-2 focus:outline-none py-2">
-                                    <div class="w-8 h-8 rounded-full bg-[#0066cc] flex items-center justify-center text-white font-semibold text-sm">
+                            <div class="flex items-center gap-3">
+                                <a href="{{ route('profile.show') }}" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                                    <div class="w-9 h-9 bg-[#38b000] rounded-full flex items-center justify-center text-white font-semibold">
                                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                                     </div>
                                     <span class="hidden md:block text-gray-700">{{ auth()->user()->name }}</span>
-                                </button>
-                                <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 border border-gray-200">
-                                    <a href="{{ route('profile.show') }}" class="block px-4 py-2 hover:bg-gray-50 text-gray-700">Профиль</a>
-                                    @if(auth()->user()->isAdmin())
-                                        <a href="{{ route('admin.index') }}" class="block px-4 py-2 hover:bg-gray-50 text-gray-700">Админ панель</a>
-                                    @endif
-                                    <form method="POST" action="{{ route('logout') }}">
-                                        @csrf
-                                        <button type="submit" class="block w-full text-left px-4 py-2 hover:bg-gray-50 text-gray-700">Выйти</button>
-                                    </form>
-                                </div>
+                                </a>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="px-4 py-2 text-gray-700 hover:text-[#38b000] transition">Выход</button>
+                                </form>
                             </div>
                         @else
-                            <a href="{{ route('login') }}" class="text-gray-700 hover:text-[#0066cc] transition py-2">Войти</a>
-                            <a href="{{ route('register') }}" class="px-4 py-2 bg-[#0066cc] text-white rounded-md hover:bg-[#0052a3] transition">Регистрация</a>
+                            <a href="{{ route('login') }}" class="px-6 py-2 text-gray-700 hover:text-[#38b000] transition">Войти</a>
+                            <a href="{{ route('register') }}" class="px-6 py-2 bg-[#38b000] text-white rounded-lg hover:bg-[#2d8c00] transition">Зарегистрироваться</a>
                         @endauth
                     </div>
                 </div>
@@ -91,22 +95,22 @@
                     <div>
                         <h3 class="font-semibold text-gray-900 mb-3">Клиентам</h3>
                         <ul class="space-y-2 text-sm text-gray-600">
-                            <li><a href="#" class="hover:text-[#0066cc]">Поддержка</a></li>
-                            <li><a href="{{ route('hotels.index') }}" class="hover:text-[#0066cc]">Все отели</a></li>
+                            <li><a href="#" class="hover:text-[#38b000]">Поддержка</a></li>
+                            <li><a href="{{ route('hotels.index') }}" class="hover:text-[#38b000]">Все отели</a></li>
                         </ul>
                     </div>
                     <div>
                         <h3 class="font-semibold text-gray-900 mb-3">О проекте</h3>
                         <ul class="space-y-2 text-sm text-gray-600">
-                            <li><a href="#" class="hover:text-[#0066cc]">О нас</a></li>
-                            <li><a href="#" class="hover:text-[#0066cc]">Контакты</a></li>
+                            <li><a href="#" class="hover:text-[#38b000]">О нас</a></li>
+                            <li><a href="#" class="hover:text-[#38b000]">Контакты</a></li>
                         </ul>
                     </div>
                     <div>
                         <h3 class="font-semibold text-gray-900 mb-3">Правовая информация</h3>
                         <ul class="space-y-2 text-sm text-gray-600">
-                            <li><a href="#" class="hover:text-[#0066cc]">Политика конфиденциальности</a></li>
-                            <li><a href="#" class="hover:text-[#0066cc]">Условия использования</a></li>
+                            <li><a href="#" class="hover:text-[#38b000]">Политика конфиденциальности</a></li>
+                            <li><a href="#" class="hover:text-[#38b000]">Условия использования</a></li>
                         </ul>
                     </div>
                 </div>

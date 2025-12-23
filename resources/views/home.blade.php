@@ -65,17 +65,33 @@
                                 <input type="hidden" name="guests" id="guestsInput" value="{{ request('guests', 2) }}">
                                 <input type="hidden" name="rooms" id="roomsInput" value="{{ request('rooms', 1) }}">
 
-                                <button type="submit" class="w-full py-4 bg-[#38b000] text-white rounded-xl hover:bg-[#2d8c00] transition font-semibold">
-                                    Найти
+                                <button type="submit" class="w-full flex items-center justify-center gap-2 py-4 bg-[#38b000] text-white rounded-xl hover:bg-[#2d8c00] transition font-semibold">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                    <span>Найти</span>
                                 </button>
                             </form>
                         </div>
 
                         {{-- Benefits --}}
-                        <div class="mt-6 pt-6 border-t space-y-2 text-sm text-gray-600">
-                            <div>✓ Большой выбор отелей</div>
-                            <div>✓ Лучшие цены</div>
-                            <div>✓ Поддержка 24/7</div>
+                        <div class="mt-6 pt-6 border-t border-gray-200 space-y-3 text-sm">
+                            <div class="flex items-start gap-2 text-gray-600">
+                                <span class="text-[#38b000]">✓</span>
+                                <span>Большой выбор отелей</span>
+                            </div>
+                            <div class="flex items-start gap-2 text-gray-600">
+                                <span class="text-[#38b000]">✓</span>
+                                <span>2 миллиона объектов по всему миру</span>
+                            </div>
+                            <div class="flex items-start gap-2 text-gray-600">
+                                <span class="text-[#38b000]">✓</span>
+                                <span>Любовь 5 звёзд на любой вкус</span>
+                            </div>
+                            <div class="flex items-start gap-2 text-gray-600">
+                                <span class="text-[#38b000]">✓</span>
+                                <span>Поддержка 24/7</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -83,7 +99,7 @@
 
             {{-- LEFT: HOTELS --}}
             <div class="flex-1 lg:order-1">
-                <h2 class="text-xl font-semibold mb-6">
+                <h2 class="text-gray-900 dark:text-white mb-6 text-xl font-semibold">
                     Идеи для путешествий по Казахстану
                 </h2>
 
@@ -95,8 +111,8 @@
 
                 {{-- Load more --}}
                 @if($hotels->hasMorePages())
-                    <div class="text-center mt-8">
-                        <button id="load-more" class="px-8 py-3 border-2 border-gray-300 rounded-xl hover:border-[#38b000] hover:text-[#38b000] transition">
+                    <div class="text-center mt-8 pb-8">
+                        <button id="load-more" class="px-8 py-3 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:border-[#38b000] hover:text-[#38b000] transition-colors">
                             Загрузить ещё
                         </button>
                     </div>
