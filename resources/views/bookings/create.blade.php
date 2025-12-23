@@ -215,12 +215,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const totalPriceSidebar = document.getElementById('total-price-sidebar');
     const pricePerNight = {{ $room->price_per_night }};
     
-    // If dates are not set, redirect to hotel page to select dates
-    @if(!$checkIn || !$checkOut)
-        setTimeout(function() {
-            window.location.href = '{{ route("hotels.show", $room->hotel->id) }}?room_id={{ $room->id }}';
-        }, 100);
-    @endif
 
     function calculatePrice() {
         const checkIn = checkInInput.value;

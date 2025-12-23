@@ -15,24 +15,27 @@ class BookingController extends Controller
      */
     public function create(Request $request)
     {
-        $room = null;
-        if ($request->filled('room_id')) {
-            $room = Room::with('hotel')->findOrFail($request->room_id);
+        if (!$request->filled('room_id')) {
+            return redirect()->route('hotels.index')->withErrors(['error' => 'Please select a room first.']);
         }
 
+        $room = Room::with('hotel')->findOrFail($request->room_id);
         $checkIn = $request->get('check_in');
         $checkOut = $request->get('check_out');
-        $guests = $request->get('guests', $room ? $room->capacity : 2);
+        $guests = $request->get('guests', $room->capacity);
 
-        // Calculate nights and total price if dates are provided
-        $nights = 0;
-        $totalPrice = 0;
-        if ($checkIn && $checkOut && $room) {
-            $checkInDate = \Carbon\Carbon::parse($checkIn);
-            $checkOutDate = \Carbon\Carbon::parse($checkOut);
-            $nights = $checkInDate->diffInDays($checkOutDate);
-            $totalPrice = $room->price_per_night * $nights;
+        // If dates are not provided, redirect to hotel page
+        if (!$checkIn || !$checkOut) {
+            return redirect()->route('hotels.show', $room->hotel->id)
+                ->with('info', 'Please select check-in and check-out dates to proceed with booking.')
+                ->withInput(['room_id' => $room->id]);
         }
+
+        // Calculate nights and total price
+        $checkInDate = \Carbon\Carbon::parse($checkIn);
+        $checkOutDate = \Carbon\Carbon::parse($checkOut);
+        $nights = $checkInDate->diffInDays($checkOutDate);
+        $totalPrice = $room->price_per_night * $nights;
 
         return view('bookings.create', compact('room', 'checkIn', 'checkOut', 'guests', 'nights', 'totalPrice'));
     }
