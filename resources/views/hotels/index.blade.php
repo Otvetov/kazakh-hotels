@@ -101,10 +101,9 @@
             </form>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <!-- Hotels List -->
-            <div class="md:col-span-full">
-                @if($hotels->count() === 0)
+        <!-- Hotels List -->
+        <div>
+            @if($hotels->count() === 0)
                     <div class="text-center py-16">
                         <p class="text-gray-500 mb-4">Отели не найдены</p>
                         <a
