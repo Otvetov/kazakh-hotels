@@ -102,9 +102,8 @@
         </div>
 
         <!-- Hotels List -->
-        <div>
-            @if($hotels->count() === 0)
-                    <div class="text-center py-16">
+        @if($hotels->count() === 0)
+            <div class="text-center py-16">
                         <p class="text-gray-500 mb-4">Отели не найдены</p>
                         <a
                             href="{{ route('hotels.index') }}"
@@ -228,9 +227,7 @@
                             {{ $hotels->links() }}
                         </div>
                     @endif
-                @endif
-            </div>
-        </div>
+        @endif
     </div>
 </div>
 
