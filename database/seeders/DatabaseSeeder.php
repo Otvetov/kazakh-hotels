@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
         $users = User::factory(10)->create();
 
         // Create hotels
-        $cities = ['Almaty', 'Astana', 'Shymkent', 'Karaganda', 'Aktobe', 'Taraz', 'Pavlodar', 'Oskemen'];
+        $cities = ['Алматы', 'Астана', 'Шымкент', 'Караганда', 'Актобе', 'Тараз', 'Павлодар', 'Усть-Каменогорск'];
         
         $hotels = [];
         foreach ($cities as $city) {

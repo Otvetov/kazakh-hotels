@@ -40,31 +40,25 @@
         <div id="popular-cities" class="px-6 pb-6">
             <p class="text-sm text-gray-500 mb-3">Популярные направления</p>
             <div class="space-y-2">
-                @php
-                    $popularCities = [
-                        ['name' => 'Алматы', 'description' => 'Крупнейший город Казахстана'],
-                        ['name' => 'Астана', 'description' => 'Столица Казахстана'],
-                        ['name' => 'Шымкент', 'description' => 'Южная столица Казахстана'],
-                        ['name' => 'Караганда', 'description' => 'Промышленный центр'],
-                        ['name' => 'Актобе', 'description' => 'Западный регион'],
-                        ['name' => 'Тараз', 'description' => 'Древний город'],
-                    ];
-                @endphp
-                @foreach($popularCities as $city)
-                    <button
-                        onclick="selectCityAndClose('{{ $city['name'] }}')"
-                        class="w-full flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors text-left"
-                    >
-                        <svg class="w-5 h-5 text-[#38b000] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                        <div>
-                            <div class="text-gray-900 font-medium">{{ $city['name'] }}</div>
-                            <div class="text-sm text-gray-500">{{ $city['description'] }}</div>
-                        </div>
-                    </button>
-                @endforeach
+                @if(isset($popularCities) && $popularCities->count() > 0)
+                    @foreach($popularCities as $city)
+                        <button
+                            onclick="selectCityAndClose('{{ $city['name'] }}')"
+                            class="w-full flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors text-left"
+                        >
+                            <svg class="w-5 h-5 text-[#38b000] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <div>
+                                <div class="text-gray-900 font-medium">{{ $city['name'] }}</div>
+                                <div class="text-sm text-gray-500">{{ $city['description'] }}</div>
+                            </div>
+                        </button>
+                    @endforeach
+                @else
+                    <p class="text-sm text-gray-400">Нет доступных направлений</p>
+                @endif
             </div>
         </div>
     </div>

@@ -32,3 +32,4 @@ class StoreHotelRequest extends FormRequest
     }
 }
 
+

@@ -101,6 +101,44 @@ function saveGuests() {
     closeModals();
 }
 
+// Form validation
+document.addEventListener('DOMContentLoaded', function() {
+    const searchForm = document.getElementById('searchForm');
+    const searchError = document.getElementById('searchError');
+    
+    if (searchForm) {
+        searchForm.addEventListener('submit', function(e) {
+            const city = document.getElementById('cityInput').value.trim();
+            const checkIn = document.getElementById('checkInInput').value;
+            const checkOut = document.getElementById('checkOutInput').value;
+            
+            const errors = [];
+            
+            if (!city || city === 'Выберите направление') {
+                errors.push('Выберите направление');
+            }
+            
+            if (!checkIn) {
+                errors.push('Выберите дату заезда');
+            }
+            
+            if (!checkOut) {
+                errors.push('Выберите дату выезда');
+            }
+            
+            if (errors.length > 0) {
+                e.preventDefault();
+                searchError.textContent = 'Пожалуйста, заполните следующие поля: ' + errors.join(', ');
+                searchError.classList.remove('hidden');
+                searchError.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                return false;
+            } else {
+                searchError.classList.add('hidden');
+            }
+        });
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     // City search filter with AJAX
     const citySelect = document.getElementById('citySelect');
@@ -128,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 popularCities.classList.add('hidden');
                 
                 // Fetch cities from server
-                fetch(`{{ route('hotels.index') }}?city=${encodeURIComponent(searchTerm)}&ajax=1`, {
+                fetch(`{{ route('home') }}?city=${encodeURIComponent(searchTerm)}&ajax=1`, {
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',
                         'Accept': 'application/json'

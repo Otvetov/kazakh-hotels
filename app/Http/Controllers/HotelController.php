@@ -70,3 +70,4 @@ class HotelController extends Controller
     }
 }
 
+

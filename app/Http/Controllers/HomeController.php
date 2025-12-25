@@ -29,7 +29,34 @@ class HomeController extends Controller
 
         $hotels = $query->with('rooms')->latest()->paginate(12);
 
+        // Get popular cities from database (cities with most hotels)
+        $popularCities = Hotel::select('city')
+            ->selectRaw('COUNT(*) as hotel_count')
+            ->groupBy('city')
+            ->orderByDesc('hotel_count')
+            ->limit(6)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'name' => $item->city,
+                    'description' => $this->getCityDescription($item->city),
+                ];
+            });
+
         if ($request->ajax()) {
+            // For city search AJAX
+            if ($request->has('ajax') && $request->ajax == 1) {
+                $searchTerm = $request->get('city', '');
+                $cities = Hotel::select('city')
+                    ->distinct()
+                    ->where('city', 'like', '%' . $searchTerm . '%')
+                    ->limit(10)
+                    ->pluck('city')
+                    ->toArray();
+                
+                return response()->json(['cities' => $cities]);
+            }
+
             $html = '';
             foreach ($hotels as $hotel) {
                 $html .= view('partials.hotel-card', compact('hotel'))->render();
@@ -40,7 +67,26 @@ class HomeController extends Controller
             ]);
         }
 
-        return view('home', compact('hotels'));
+        return view('home', compact('hotels', 'popularCities'));
+    }
+
+    /**
+     * Get city description
+     */
+    private function getCityDescription(string $city): string
+    {
+        $descriptions = [
+            'Алматы' => 'Крупнейший город Казахстана',
+            'Астана' => 'Столица Казахстана',
+            'Шымкент' => 'Южная столица Казахстана',
+            'Караганда' => 'Промышленный центр',
+            'Актобе' => 'Западный регион',
+            'Тараз' => 'Древний город',
+            'Павлодар' => 'Северный регион',
+            'Усть-Каменогорск' => 'Восточный регион',
+        ];
+
+        return $descriptions[$city] ?? 'Популярное направление';
     }
 }
 

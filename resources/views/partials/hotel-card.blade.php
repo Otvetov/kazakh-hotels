@@ -70,3 +70,4 @@ function toggleFavorite(hotelId) {
 @endauth
 
 
+

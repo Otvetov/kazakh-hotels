@@ -58,12 +58,14 @@
                                 </div>
                             </button>
 
-                            <form action="{{ route('hotels.index') }}" method="GET" class="mt-6">
+                            <form action="{{ route('hotels.index') }}" method="GET" id="searchForm" class="mt-6">
                                 <input type="hidden" name="city" id="cityInput" value="{{ request('city') }}">
                                 <input type="hidden" name="check_in" id="checkInInput" value="{{ request('check_in') }}">
                                 <input type="hidden" name="check_out" id="checkOutInput" value="{{ request('check_out') }}">
                                 <input type="hidden" name="guests" id="guestsInput" value="{{ request('guests', 2) }}">
                                 <input type="hidden" name="rooms" id="roomsInput" value="{{ request('rooms', 1) }}">
+
+                                <div id="searchError" class="mb-3 hidden p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600"></div>
 
                                 <button type="submit" class="w-full flex items-center justify-center gap-2 py-4 bg-[#38b000] text-white rounded-xl hover:bg-[#2d8c00] transition font-semibold">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
