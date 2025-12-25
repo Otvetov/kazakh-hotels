@@ -8,6 +8,28 @@ function openModal(id) {
         modal.classList.remove('hidden');
         modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
+        
+        // Initialize guests modal button states
+        if (id === 'guestsModal') {
+            const guestsCountEl = document.getElementById('guestsCount');
+            const roomsCountEl = document.getElementById('roomsCount');
+            if (guestsCountEl) {
+                guestsCount = parseInt(guestsCountEl.textContent) || 2;
+            }
+            if (roomsCountEl) {
+                roomsCount = parseInt(roomsCountEl.textContent) || 1;
+            }
+            
+            const guestsMinusBtn = document.getElementById('guestsMinusBtn');
+            const guestsPlusBtn = document.getElementById('guestsPlusBtn');
+            const roomsMinusBtn = document.getElementById('roomsMinusBtn');
+            const roomsPlusBtn = document.getElementById('roomsPlusBtn');
+            
+            if (guestsMinusBtn) guestsMinusBtn.disabled = guestsCount <= 1;
+            if (guestsPlusBtn) guestsPlusBtn.disabled = guestsCount >= 10;
+            if (roomsMinusBtn) roomsMinusBtn.disabled = roomsCount <= 1;
+            if (roomsPlusBtn) roomsPlusBtn.disabled = roomsCount >= 5;
+        }
     }
 }
 
@@ -65,20 +87,26 @@ function saveDates() {
 
 function changeGuests(delta) {
     guestsCount = Math.max(1, Math.min(10, guestsCount + delta));
-    document.getElementById('guestsCount').textContent = guestsCount;
+    const guestsCountEl = document.getElementById('guestsCount');
+    if (guestsCountEl) {
+        guestsCountEl.textContent = guestsCount;
+    }
     // Update button states
-    const minusBtn = event.target.closest('button').parentElement.querySelector('button:first-child');
-    const plusBtn = event.target.closest('button').parentElement.querySelector('button:last-child');
+    const minusBtn = document.getElementById('guestsMinusBtn');
+    const plusBtn = document.getElementById('guestsPlusBtn');
     if (minusBtn) minusBtn.disabled = guestsCount <= 1;
     if (plusBtn) plusBtn.disabled = guestsCount >= 10;
 }
 
 function changeRooms(delta) {
     roomsCount = Math.max(1, Math.min(5, roomsCount + delta));
-    document.getElementById('roomsCount').textContent = roomsCount;
+    const roomsCountEl = document.getElementById('roomsCount');
+    if (roomsCountEl) {
+        roomsCountEl.textContent = roomsCount;
+    }
     // Update button states
-    const minusBtn = event.target.closest('button').parentElement.querySelector('button:first-child');
-    const plusBtn = event.target.closest('button').parentElement.querySelector('button:last-child');
+    const minusBtn = document.getElementById('roomsMinusBtn');
+    const plusBtn = document.getElementById('roomsPlusBtn');
     if (minusBtn) minusBtn.disabled = roomsCount <= 1;
     if (plusBtn) plusBtn.disabled = roomsCount >= 5;
 }
@@ -92,12 +120,26 @@ function selectCityAndClose(city) {
 function saveGuests() {
     const guestsText = guestsCount === 1 ? 'гость' : 'гостей';
     const roomsText = roomsCount === 1 ? 'номер' : 'номеров';
+    const valueText = `${guestsCount} ${guestsText}, ${roomsCount} ${roomsText}`;
     
-    document.getElementById('guestsValue').textContent = 
-        `${guestsCount} ${guestsText}, ${roomsCount} ${roomsText}`;
+    // Update for home page
+    const guestsValue = document.getElementById('guestsValue');
+    const guestsInput = document.getElementById('guestsInput');
+    const roomsInput = document.getElementById('roomsInput');
     
-    document.getElementById('guestsInput').value = guestsCount;
-    document.getElementById('roomsInput').value = roomsCount;
+    if (guestsValue) guestsValue.textContent = valueText;
+    if (guestsInput) guestsInput.value = guestsCount;
+    if (roomsInput) roomsInput.value = roomsCount;
+    
+    // Update for hotels page
+    const guestsValueHotels = document.getElementById('guestsValueHotels');
+    const guestsInputHotels = document.getElementById('guestsInputHotels');
+    const roomsInputHotels = document.getElementById('roomsInputHotels');
+    
+    if (guestsValueHotels) guestsValueHotels.textContent = valueText;
+    if (guestsInputHotels) guestsInputHotels.value = guestsCount;
+    if (roomsInputHotels) roomsInputHotels.value = roomsCount;
+    
     closeModals();
 }
 

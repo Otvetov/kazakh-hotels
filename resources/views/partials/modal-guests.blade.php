@@ -26,9 +26,9 @@
                 </div>
                 <div class="flex items-center gap-3">
                     <button
+                        id="guestsMinusBtn"
                         onclick="changeGuests(-1)"
                         class="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled="{{ request('guests', 2) <= 1 ? 'true' : 'false' }}"
                     >
                         <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
@@ -36,9 +36,9 @@
                     </button>
                     <span id="guestsCount" class="text-gray-900 min-w-[2rem] text-center font-semibold text-lg">{{ request('guests', 2) }}</span>
                     <button
+                        id="guestsPlusBtn"
                         onclick="changeGuests(1)"
                         class="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled="{{ request('guests', 2) >= 10 ? 'true' : 'false' }}"
                     >
                         <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -53,9 +53,9 @@
                 </div>
                 <div class="flex items-center gap-3">
                     <button
+                        id="roomsMinusBtn"
                         onclick="changeRooms(-1)"
                         class="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled="{{ request('rooms', 1) <= 1 ? 'true' : 'false' }}"
                     >
                         <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
@@ -63,9 +63,9 @@
                     </button>
                     <span id="roomsCount" class="text-gray-900 min-w-[2rem] text-center font-semibold text-lg">{{ request('rooms', 1) }}</span>
                     <button
+                        id="roomsPlusBtn"
                         onclick="changeRooms(1)"
                         class="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled="{{ request('rooms', 1) >= 5 ? 'true' : 'false' }}"
                     >
                         <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>

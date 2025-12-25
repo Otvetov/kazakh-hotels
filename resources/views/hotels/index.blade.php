@@ -331,15 +331,7 @@ window.saveDates = function() {
     }
 };
 
-// Override saveGuests for hotels page
-const originalSaveGuests = window.saveGuests;
-window.saveGuests = function() {
-    if (document.getElementById('guestsValueHotels')) {
-        saveGuestsHotels();
-    } else if (originalSaveGuests) {
-        originalSaveGuests();
-    }
-};
+// saveGuests now works for both pages automatically
 
 // Form validation for hotels page
 document.addEventListener('DOMContentLoaded', function() {
