@@ -6,34 +6,118 @@
 <div class="min-h-screen bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 py-8">
         <!-- Header -->
-        <div class="flex items-center justify-between mb-8">
-            <div>
-                <h1 class="text-gray-900 mb-2 text-2xl font-bold">
-                    {{ request('city') ? 'Отели в ' . request('city') : 'Все отели' }}
-                </h1>
-                <p class="text-gray-600">
-                    Найдено {{ $hotels->total() }} {{ $hotels->total() == 1 ? 'отель' : 'отелей' }}
-                </p>
-            </div>
+        <div class="mb-6">
+            <h1 class="text-gray-900 mb-2 text-2xl font-bold">
+                {{ request('city') ? 'Отели в ' . request('city') : 'Все отели' }}
+            </h1>
+            <p class="text-gray-600">
+                Найдено {{ $hotels->total() }} {{ $hotels->total() == 1 ? 'отель' : 'отелей' }}
+            </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <!-- Filters Sidebar -->
-            <div class="md:col-span-1">
-                <div class="md:sticky md:top-24 space-y-6">
-                    <!-- Sort -->
-                    <div class="bg-white rounded-xl p-4 shadow-sm">
-                        <h3 class="text-gray-900 mb-4 font-semibold">Сортировка</h3>
+        <!-- Horizontal Search Panel -->
+        <div class="bg-white rounded-2xl shadow-xl p-6 mb-8">
+            <form action="{{ route('hotels.index') }}" method="GET" id="hotelsSearchForm" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <!-- City Search -->
+                    <div>
+                        <button type="button" onclick="openModal('searchModal')" class="search-btn w-full flex items-start gap-3 p-4 border border-gray-300 rounded-xl hover:border-[#38b000] transition-colors text-left bg-white">
+                            <svg class="w-5 h-5 text-[#38b000] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <div class="flex-1 min-w-0">
+                                <span class="label text-xs text-gray-500 block mb-0.5">Город, отель или направление</span>
+                                <span id="cityValueHotels" class="value text-gray-900 font-medium truncate block">{{ request('city') ?: 'Выберите направление' }}</span>
+                            </div>
+                        </button>
+                        <input type="hidden" name="city" id="cityInputHotels" value="{{ request('city') }}">
+                    </div>
+
+                    <!-- Dates -->
+                    <div>
+                        <button type="button" onclick="openModal('dateModal')" class="search-btn w-full flex items-start gap-3 p-4 border border-gray-300 rounded-xl hover:border-[#38b000] transition-colors text-left bg-white">
+                            <svg class="w-5 h-5 text-[#38b000] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            <div class="flex-1 min-w-0">
+                                <span class="label text-xs text-gray-500 block mb-0.5">Даты поездки</span>
+                                <span id="dateValueHotels" class="value text-gray-900 font-medium truncate block">
+                                    @if(request('check_in') && request('check_out'))
+                                        {{ \Carbon\Carbon::parse(request('check_in'))->format('d M') }} – {{ \Carbon\Carbon::parse(request('check_out'))->format('d M') }}
+                                    @else
+                                        Заезд – Выезд
+                                    @endif
+                                </span>
+                            </div>
+                        </button>
+                        <input type="hidden" name="check_in" id="checkInInputHotels" value="{{ request('check_in') }}">
+                        <input type="hidden" name="check_out" id="checkOutInputHotels" value="{{ request('check_out') }}">
+                    </div>
+
+                    <!-- Guests -->
+                    <div>
+                        <button type="button" onclick="openModal('guestsModal')" class="search-btn w-full flex items-start gap-3 p-4 border border-gray-300 rounded-xl hover:border-[#38b000] transition-colors text-left bg-white">
+                            <svg class="w-5 h-5 text-[#38b000] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            </svg>
+                            <div class="flex-1 min-w-0">
+                                <span class="label text-xs text-gray-500 block mb-0.5">Гости и номера</span>
+                                <span id="guestsValueHotels" class="value text-gray-900 font-medium truncate block">
+                                    @php
+                                        $guests = request('guests', 2);
+                                        $rooms = request('rooms', 1);
+                                    @endphp
+                                    {{ $guests }} {{ $guests == 1 ? 'гость' : 'гостей' }}, {{ $rooms }} {{ $rooms == 1 ? 'номер' : 'номеров' }}
+                                </span>
+                            </div>
+                        </button>
+                        <input type="hidden" name="guests" id="guestsInputHotels" value="{{ request('guests', 2) }}">
+                        <input type="hidden" name="rooms" id="roomsInputHotels" value="{{ request('rooms', 1) }}">
+                    </div>
+
+                    <!-- Sort & Search Button -->
+                    <div class="flex gap-2">
                         <select
                             id="sort-select"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#38b000]"
+                            name="sort"
+                            class="flex-1 px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#38b000] bg-white"
                         >
                             <option value="popular" {{ request('sort') == 'popular' ? 'selected' : '' }}>По популярности</option>
                             <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>По рейтингу</option>
                             <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Сначала дешёвые</option>
                             <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Сначала дорогие</option>
                         </select>
+                        <button type="submit" class="px-6 py-2 bg-[#38b000] text-white rounded-xl hover:bg-[#2d8c00] transition font-semibold flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                            <span class="hidden md:inline">Найти</span>
+                        </button>
                     </div>
+                </div>
+
+                <!-- Preserve existing filters -->
+                @if(request('min_price'))
+                    <input type="hidden" name="min_price" value="{{ request('min_price') }}">
+                @endif
+                @if(request('max_price'))
+                    <input type="hidden" name="max_price" value="{{ request('max_price') }}">
+                @endif
+                @if(request('stars'))
+                    @foreach((array)request('stars') as $star)
+                        <input type="hidden" name="stars[]" value="{{ $star }}">
+                    @endforeach
+                @endif
+
+                <div id="searchErrorHotels" class="hidden p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600"></div>
+            </form>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <!-- Filters Sidebar -->
+            <div class="md:col-span-1">
+                <div class="md:sticky md:top-24 space-y-6">
 
                     <!-- Price Range -->
                     <div class="bg-white rounded-xl p-4 shadow-sm">
@@ -233,6 +317,11 @@
     </div>
 </div>
 
+{{-- MODALS --}}
+@include('partials.modal-search')
+@include('partials.modal-dates')
+@include('partials.modal-guests')
+
 @auth
 <script>
 function toggleFavorite(hotelId) {
@@ -252,10 +341,142 @@ function toggleFavorite(hotelId) {
 @endauth
 
 <script>
-document.getElementById('sort-select').addEventListener('change', function() {
-    const url = new URL(window.location.href);
-    url.searchParams.set('sort', this.value);
-    window.location.href = url.toString();
+// Update city value for hotels page
+function selectCityAndCloseHotels(city) {
+    const cityValue = document.getElementById('cityValueHotels');
+    const cityInput = document.getElementById('cityInputHotels');
+    if (cityValue) cityValue.textContent = city;
+    if (cityInput) cityInput.value = city;
+    closeModals();
+}
+
+// Update dates for hotels page
+function saveDatesHotels() {
+    const checkIn = document.getElementById('checkIn').value;
+    const checkOut = document.getElementById('checkOut').value;
+    
+    if (checkIn && checkOut) {
+        const checkInDate = new Date(checkIn);
+        const checkOutDate = new Date(checkOut);
+        
+        const checkInFormatted = checkInDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+        const checkOutFormatted = checkOutDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+        
+        const dateValue = document.getElementById('dateValueHotels');
+        if (dateValue) {
+            dateValue.textContent = `${checkInFormatted} – ${checkOutFormatted}`;
+        }
+        
+        const checkInInput = document.getElementById('checkInInputHotels');
+        const checkOutInput = document.getElementById('checkOutInputHotels');
+        if (checkInInput) checkInInput.value = checkIn;
+        if (checkOutInput) checkOutInput.value = checkOut;
+        
+        closeModals();
+    }
+}
+
+// Update guests for hotels page
+function saveGuestsHotels() {
+    const guestsCount = window.guestsCount || 2;
+    const roomsCount = window.roomsCount || 1;
+    const guestsText = guestsCount === 1 ? 'гость' : 'гостей';
+    const roomsText = roomsCount === 1 ? 'номер' : 'номеров';
+    
+    const guestsValue = document.getElementById('guestsValueHotels');
+    if (guestsValue) {
+        guestsValue.textContent = `${guestsCount} ${guestsText}, ${roomsCount} ${roomsText}`;
+    }
+    
+    const guestsInput = document.getElementById('guestsInputHotels');
+    const roomsInput = document.getElementById('roomsInputHotels');
+    if (guestsInput) guestsInput.value = guestsCount;
+    if (roomsInput) roomsInput.value = roomsCount;
+    
+    closeModals();
+}
+
+// Override selectCityAndClose for hotels page
+const originalSelectCityAndClose = window.selectCityAndClose;
+window.selectCityAndClose = function(city) {
+    // Check if we're on hotels page
+    if (document.getElementById('cityValueHotels')) {
+        selectCityAndCloseHotels(city);
+    } else if (originalSelectCityAndClose) {
+        originalSelectCityAndClose(city);
+    }
+};
+
+// Override saveDates for hotels page
+const originalSaveDates = window.saveDates;
+window.saveDates = function() {
+    if (document.getElementById('dateValueHotels')) {
+        saveDatesHotels();
+    } else if (originalSaveDates) {
+        originalSaveDates();
+    }
+};
+
+// Override saveGuests for hotels page
+const originalSaveGuests = window.saveGuests;
+window.saveGuests = function() {
+    if (document.getElementById('guestsValueHotels')) {
+        saveGuestsHotels();
+    } else if (originalSaveGuests) {
+        originalSaveGuests();
+    }
+};
+
+// Form validation for hotels page
+document.addEventListener('DOMContentLoaded', function() {
+    const hotelsSearchForm = document.getElementById('hotelsSearchForm');
+    const searchErrorHotels = document.getElementById('searchErrorHotels');
+    
+    if (hotelsSearchForm) {
+        hotelsSearchForm.addEventListener('submit', function(e) {
+            const city = document.getElementById('cityInputHotels')?.value.trim();
+            const checkIn = document.getElementById('checkInInputHotels')?.value;
+            const checkOut = document.getElementById('checkOutInputHotels')?.value;
+            
+            const errors = [];
+            
+            if (!city || city === 'Выберите направление') {
+                errors.push('Выберите направление');
+            }
+            
+            if (!checkIn) {
+                errors.push('Выберите дату заезда');
+            }
+            
+            if (!checkOut) {
+                errors.push('Выберите дату выезда');
+            }
+            
+            if (errors.length > 0) {
+                e.preventDefault();
+                if (searchErrorHotels) {
+                    searchErrorHotels.textContent = 'Пожалуйста, заполните следующие поля: ' + errors.join(', ');
+                    searchErrorHotels.classList.remove('hidden');
+                    searchErrorHotels.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+                return false;
+            } else {
+                if (searchErrorHotels) {
+                    searchErrorHotels.classList.add('hidden');
+                }
+            }
+        });
+    }
+
+    // Sort select - submit form on change
+    const sortSelect = document.getElementById('sort-select');
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function() {
+            document.getElementById('hotelsSearchForm')?.submit();
+        });
+    }
 });
 </script>
+
+@include('partials.modals-js')
 @endsection

@@ -55,7 +55,40 @@ class HotelController extends Controller
         $hotels = $query->with('rooms')->paginate(12);
         $cities = Hotel::distinct()->pluck('city')->sort();
 
-        return view('hotels.index', compact('hotels', 'cities'));
+        // Get popular cities from database (cities with most hotels)
+        $popularCities = Hotel::select('city')
+            ->selectRaw('COUNT(*) as hotel_count')
+            ->groupBy('city')
+            ->orderByDesc('hotel_count')
+            ->limit(6)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'name' => $item->city,
+                    'description' => $this->getCityDescription($item->city),
+                ];
+            });
+
+        return view('hotels.index', compact('hotels', 'cities', 'popularCities'));
+    }
+
+    /**
+     * Get city description
+     */
+    private function getCityDescription(string $city): string
+    {
+        $descriptions = [
+            'Алматы' => 'Крупнейший город Казахстана',
+            'Астана' => 'Столица Казахстана',
+            'Шымкент' => 'Южная столица Казахстана',
+            'Караганда' => 'Промышленный центр',
+            'Актобе' => 'Западный регион',
+            'Тараз' => 'Древний город',
+            'Павлодар' => 'Северный регион',
+            'Усть-Каменогорск' => 'Восточный регион',
+        ];
+
+        return $descriptions[$city] ?? 'Популярное направление';
     }
 
     /**
