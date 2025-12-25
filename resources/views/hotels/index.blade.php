@@ -97,95 +97,13 @@
                     </div>
                 </div>
 
-                <!-- Preserve existing filters -->
-                @if(request('min_price'))
-                    <input type="hidden" name="min_price" value="{{ request('min_price') }}">
-                @endif
-                @if(request('max_price'))
-                    <input type="hidden" name="max_price" value="{{ request('max_price') }}">
-                @endif
-                @if(request('stars'))
-                    @foreach((array)request('stars') as $star)
-                        <input type="hidden" name="stars[]" value="{{ $star }}">
-                    @endforeach
-                @endif
-
                 <div id="searchErrorHotels" class="hidden p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600"></div>
             </form>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <!-- Filters Sidebar -->
-            <div class="md:col-span-1">
-                <div class="md:sticky md:top-24 space-y-6">
-
-                    <!-- Price Range -->
-                    <div class="bg-white rounded-xl p-4 shadow-sm">
-                        <h3 class="text-gray-900 mb-4 font-semibold">Цена за ночь</h3>
-                        <form method="GET" action="{{ route('hotels.index') }}" class="space-y-3">
-                            <input
-                                type="number"
-                                name="min_price"
-                                value="{{ request('min_price') }}"
-                                placeholder="От"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#38b000]"
-                            />
-                            <input
-                                type="number"
-                                name="max_price"
-                                value="{{ request('max_price') }}"
-                                placeholder="До"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#38b000]"
-                            />
-                            @if(request('city'))
-                                <input type="hidden" name="city" value="{{ request('city') }}">
-                            @endif
-                            <button type="submit" class="w-full px-4 py-2 bg-[#38b000] text-white rounded-lg hover:bg-[#2d8c00] transition-colors">
-                                Применить
-                            </button>
-                        </form>
-                    </div>
-
-                    <!-- Stars -->
-                    <div class="bg-white rounded-xl p-4 shadow-sm">
-                        <h3 class="text-gray-900 mb-4 font-semibold">Количество звезд</h3>
-                        <form method="GET" action="{{ route('hotels.index') }}" id="stars-form" class="space-y-2">
-                            @foreach([5, 4, 3, 2, 1] as $star)
-                                <label class="flex items-center gap-2 cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        name="stars[]"
-                                        value="{{ $star }}"
-                                        {{ in_array($star, (array)request('stars', [])) ? 'checked' : '' }}
-                                        onchange="document.getElementById('stars-form').submit()"
-                                        class="w-4 h-4 text-[#38b000] border-gray-300 rounded focus:ring-[#38b000]"
-                                    />
-                                    <div class="flex items-center gap-1">
-                                        @for($i = 0; $i < $star; $i++)
-                                            <svg class="w-4 h-4 fill-yellow-400 text-yellow-400" viewBox="0 0 20 20">
-                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-1.07 3.927a1 1 0 01-.39 1.18l-3.462 2.462c-.969.69-2.157-.38-1.902-1.81l1.07-3.292a1 1 0 00-.95-.69H5.577c-.969 0-1.371-1.24-.588-1.81l3.462-2.462a1 1 0 01.39-1.18z"/>
-                                            </svg>
-                                        @endfor
-                                    </div>
-                                </label>
-                            @endforeach
-                            @if(request('city'))
-                                <input type="hidden" name="city" value="{{ request('city') }}">
-                            @endif
-                        </form>
-                    </div>
-
-                    <a
-                        href="{{ route('hotels.index') }}"
-                        class="w-full block px-4 py-2 text-center text-[#38b000] border border-[#38b000] rounded-lg hover:bg-[#38b000] hover:text-white transition-colors"
-                    >
-                        Сбросить фильтры
-                    </a>
-                </div>
-            </div>
-
             <!-- Hotels List -->
-            <div class="md:col-span-3">
+            <div class="md:col-span-full">
                 @if($hotels->count() === 0)
                     <div class="text-center py-16">
                         <p class="text-gray-500 mb-4">Отели не найдены</p>
