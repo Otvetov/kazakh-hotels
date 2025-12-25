@@ -3,7 +3,7 @@
 
     <div class="relative h-48 overflow-hidden">
         @if($hotel->image)
-            <img src="{{ asset('storage/' . $hotel->image) }}"
+            <img src="{{ $hotel->image_url }}"
                  alt="{{ $hotel->name }}"
                  class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
         @else

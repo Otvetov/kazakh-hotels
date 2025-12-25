@@ -44,7 +44,7 @@
             <div>
                 <label class="block text-sm font-medium mb-2">Current Image</label>
                 @if($hotel->image)
-                    <img src="{{ asset('storage/' . $hotel->image) }}" alt="{{ $hotel->name }}" class="w-32 h-32 object-cover rounded mb-2">
+                    <img src="{{ $hotel->image_url }}" alt="{{ $hotel->name }}" class="w-32 h-32 object-cover rounded mb-2">
                 @endif
                 <input type="file" name="image" accept="image/*"
                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700">

@@ -21,7 +21,7 @@
             <div class="relative h-96">
                 @if($hotel->image)
                     <img
-                        src="{{ asset('storage/' . $hotel->image) }}"
+                        src="{{ $hotel->image_url }}"
                         alt="{{ $hotel->name }}"
                         class="w-full h-full object-cover"
                     />

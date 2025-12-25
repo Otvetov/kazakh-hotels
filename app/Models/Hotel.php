@@ -80,6 +80,24 @@ class Hotel extends Model
     {
         return $this->rooms()->min('price_per_night') ?? 0;
     }
+
+    /**
+     * Get image URL (supports both external URLs and local storage paths)
+     */
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image) {
+            return null;
+        }
+
+        // Check if it's a full URL (starts with http:// or https://)
+        if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
+            return $this->image;
+        }
+
+        // Otherwise, treat it as a local storage path
+        return asset('storage/' . $this->image);
+    }
 }
 
 

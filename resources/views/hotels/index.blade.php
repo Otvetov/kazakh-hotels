@@ -124,7 +124,7 @@
                                     <div class="relative md:w-72 h-56 md:h-auto flex-shrink-0">
                                         @if($hotel->image)
                                             <img
-                                                src="{{ asset('storage/' . $hotel->image) }}"
+                                                src="{{ $hotel->image_url }}"
                                                 alt="{{ $hotel->name }}"
                                                 class="w-full h-full object-cover"
                                             />

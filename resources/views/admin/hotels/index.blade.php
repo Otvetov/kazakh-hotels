@@ -28,7 +28,7 @@
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                         <td class="px-6 py-4">
                             @if($hotel->image)
-                                <img src="{{ asset('storage/' . $hotel->image) }}" alt="{{ $hotel->name }}" class="w-16 h-16 object-cover rounded">
+                                <img src="{{ $hotel->image_url }}" alt="{{ $hotel->name }}" class="w-16 h-16 object-cover rounded">
                             @else
                                 <div class="w-16 h-16 bg-gray-200 dark:bg-gray-600 rounded"></div>
                             @endif

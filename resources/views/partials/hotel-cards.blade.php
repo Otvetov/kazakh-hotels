@@ -3,7 +3,7 @@
          onclick="window.location='{{ route('hotels.show', $hotel) }}'">
         <div class="relative h-48 overflow-hidden">
             @if($hotel->image)
-                <img src="{{ asset('storage/' . $hotel->image) }}" alt="{{ $hotel->name }}" 
+                <img src="{{ $hotel->image_url }}" alt="{{ $hotel->name }}" 
                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
             @else
                 <div class="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
