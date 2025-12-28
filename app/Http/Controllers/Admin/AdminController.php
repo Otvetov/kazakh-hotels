@@ -24,7 +24,7 @@ class AdminController extends Controller
     {
         $stats = [
             'total_bookings' => Booking::count(),
-            'total_revenue' => Booking::where('status', 'confirmed')->sum('total_price'),
+            'total_revenue' => Booking::where('status', 'confirmed')->sum('total_price') ?? 0,
             'pending_reviews' => Review::where('status', 'pending')->count(),
             'pending_bookings' => Booking::where('status', 'pending')->count(),
             'total_hotels' => Hotel::count(),

@@ -14,7 +14,7 @@
         </div>
         <div class="bg-white rounded-lg shadow-md p-6 border border-gray-200">
             <h3 class="text-sm font-medium text-gray-600 mb-2">Общий доход</h3>
-            <p class="text-3xl font-bold text-[#38b000]">{{ number_format($stats['total_revenue'], 0) }} ₸</p>
+            <p class="text-3xl font-bold text-[#38b000]">{{ number_format($stats['total_revenue'] ?? 0, 0) }} ₸</p>
         </div>
         <div class="bg-white rounded-lg shadow-md p-6 border border-gray-200">
             <h3 class="text-sm font-medium text-gray-600 mb-2">Ожидающие отзывы</h3>
