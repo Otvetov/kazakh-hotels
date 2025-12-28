@@ -310,16 +310,7 @@ function saveGuestsHotels() {
     closeModals();
 }
 
-// Override selectCityAndClose for hotels page
-const originalSelectCityAndClose = window.selectCityAndClose;
-window.selectCityAndClose = function(city) {
-    // Check if we're on hotels page
-    if (document.getElementById('cityValueHotels')) {
-        selectCityAndCloseHotels(city);
-    } else if (originalSelectCityAndClose) {
-        originalSelectCityAndClose(city);
-    }
-};
+// selectCityAndClose is now handled in modals-js.blade.php
 
 // Override saveDates for hotels page
 const originalSaveDates = window.saveDates;

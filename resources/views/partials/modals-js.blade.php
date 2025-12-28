@@ -112,8 +112,21 @@ function changeRooms(delta) {
 }
 
 function selectCityAndClose(city) {
-    document.getElementById('cityValue').textContent = city;
-    document.getElementById('cityInput').value = city;
+    // Check if we're on hotels page
+    const cityValueHotels = document.getElementById('cityValueHotels');
+    const cityInputHotels = document.getElementById('cityInputHotels');
+    
+    if (cityValueHotels && cityInputHotels) {
+        // Hotels page
+        cityValueHotels.textContent = city;
+        cityInputHotels.value = city;
+    } else {
+        // Home page
+        const cityValue = document.getElementById('cityValue');
+        const cityInput = document.getElementById('cityInput');
+        if (cityValue) cityValue.textContent = city;
+        if (cityInput) cityInput.value = city;
+    }
     closeModals();
 }
 
