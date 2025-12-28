@@ -75,12 +75,31 @@ function saveDates() {
         const checkOutDate = new Date(checkOut);
         const options = { day: 'numeric', month: 'short' };
         
-        document.getElementById('dateValue').textContent = 
-            checkInDate.toLocaleDateString('ru-RU', options) + ' – ' + 
-            checkOutDate.toLocaleDateString('ru-RU', options);
+        // Check if we're on hotels page
+        const dateValueHotels = document.getElementById('dateValueHotels');
+        const checkInInputHotels = document.getElementById('checkInInputHotels');
+        const checkOutInputHotels = document.getElementById('checkOutInputHotels');
         
-        document.getElementById('checkInInput').value = checkIn;
-        document.getElementById('checkOutInput').value = checkOut;
+        if (dateValueHotels && checkInInputHotels && checkOutInputHotels) {
+            // Hotels page
+            const checkInFormatted = checkInDate.toLocaleDateString('ru-RU', options);
+            const checkOutFormatted = checkOutDate.toLocaleDateString('ru-RU', options);
+            dateValueHotels.textContent = `${checkInFormatted} – ${checkOutFormatted}`;
+            checkInInputHotels.value = checkIn;
+            checkOutInputHotels.value = checkOut;
+        } else {
+            // Home page
+            const dateValue = document.getElementById('dateValue');
+            const checkInInput = document.getElementById('checkInInput');
+            const checkOutInput = document.getElementById('checkOutInput');
+            if (dateValue) {
+                dateValue.textContent = 
+                    checkInDate.toLocaleDateString('ru-RU', options) + ' – ' + 
+                    checkOutDate.toLocaleDateString('ru-RU', options);
+            }
+            if (checkInInput) checkInInput.value = checkIn;
+            if (checkOutInput) checkOutInput.value = checkOut;
+        }
         closeModals();
     }
 }

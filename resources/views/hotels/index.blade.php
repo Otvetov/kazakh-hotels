@@ -264,63 +264,7 @@ function selectCityAndCloseHotels(city) {
     closeModals();
 }
 
-// Update dates for hotels page
-function saveDatesHotels() {
-    const checkIn = document.getElementById('checkIn').value;
-    const checkOut = document.getElementById('checkOut').value;
-    
-    if (checkIn && checkOut) {
-        const checkInDate = new Date(checkIn);
-        const checkOutDate = new Date(checkOut);
-        
-        const checkInFormatted = checkInDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
-        const checkOutFormatted = checkOutDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
-        
-        const dateValue = document.getElementById('dateValueHotels');
-        if (dateValue) {
-            dateValue.textContent = `${checkInFormatted} – ${checkOutFormatted}`;
-        }
-        
-        const checkInInput = document.getElementById('checkInInputHotels');
-        const checkOutInput = document.getElementById('checkOutInputHotels');
-        if (checkInInput) checkInInput.value = checkIn;
-        if (checkOutInput) checkOutInput.value = checkOut;
-        
-        closeModals();
-    }
-}
-
-// Update guests for hotels page
-function saveGuestsHotels() {
-    const guestsCount = window.guestsCount || 2;
-    const roomsCount = window.roomsCount || 1;
-    const guestsText = guestsCount === 1 ? 'гость' : 'гостей';
-    const roomsText = roomsCount === 1 ? 'номер' : 'номеров';
-    
-    const guestsValue = document.getElementById('guestsValueHotels');
-    if (guestsValue) {
-        guestsValue.textContent = `${guestsCount} ${guestsText}, ${roomsCount} ${roomsText}`;
-    }
-    
-    const guestsInput = document.getElementById('guestsInputHotels');
-    const roomsInput = document.getElementById('roomsInputHotels');
-    if (guestsInput) guestsInput.value = guestsCount;
-    if (roomsInput) roomsInput.value = roomsCount;
-    
-    closeModals();
-}
-
-// selectCityAndClose is now handled in modals-js.blade.php
-
-// Override saveDates for hotels page
-const originalSaveDates = window.saveDates;
-window.saveDates = function() {
-    if (document.getElementById('dateValueHotels')) {
-        saveDatesHotels();
-    } else if (originalSaveDates) {
-        originalSaveDates();
-    }
-};
+// saveDates and selectCityAndClose are now handled in modals-js.blade.php
 
 // saveGuests now works for both pages automatically
 
