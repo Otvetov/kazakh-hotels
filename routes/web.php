@@ -17,6 +17,11 @@ use Illuminate\Support\Facades\Route;
 // Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// API Documentation
+Route::get('/api-docs', function () {
+    return view('api-docs');
+})->name('api.docs');
+
 // Hotels
 Route::get('/hotels', [HotelController::class, 'index'])->name('hotels.index');
 Route::get('/hotel/{hotel}', [HotelController::class, 'show'])->name('hotels.show');
