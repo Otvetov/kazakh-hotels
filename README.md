@@ -1,75 +1,68 @@
-# Kazakh Hotels - Hotel Booking Web Application
+# Kazakh Hotels - Система бронирования отелей
 
-A production-ready hotel booking web application for Kazakhstan, built with Laravel 12 and inspired by Otello.ru.
+Веб-приложение для бронирования отелей в Казахстане на Laravel 12.
 
-## 🛠 Tech Stack
+## 🛠 Технологии
 
 - **Backend**: Laravel 12 (PHP 8.3+)
-- **Database**: MySQL 8.4
-- **ORM**: Eloquent
+- **База данных**: MySQL 8.4
 - **Frontend**: Blade + Tailwind CSS 4.0
-- **Auth**: Custom session-based authentication
-- **Storage**: Laravel Filesystem (local/S3-compatible)
+- **Аутентификация**: Сессионная авторизация
+- **Хранилище**: Laravel Filesystem
 
-## ✨ Features
+## ✨ Основные возможности
 
-### Public Features
-- 🏠 Home page with search panel and infinite scroll
-- 🏨 Hotels catalog with filters (city, price, rating) and sorting
-- 🏨 Hotel detail pages with gallery, rooms table, and reviews
-- ❤️ Favorites system
-- 📅 Booking flow with date selection and price calculation
-- 💬 Reviews system (requires admin approval)
-- 🌙 Global dark mode support
+### Для всех пользователей
+- 🏠 Главная страница с поиском отелей
+- 🏨 Каталог отелей с фильтрами и сортировкой
+- 🏨 Страницы отелей с фотогалереей, номерами и отзывами
+- ❤️ Система избранного
+- 📅 Бронирование номеров с выбором дат
+- 💬 Система отзывов (с модерацией)
 
-### User Features (Authenticated)
-- 📖 Bookings management with tabs (Active, Past, Cancelled)
-- 👤 User profile with booking history
-- ❤️ Favorites management
-- 💬 Write reviews
+### Для авторизованных пользователей
+- 📖 Управление бронированиями (активные, завершенные, отмененные)
+- 👤 Профиль пользователя с историей бронирований
+- ❤️ Управление избранным
+- 💬 Написание отзывов
 
-### Admin Features
-- 🛡️ Admin panel with role-based access
-- 🏨 Hotels CRUD with image upload
-- 🛏️ Rooms CRUD
-- 👥 User management (ban/unban)
-- 📅 Bookings management and status updates
-- 💬 Reviews moderation (approve/reject)
-- 📊 Statistics dashboard
+### Для администраторов
+- 🛡️ Административная панель
+- 🏨 Управление отелями (CRUD)
+- 🛏️ Управление номерами
+- 👥 Управление пользователями
+- 📅 Управление бронированиями
+- 💬 Модерация отзывов
+- 📊 Статистика и аналитика
 
-## 📋 Requirements
+## 📋 Требования
 
 - PHP 8.3+
 - Composer
 - MySQL 8.4+
 - Node.js & NPM
-- Laravel 12
 
-## 🚀 Installation
+## 🚀 Установка
 
-1. **Clone the repository**
+1. **Клонируйте репозиторий**
    ```bash
    git clone <repository-url>
    cd kazakh-hotels
    ```
 
-2. **Install PHP dependencies**
+2. **Установите зависимости**
    ```bash
    composer install
-   ```
-
-3. **Install NPM dependencies**
-   ```bash
    npm install
    ```
 
-4. **Configure environment**
+3. **Настройте окружение**
    ```bash
    cp .env.example .env
    php artisan key:generate
    ```
-
-5. **Update `.env` file with your database credentials**
+   
+   Обновите `.env` с данными для подключения к БД:
    ```env
    DB_CONNECTION=mysql
    DB_HOST=127.0.0.1
@@ -79,141 +72,113 @@ A production-ready hotel booking web application for Kazakhstan, built with Lara
    DB_PASSWORD=your_password
    ```
 
-6. **Run migrations**
+4. **Выполните миграции**
    ```bash
    php artisan migrate
-   ```
-
-7. **Create storage link**
-   ```bash
    php artisan storage:link
    ```
 
-8. **Seed database (optional)**
+5. **Заполните базу тестовыми данными (опционально)**
    ```bash
    php artisan db:seed
    ```
+   
+   Будет создано:
+   - 1 администратор (admin@example.com / password)
+   - 10 пользователей
+   - 24 отеля в 8 городах
+   - Примеры номеров, бронирований, избранного и отзывов
 
-   This will create:
-   - 1 admin user (admin@example.com / password)
-   - 10 regular users
-   - 24 hotels across 8 cities
-   - Sample rooms, bookings, favorites, and reviews
-
-9. **Build assets**
+6. **Соберите assets**
    ```bash
    npm run build
    ```
 
-10. **Start development server**
-    ```bash
-    php artisan serve
-    ```
+7. **Запустите сервер разработки**
+   ```bash
+   php artisan serve
+   npm run dev
+   ```
 
-    And in another terminal:
-    ```bash
-    npm run dev
-    ```
+## 👤 Учетная запись администратора
 
-## 👤 Default Admin Account
-
-After seeding:
+После выполнения seed:
 - **Email**: admin@example.com
-- **Password**: password
+- **Пароль**: password
 
-## 📁 Project Structure
+## 📁 Структура проекта
 
 ```
 app/
 ├── Http/
 │   ├── Controllers/
-│   │   ├── Admin/          # Admin controllers
-│   │   ├── Auth/           # Authentication controllers
-│   │   └── ...             # Main controllers
-│   ├── Middleware/         # Custom middleware
-│   └── Requests/           # Form requests
-├── Models/                 # Eloquent models
-└── Policies/               # Authorization policies
+│   │   ├── Admin/       # Административные контроллеры
+│   │   ├── Api/         # API контроллеры
+│   │   ├── Auth/        # Контроллеры аутентификации
+│   │   └── ...          # Основные контроллеры
+│   ├── Middleware/      # Middleware
+│   └── Requests/        # Form Request валидация
+├── Models/              # Eloquent модели
+└── Policies/            # Политики авторизации
 
 database/
-├── migrations/             # Database migrations
-└── seeders/                # Database seeders
+├── migrations/          # Миграции БД
+└── seeders/             # Сидеры
 
 resources/
-├── css/                    # Tailwind CSS
-├── js/                     # JavaScript
-└── views/                  # Blade templates
-    ├── admin/              # Admin views
-    ├── auth/               # Auth views
-    ├── bookings/           # Booking views
-    ├── hotels/             # Hotel views
-    └── layouts/            # Layout templates
+├── css/                 # Tailwind CSS
+├── js/                  # JavaScript
+└── views/               # Blade шаблоны
+    ├── admin/           # Админ-панель
+    │   ├── bookings/
+    │   ├── hotels/
+    │   ├── reviews/
+    │   ├── rooms/
+    │   └── users/
+    ├── auth/            # Авторизация (login, register)
+    ├── bookings/        # Бронирования
+    ├── favorites/       # Избранное
+    ├── hotels/          # Отели
+    ├── layouts/         # Макеты
+    ├── partials/        # Частичные шаблоны
+    └── profile/         # Профиль пользователя
 
 routes/
-└── web.php                 # Web routes
+├── web.php              # Web-маршруты
+├── api.php              # API-маршруты
+└── auth.php             # Маршруты аутентификации
 ```
 
-## 🎨 UI/UX Features
+## 🎨 Особенности интерфейса
 
-- **Dark Mode**: Global dark theme with localStorage persistence
-- **Responsive Design**: Mobile, tablet, and desktop support
-- **Modern UI**: Clean design with rounded cards and smooth animations
-- **Accent Color**: #38b000 (green)
-- **Fonts**: Inter / Nunito
+- **Адаптивный дизайн**: поддержка мобильных устройств, планшетов и десктопов
+- **Современный UI**: чистое оформление с плавными анимациями
+- **Цветовая схема**: акцентный цвет #38b000 (зеленый)
 
-## 🔐 Authentication
+## 🔐 Аутентификация
 
-The application uses custom session-based authentication. Routes are protected with:
-- `auth` middleware for authenticated users
-- `admin` middleware for admin-only routes
+Приложение использует сессионную аутентификацию. Маршруты защищены:
+- `auth` middleware для авторизованных пользователей
+- `admin` middleware для администраторов
 
-## 📝 Database Schema
+## 📝 Структура базы данных
 
-- **users**: User accounts with role and ban status
-- **hotels**: Hotel information
-- **rooms**: Room details per hotel
-- **bookings**: User bookings
-- **favorites**: User favorite hotels
-- **reviews**: Hotel reviews (pending/approved/rejected)
+- **users** — пользователи (роли, статус блокировки)
+- **hotels** — информация об отелях
+- **rooms** — номера отелей
+- **bookings** — бронирования
+- **favorites** — избранные отели
+- **reviews** — отзывы (ожидающие/одобренные/отклоненные)
 
-## 🧪 Testing
+## 📦 Деплой в production
 
-```bash
-php artisan test
-```
+1. Установите `APP_ENV=production` в `.env`
+2. Выполните кеширование:
+   ```bash
+   php artisan config:cache
+   php artisan route:cache
+   php artisan view:cache
+   ```
+3. Соберите assets: `npm run build`
+4. Убедитесь, что существует символическая ссылка: `php artisan storage:link`
 
-## 📦 Production Deployment
-
-1. Set `APP_ENV=production` in `.env`
-2. Run `php artisan config:cache`
-3. Run `php artisan route:cache`
-4. Run `php artisan view:cache`
-5. Build assets: `npm run build`
-6. Ensure storage link exists: `php artisan storage:link`
-
-## 🤝 Contributing
-
-This is an educational project. Feel free to fork and modify as needed.
-
-## 📄 License
-
-MIT License
-
-## 🎯 Features Checklist
-
-- ✅ Global dark theme
-- ✅ Home page with search
-- ✅ Hotels catalog with filters
-- ✅ Hotel detail pages
-- ✅ Booking system
-- ✅ Favorites
-- ✅ Reviews with moderation
-- ✅ User profile
-- ✅ Admin panel
-- ✅ Role-based access
-- ✅ Image uploads
-- ✅ Responsive design
-
----
-
-Built with ❤️ using Laravel 12
