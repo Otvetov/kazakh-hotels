@@ -36,7 +36,7 @@ class ReviewController extends Controller
     {
         $review->update(['status' => 'approved']);
 
-        return back()->with('success', 'Review approved successfully.');
+        return back()->with('success', 'Отзыв успешно одобрен.');
     }
 
     /**
@@ -46,7 +46,7 @@ class ReviewController extends Controller
     {
         $review->update(['status' => 'rejected']);
 
-        return back()->with('success', 'Review rejected successfully.');
+        return back()->with('success', 'Отзыв успешно отклонен.');
     }
 }
 

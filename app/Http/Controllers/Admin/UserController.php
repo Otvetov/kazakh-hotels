@@ -30,7 +30,7 @@ class UserController extends Controller
     {
         $user->update(['banned_at' => now()]);
 
-        return back()->with('success', 'User banned successfully.');
+        return back()->with('success', 'Пользователь успешно заблокирован.');
     }
 
     /**
@@ -40,7 +40,7 @@ class UserController extends Controller
     {
         $user->update(['banned_at' => null]);
 
-        return back()->with('success', 'User unbanned successfully.');
+        return back()->with('success', 'Пользователь успешно разблокирован.');
     }
 }
 

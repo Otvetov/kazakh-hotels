@@ -19,9 +19,33 @@ class RoomController extends Controller
     /**
      * Display rooms list
      */
-    public function index()
+    public function index(Request $request)
     {
-        $rooms = Room::with('hotel')->latest()->paginate(15);
+        $query = Room::with(['hotel', 'bookings' => function ($q) {
+            $q->where('status', '!=', 'cancelled')
+              ->where('check_out', '>=', now())
+              ->with('user')
+              ->orderBy('check_in', 'asc');
+        }]);
+
+        // Filter by booked status
+        if ($request->filled('booked')) {
+            if ($request->booked == '1') {
+                // Show only rooms with active bookings
+                $query->whereHas('bookings', function ($q) {
+                    $q->where('status', '!=', 'cancelled')
+                      ->where('check_out', '>=', now());
+                });
+            } else {
+                // Show only rooms without active bookings
+                $query->whereDoesntHave('bookings', function ($q) {
+                    $q->where('status', '!=', 'cancelled')
+                      ->where('check_out', '>=', now());
+                });
+            }
+        }
+
+        $rooms = $query->latest()->paginate(15);
 
         return view('admin.rooms.index', compact('rooms'));
     }
@@ -43,7 +67,7 @@ class RoomController extends Controller
     {
         Room::create($request->validated());
 
-        return redirect()->route('admin.rooms.index')->with('success', 'Room created successfully.');
+        return redirect()->route('admin.rooms.index')->with('success', 'Номер успешно создан.');
     }
 
     /**
@@ -63,7 +87,7 @@ class RoomController extends Controller
     {
         $room->update($request->validated());
 
-        return redirect()->route('admin.rooms.index')->with('success', 'Room updated successfully.');
+        return redirect()->route('admin.rooms.index')->with('success', 'Номер успешно обновлен.');
     }
 
     /**
@@ -73,7 +97,7 @@ class RoomController extends Controller
     {
         $room->delete();
 
-        return redirect()->route('admin.rooms.index')->with('success', 'Room deleted successfully.');
+        return redirect()->route('admin.rooms.index')->with('success', 'Номер успешно удален.');
     }
 }
 

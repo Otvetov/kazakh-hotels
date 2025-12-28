@@ -47,7 +47,7 @@ class HotelController extends Controller
 
         Hotel::create($data);
 
-        return redirect()->route('admin.hotels.index')->with('success', 'Hotel created successfully.');
+        return redirect()->route('admin.hotels.index')->with('success', 'Отель успешно создан.');
     }
 
     /**
@@ -74,7 +74,7 @@ class HotelController extends Controller
 
         $hotel->update($data);
 
-        return redirect()->route('admin.hotels.index')->with('success', 'Hotel updated successfully.');
+        return redirect()->route('admin.hotels.index')->with('success', 'Отель успешно обновлен.');
     }
 
     /**
@@ -88,7 +88,7 @@ class HotelController extends Controller
 
         $hotel->delete();
 
-        return redirect()->route('admin.hotels.index')->with('success', 'Hotel deleted successfully.');
+        return redirect()->route('admin.hotels.index')->with('success', 'Отель успешно удален.');
     }
 }
 

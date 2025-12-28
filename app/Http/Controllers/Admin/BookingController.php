@@ -40,7 +40,7 @@ class BookingController extends Controller
 
         $booking->update(['status' => $request->status]);
 
-        return back()->with('success', 'Booking status updated successfully.');
+        return back()->with('success', 'Статус бронирования успешно обновлен.');
     }
 }
 

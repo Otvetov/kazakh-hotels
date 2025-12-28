@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
                     'address' => fake()->streetAddress(),
                     'description' => fake()->paragraph(3),
                     'rating' => fake()->randomFloat(1, 3, 5),
-                    'image' => fake()->imageUrl(),
+                    'image' => 'https://picsum.photos/1200/600',
                 ]);
             }
         }

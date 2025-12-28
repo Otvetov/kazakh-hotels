@@ -1,20 +1,20 @@
 @extends('layouts.app')
 
-@section('title', 'Moderate Reviews - Admin')
+@section('title', 'Модерация отзывов - Админ')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <h1 class="text-3xl font-bold mb-8">Moderate Reviews</h1>
+    <h1 class="text-3xl font-bold mb-8">Модерация отзывов</h1>
 
     <div class="mb-4">
         <form method="GET" class="flex gap-4">
             <select name="status" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700">
-                <option value="">All Statuses</option>
-                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Approved</option>
-                <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                <option value="">Все статусы</option>
+                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Ожидает</option>
+                <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Одобрено</option>
+                <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Отклонено</option>
             </select>
-            <button type="submit" class="px-4 py-2 bg-[#38b000] text-white rounded-lg hover:bg-[#2d8a00] transition">Filter</button>
+            <button type="submit" class="px-4 py-2 bg-[#38b000] text-white rounded-lg hover:bg-[#2d8a00] transition">Фильтр</button>
         </form>
     </div>
 
@@ -36,7 +36,13 @@
                         {{ $review->status === 'approved' ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' : 
                            ($review->status === 'rejected' ? 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200' : 
                             'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200') }}">
-                        {{ ucfirst($review->status) }}
+                        @if($review->status === 'approved')
+                            Одобрено
+                        @elseif($review->status === 'rejected')
+                            Отклонено
+                        @else
+                            Ожидает
+                        @endif
                     </span>
                 </div>
                 <p class="text-gray-700 dark:text-gray-300 mb-4">{{ $review->comment }}</p>
@@ -44,20 +50,20 @@
                     @if($review->status !== 'approved')
                         <form action="{{ route('admin.reviews.approve', $review) }}" method="POST" class="inline">
                             @csrf
-                            <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Approve</button>
+                            <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Одобрить</button>
                         </form>
                     @endif
                     @if($review->status !== 'rejected')
                         <form action="{{ route('admin.reviews.reject', $review) }}" method="POST" class="inline">
                             @csrf
-                            <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">Reject</button>
+                            <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">Отклонить</button>
                         </form>
                     @endif
                 </div>
             </div>
         @empty
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center border border-gray-200 dark:border-gray-700">
-                <p class="text-gray-500 dark:text-gray-400">No reviews found</p>
+                <p class="text-gray-500 dark:text-gray-400">Отзывы не найдены</p>
             </div>
         @endforelse
     </div>
