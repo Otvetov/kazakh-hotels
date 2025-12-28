@@ -8,7 +8,7 @@
 
     <div class="mb-4">
         <form method="GET" class="flex gap-4">
-            <select name="status" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700">
+            <select name="status" class="px-4 py-2 border border-gray-300border-gray-600 rounded-lg bg-whitebg-gray-700">
                 <option value="">Все статусы</option>
                 <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Ожидает</option>
                 <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Одобрено</option>
@@ -20,11 +20,11 @@
 
     <div class="space-y-4">
         @forelse($reviews as $review)
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
+            <div class="bg-whitebg-gray-800 rounded-lg shadow-md p-6 border border-gray-200border-gray-700">
                 <div class="flex justify-between items-start mb-4">
                     <div>
                         <p class="font-semibold">{{ $review->user->name }}</p>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">{{ $review->hotel->name }}</p>
+                        <p class="text-sm text-gray-600text-gray-400">{{ $review->hotel->name }}</p>
                         <div class="flex items-center mt-2">
                             @for($i = 0; $i < 5; $i++)
                                 <span class="text-yellow-400 {{ $i < $review->rating ? '' : 'opacity-30' }}">★</span>
@@ -33,9 +33,9 @@
                         </div>
                     </div>
                     <span class="px-3 py-1 rounded text-sm
-                        {{ $review->status === 'approved' ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' : 
-                           ($review->status === 'rejected' ? 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200' : 
-                            'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200') }}">
+                        {{ $review->status === 'approved' ? 'bg-green-100bg-green-900 text-green-800text-green-200' : 
+                           ($review->status === 'rejected' ? 'bg-red-100bg-red-900 text-red-800text-red-200' : 
+                            'bg-yellow-100bg-yellow-900 text-yellow-800text-yellow-200') }}">
                         @if($review->status === 'approved')
                             Одобрено
                         @elseif($review->status === 'rejected')
@@ -45,7 +45,7 @@
                         @endif
                     </span>
                 </div>
-                <p class="text-gray-700 dark:text-gray-300 mb-4">{{ $review->comment }}</p>
+                <p class="text-gray-700text-gray-300 mb-4">{{ $review->comment }}</p>
                 <div class="flex gap-2">
                     @if($review->status !== 'approved')
                         <form action="{{ route('admin.reviews.approve', $review) }}" method="POST" class="inline">
@@ -62,8 +62,8 @@
                 </div>
             </div>
         @empty
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center border border-gray-200 dark:border-gray-700">
-                <p class="text-gray-500 dark:text-gray-400">Отзывы не найдены</p>
+            <div class="bg-whitebg-gray-800 rounded-lg shadow-md p-12 text-center border border-gray-200border-gray-700">
+                <p class="text-gray-500text-gray-400">Отзывы не найдены</p>
             </div>
         @endforelse
     </div>

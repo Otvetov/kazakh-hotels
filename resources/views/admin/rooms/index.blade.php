@@ -13,7 +13,7 @@
 
     <div class="mb-4">
         <form method="GET" class="flex gap-4">
-            <select name="booked" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700">
+            <select name="booked" class="px-4 py-2 border border-gray-300border-gray-600 rounded-lg bg-whitebg-gray-700">
                 <option value="">Все номера</option>
                 <option value="1" {{ request('booked') == '1' ? 'selected' : '' }}>Забронированные</option>
                 <option value="0" {{ request('booked') == '0' ? 'selected' : '' }}>Свободные</option>
@@ -22,33 +22,33 @@
         </form>
     </div>
 
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+    <div class="bg-whitebg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200border-gray-700">
         <table class="w-full">
-            <thead class="bg-gray-50 dark:bg-gray-700">
+            <thead class="bg-gray-50bg-gray-700">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Отель</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Название номера</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Вместимость</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Цена/ночь</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Доступен</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Бронирования</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Действия</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500text-gray-300 uppercase">Отель</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500text-gray-300 uppercase">Название номера</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500text-gray-300 uppercase">Вместимость</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500text-gray-300 uppercase">Цена/ночь</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500text-gray-300 uppercase">Доступен</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500text-gray-300 uppercase">Бронирования</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500text-gray-300 uppercase">Действия</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody class="divide-y divide-gray-200divide-gray-700">
                 @forelse($rooms as $room)
                     @php
                         $activeBookings = $room->bookings->filter(function ($booking) {
                             return $booking->status != 'cancelled' && $booking->check_out >= now();
                         });
                     @endphp
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <tr class="hover:bg-gray-50hover:bg-gray-700">
                         <td class="px-6 py-4">{{ $room->hotel->name }}</td>
                         <td class="px-6 py-4 font-semibold">{{ $room->name }}</td>
                         <td class="px-6 py-4">{{ $room->capacity }}</td>
                         <td class="px-6 py-4">{{ number_format($room->price_per_night, 0) }} ₸</td>
                         <td class="px-6 py-4">
-                            <span class="px-2 py-1 rounded {{ $room->is_available ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200' }}">
+                            <span class="px-2 py-1 rounded {{ $room->is_available ? 'bg-green-100bg-green-900 text-green-800text-green-200' : 'bg-red-100bg-red-900 text-red-800text-red-200' }}">
                                 {{ $room->is_available ? 'Да' : 'Нет' }}
                             </span>
                         </td>
@@ -58,13 +58,13 @@
                                     @foreach($activeBookings->take(2) as $booking)
                                         <div class="text-xs">
                                             <div class="font-medium">{{ $booking->user->name }}</div>
-                                            <div class="text-gray-600 dark:text-gray-400">
+                                            <div class="text-gray-600text-gray-400">
                                                 {{ $booking->check_in->format('d.m.Y') }} - {{ $booking->check_out->format('d.m.Y') }}
                                             </div>
                                             <span class="px-1 py-0.5 rounded text-xs
-                                                {{ $booking->status === 'confirmed' ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' : 
-                                                   ($booking->status === 'cancelled' ? 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200' : 
-                                                    'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200') }}">
+                                                {{ $booking->status === 'confirmed' ? 'bg-green-100bg-green-900 text-green-800text-green-200' : 
+                                                   ($booking->status === 'cancelled' ? 'bg-red-100bg-red-900 text-red-800text-red-200' : 
+                                                    'bg-yellow-100bg-yellow-900 text-yellow-800text-yellow-200') }}">
                                                 @if($booking->status === 'confirmed')
                                                     Подтверждено
                                                 @elseif($booking->status === 'cancelled')
@@ -76,13 +76,13 @@
                                         </div>
                                     @endforeach
                                     @if($activeBookings->count() > 2)
-                                        <div class="text-xs text-gray-500 dark:text-gray-400">
+                                        <div class="text-xs text-gray-500text-gray-400">
                                             +{{ $activeBookings->count() - 2 }} еще
                                         </div>
                                     @endif
                                 </div>
                             @else
-                                <span class="text-gray-400 dark:text-gray-500 text-sm">Нет активных бронирований</span>
+                                <span class="text-gray-400text-gray-500 text-sm">Нет активных бронирований</span>
                             @endif
                         </td>
                         <td class="px-6 py-4">
@@ -98,7 +98,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">Номера не найдены</td>
+                        <td colspan="7" class="px-6 py-4 text-center text-gray-500text-gray-400">Номера не найдены</td>
                     </tr>
                 @endforelse
             </tbody>

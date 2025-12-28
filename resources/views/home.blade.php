@@ -101,7 +101,7 @@
 
             {{-- LEFT: HOTELS --}}
             <div class="flex-1 lg:order-1">
-                <h2 class="text-gray-900 dark:text-white mb-6 text-xl font-semibold">
+                <h2 class="text-gray-900text-white mb-6 text-xl font-semibold">
                     Идеи для путешествий по Казахстану
                 </h2>
 
@@ -114,7 +114,7 @@
                 {{-- Load more --}}
                 @if($hotels->hasMorePages())
                     <div class="text-center mt-8 pb-8">
-                        <button id="load-more" class="px-8 py-3 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:border-[#38b000] hover:text-[#38b000] transition-colors">
+                        <button id="load-more" class="px-8 py-3 bg-whitebg-gray-800 border-2 border-gray-300border-gray-600 text-gray-700text-gray-300 rounded-xl hover:border-[#38b000] hover:text-[#38b000] transition-colors">
                             Загрузить ещё
                         </button>
                     </div>

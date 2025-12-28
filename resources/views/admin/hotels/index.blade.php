@@ -11,26 +11,26 @@
         </a>
     </div>
 
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+    <div class="bg-whitebg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200border-gray-700">
         <table class="w-full">
-            <thead class="bg-gray-50 dark:bg-gray-700">
+            <thead class="bg-gray-50bg-gray-700">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Изображение</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Название</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Город</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Рейтинг</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Номера</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Действия</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500text-gray-300 uppercase">Изображение</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500text-gray-300 uppercase">Название</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500text-gray-300 uppercase">Город</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500text-gray-300 uppercase">Рейтинг</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500text-gray-300 uppercase">Номера</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500text-gray-300 uppercase">Действия</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody class="divide-y divide-gray-200divide-gray-700">
                 @forelse($hotels as $hotel)
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <tr class="hover:bg-gray-50hover:bg-gray-700">
                         <td class="px-6 py-4">
                             @if($hotel->image)
                                 <img src="{{ $hotel->image_url }}" alt="{{ $hotel->name }}" class="w-16 h-16 object-cover rounded">
                             @else
-                                <div class="w-16 h-16 bg-gray-200 dark:bg-gray-600 rounded"></div>
+                                <div class="w-16 h-16 bg-gray-200bg-gray-600 rounded"></div>
                             @endif
                         </td>
                         <td class="px-6 py-4 font-semibold">{{ $hotel->name }}</td>
@@ -50,7 +50,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">Отели не найдены</td>
+                        <td colspan="6" class="px-6 py-4 text-center text-gray-500text-gray-400">Отели не найдены</td>
                     </tr>
                 @endforelse
             </tbody>
