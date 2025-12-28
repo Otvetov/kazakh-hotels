@@ -33,10 +33,8 @@
                     </div>
                 @endif
                 @if($hotel->rating)
-                    <div class="absolute top-6 right-6 bg-white px-4 py-2 rounded-full flex items-center gap-2">
-                        <svg class="w-5 h-5 fill-yellow-400 text-yellow-400" viewBox="0 0 20 20">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-1.07 3.927a1 1 0 01-.39 1.18l-3.462 2.462c-.969.69-2.157-.38-1.902-1.81l1.07-3.292a1 1 0 00-.95-.69H5.577c-.969 0-1.371-1.24-.588-1.81l3.462-2.462a1 1 0 01.39-1.18z"/>
-                        </svg>
+                    <div class="absolute top-6 right-6 bg-white px-4 py-2 rounded-full flex items-center gap-2 shadow-md">
+                        <span class="text-xl">⭐</span>
                         <span class="text-gray-900 font-semibold">{{ number_format($hotel->rating, 1) }}</span>
                     </div>
                 @endif
@@ -47,11 +45,9 @@
                     <div>
                         <h1 class="text-gray-900 mb-2 text-2xl font-bold">{{ $hotel->name }}</h1>
                         @if($hotel->stars)
-                            <div class="flex items-center gap-1 mb-3">
+                            <div class="flex items-center gap-0.5 mb-3">
                                 @for($i = 0; $i < $hotel->stars; $i++)
-                                    <svg class="w-5 h-5 fill-yellow-400 text-yellow-400" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-1.07 3.927a1 1 0 01-.39 1.18l-3.462 2.462c-.969.69-2.157-.38-1.902-1.81l1.07-3.292a1 1 0 00-.95-.69H5.577c-.969 0-1.371-1.24-.588-1.81l3.462-2.462a1 1 0 01.39-1.18z"/>
-                                    </svg>
+                                    <span class="text-xl">⭐</span>
                                 @endfor
                             </div>
                         @endif

@@ -28,11 +28,9 @@
                                 {{ $review->created_at->format('d F Y') }}
                             </div>
                         </div>
-                        <div class="flex items-center gap-1">
+                        <div class="flex items-center gap-0.5">
                             @for($i = 0; $i < 5; $i++)
-                                <svg class="w-5 h-5 {{ $i < $review->rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300' }}" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-1.07 3.927a1 1 0 01-.39 1.18l-3.462 2.462c-.969.69-2.157-.38-1.902-1.81l1.07-3.292a1 1 0 00-.95-.69H5.577c-.969 0-1.371-1.24-.588-1.81l3.462-2.462a1 1 0 01.39-1.18z"/>
-                                </svg>
+                                <span class="text-lg {{ $i < $review->rating ? '' : 'opacity-30' }}">⭐</span>
                             @endfor
                         </div>
                     </div>
@@ -68,18 +66,16 @@
                     <label class="block text-sm text-gray-700 mb-2">
                         Оценка <span class="text-red-500">*</span>
                     </label>
-                    <div class="flex items-center gap-2" id="rating-stars">
+                    <div class="flex items-center gap-1" id="rating-stars">
                         @for($i = 1; $i <= 5; $i++)
                             <button
                                 type="button"
                                 onclick="setRating({{ $i }})"
                                 onmouseenter="hoverRating({{ $i }})"
                                 onmouseleave="resetRating()"
-                                class="transition-transform hover:scale-110"
+                                class="transition-transform hover:scale-110 p-1"
                             >
-                                <svg class="w-8 h-8 rating-star" data-rating="{{ $i }}" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-1.07 3.927a1 1 0 01-.39 1.18l-3.462 2.462c-.969.69-2.157-.38-1.902-1.81l1.07-3.292a1 1 0 00-.95-.69H5.577c-.969 0-1.371-1.24-.588-1.81l3.462-2.462a1 1 0 01.39-1.18z"/>
-                                </svg>
+                                <span class="text-2xl rating-star" data-rating="{{ $i }}">⭐</span>
                             </button>
                         @endfor
                         <span id="rating-text" class="ml-2 text-sm text-gray-600"></span>
@@ -167,11 +163,9 @@ function updateStars() {
     stars.forEach((star, index) => {
         const starRating = parseInt(star.getAttribute('data-rating'));
         if (starRating <= rating) {
-            star.classList.add('fill-yellow-400', 'text-yellow-400');
-            star.classList.remove('text-gray-300');
+            star.classList.remove('opacity-30');
         } else {
-            star.classList.remove('fill-yellow-400', 'text-yellow-400');
-            star.classList.add('text-gray-300');
+            star.classList.add('opacity-30');
         }
     });
     
