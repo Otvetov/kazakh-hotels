@@ -26,6 +26,7 @@ class AdminController extends Controller
             'total_bookings' => Booking::count(),
             'total_revenue' => Booking::where('status', 'confirmed')->sum('total_price'),
             'pending_reviews' => Review::where('status', 'pending')->count(),
+            'pending_bookings' => Booking::where('status', 'pending')->count(),
             'total_hotels' => Hotel::count(),
             'total_users' => User::count(),
             'top_cities' => Hotel::selectRaw('city, COUNT(*) as count')

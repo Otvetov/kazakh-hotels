@@ -21,6 +21,10 @@
             <p class="text-3xl font-bold text-yellow-500">{{ $stats['pending_reviews'] }}</p>
         </div>
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
+            <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Ожидающие прибытия</h3>
+            <p class="text-3xl font-bold text-yellow-500">{{ $stats['pending_bookings'] }}</p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
             <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Всего отелей</h3>
             <p class="text-3xl font-bold">{{ $stats['total_hotels'] }}</p>
         </div>
