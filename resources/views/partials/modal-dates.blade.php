@@ -1,5 +1,5 @@
 <div id="dateModal" class="modal hidden" style="display: none;">
-    <div class="modal-box">
+    <div class="modal-box bg-white rounded-2xl shadow-lg p-6">
         <div class="flex justify-between items-center mb-6">
             <h3 class="modal-title text-xl font-bold text-gray-900">Даты поездки</h3>
             <button onclick="closeModals()" class="text-gray-400 hover:text-gray-600 transition">
@@ -37,4 +37,3 @@
         </button>
     </div>
 </div>
-

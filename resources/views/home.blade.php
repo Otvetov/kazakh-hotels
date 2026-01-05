@@ -13,8 +13,8 @@
                     <div class="bg-white rounded-2xl shadow-xl p-6">
                         <h2 class="text-xl font-semibold mb-6">Найдите отель</h2>
 
-                        {{-- Fake inputs (как в React) --}}
                         <div class="space-y-4">
+                            {{-- City button --}}
                             <button onclick="openModal('searchModal')" class="search-btn w-full flex items-start gap-3 p-4 border border-gray-300 rounded-xl hover:border-[#38b000] transition-colors text-left bg-white">
                                 <svg class="w-5 h-5 text-[#38b000] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
@@ -26,6 +26,7 @@
                                 </div>
                             </button>
 
+                            {{-- Date button --}}
                             <button onclick="openModal('dateModal')" class="search-btn w-full flex items-start gap-3 p-4 border border-gray-300 rounded-xl hover:border-[#38b000] transition-colors text-left bg-white">
                                 <svg class="w-5 h-5 text-[#38b000] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
@@ -42,6 +43,7 @@
                                 </div>
                             </button>
 
+                            {{-- Guests button --}}
                             <button onclick="openModal('guestsModal')" class="search-btn w-full flex items-start gap-3 p-4 border border-gray-300 rounded-xl hover:border-[#38b000] transition-colors text-left bg-white">
                                 <svg class="w-5 h-5 text-[#38b000] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
@@ -58,6 +60,7 @@
                                 </div>
                             </button>
 
+                            {{-- Search form --}}
                             <form action="{{ route('hotels.index') }}" method="GET" id="searchForm" class="mt-6">
                                 <input type="hidden" name="city" id="cityInput" value="{{ request('city') }}">
                                 <input type="hidden" name="check_in" id="checkInInput" value="{{ request('check_in') }}">
@@ -74,25 +77,25 @@
                                     <span>Найти</span>
                                 </button>
                             </form>
-                        </div>
 
-                        {{-- Benefits --}}
-                        <div class="mt-6 pt-6 border-t border-gray-200 space-y-3 text-sm">
-                            <div class="flex items-start gap-2 text-gray-600">
-                                <span class="text-[#38b000]">✓</span>
-                                <span>Большой выбор отелей</span>
-                            </div>
-                            <div class="flex items-start gap-2 text-gray-600">
-                                <span class="text-[#38b000]">✓</span>
-                                <span>2 миллиона объектов по всему миру</span>
-                            </div>
-                            <div class="flex items-start gap-2 text-gray-600">
-                                <span class="text-[#38b000]">✓</span>
-                                <span>Любовь 5 звёзд на любой вкус</span>
-                            </div>
-                            <div class="flex items-start gap-2 text-gray-600">
-                                <span class="text-[#38b000]">✓</span>
-                                <span>Поддержка 24/7</span>
+                            {{-- Benefits --}}
+                            <div class="mt-6 pt-6 border-t border-gray-200 space-y-3 text-sm">
+                                <div class="flex items-start gap-2 text-gray-600">
+                                    <span class="text-[#38b000]">✓</span>
+                                    <span>Большой выбор отелей</span>
+                                </div>
+                                <div class="flex items-start gap-2 text-gray-600">
+                                    <span class="text-[#38b000]">✓</span>
+                                    <span>2 миллиона объектов по всему миру</span>
+                                </div>
+                                <div class="flex items-start gap-2 text-gray-600">
+                                    <span class="text-[#38b000]">✓</span>
+                                    <span>Любовь 5 звёзд на любой вкус</span>
+                                </div>
+                                <div class="flex items-start gap-2 text-gray-600">
+                                    <span class="text-[#38b000]">✓</span>
+                                    <span>Поддержка 24/7</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -101,7 +104,7 @@
 
             {{-- LEFT: HOTELS --}}
             <div class="flex-1 lg:order-1">
-                <h2 class="text-gray-900text-white mb-6 text-xl font-semibold">
+                <h2 class="text-gray-900 mb-6 text-xl font-semibold">
                     Идеи для путешествий по Казахстану
                 </h2>
 
@@ -114,7 +117,7 @@
                 {{-- Load more --}}
                 @if($hotels->hasMorePages())
                     <div class="text-center mt-8 pb-8">
-                        <button id="load-more" class="px-8 py-3 bg-whitebg-gray-800 border-2 border-gray-300border-gray-600 text-gray-700text-gray-300 rounded-xl hover:border-[#38b000] hover:text-[#38b000] transition-colors">
+                        <button id="load-more" class="px-8 py-3 bg-gray-800 border-2 border-gray-600 text-gray-300 rounded-xl hover:border-[#38b000] hover:text-[#38b000] transition-colors">
                             Загрузить ещё
                         </button>
                     </div>

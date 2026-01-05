@@ -10,9 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
-    /**
-     * Display booking form
-     */
+
     public function create(Request $request)
     {
         if (!$request->filled('room_id')) {
@@ -24,14 +22,14 @@ class BookingController extends Controller
         $checkOut = $request->get('check_out');
         $guests = $request->get('guests', $room->capacity);
 
-        // If dates are not provided, redirect to hotel page
+        // Если даты не указаны, перенаправьте на страницу отеля
         if (!$checkIn || !$checkOut) {
             return redirect()->route('hotels.show', $room->hotel->id)
                 ->with('info', 'Please select check-in and check-out dates to proceed with booking.')
                 ->withInput(['room_id' => $room->id]);
         }
 
-        // Calculate nights and total price
+        // Вычислить количество ночей и общую цену
         $checkInDate = \Carbon\Carbon::parse($checkIn);
         $checkOutDate = \Carbon\Carbon::parse($checkOut);
         $nights = $checkInDate->diffInDays($checkOutDate);
@@ -40,22 +38,20 @@ class BookingController extends Controller
         return view('bookings.create', compact('room', 'checkIn', 'checkOut', 'guests', 'nights', 'totalPrice'));
     }
 
-    /**
-     * Store booking
-     */
+
     public function store(StoreBookingRequest $request)
     {
         try {
             $room = Room::with('hotel')->findOrFail($request->room_id);
 
-            // Check availability
+            // Проверить доступность номера на выбранные даты
             if (!$room->isAvailableForDates($request->check_in, $request->check_out)) {
                 return back()
                     ->withInput()
                     ->withErrors(['error' => 'Номер недоступен на выбранные даты. Пожалуйста, выберите другие даты.']);
             }
 
-            // Calculate total price
+            // Вычислить общую цену
             $checkIn = \Carbon\Carbon::parse($request->check_in);
             $checkOut = \Carbon\Carbon::parse($request->check_out);
             $nights = $checkIn->diffInDays($checkOut);
@@ -81,7 +77,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Display booking details
+     * Show booking details
      */
     public function show(Booking $booking)
     {
@@ -91,9 +87,7 @@ class BookingController extends Controller
         return view('bookings.show', compact('booking'));
     }
 
-    /**
-     * Display user bookings
-     */
+
     public function index(Request $request)
     {
         $query = Auth::user()->bookings()->with(['room.hotel']);
@@ -115,9 +109,7 @@ class BookingController extends Controller
         return view('bookings.index', compact('bookings', 'tab'));
     }
 
-    /**
-     * Cancel booking
-     */
+
     public function cancel(Booking $booking)
     {
         $this->authorize('update', $booking);

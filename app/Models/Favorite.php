@@ -14,17 +14,13 @@ class Favorite extends Model
         'hotel_id',
     ];
 
-    /**
-     * Get favorite user
-     */
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get favorite hotel
-     */
+
     public function hotel()
     {
         return $this->belongsTo(Hotel::class);

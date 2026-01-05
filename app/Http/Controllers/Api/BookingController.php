@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 class BookingController extends Controller
 {
     /**
-     * Get user bookings
+     * get bookings
      */
     public function index(Request $request): JsonResponse
     {
@@ -107,7 +107,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Get booking details
+     * Get details
      */
     public function show(Booking $booking): JsonResponse
     {
@@ -139,9 +139,7 @@ class BookingController extends Controller
         ]);
     }
 
-    /**
-     * Cancel booking
-     */
+
     public function cancel(Booking $booking): JsonResponse
     {
         if ($booking->user_id !== Auth::id() && !Auth::user()->isAdmin()) {

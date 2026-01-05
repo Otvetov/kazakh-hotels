@@ -13,9 +13,7 @@ class UserController extends Controller
         $this->middleware('admin');
     }
 
-    /**
-     * Display users list
-     */
+
     public function index()
     {
         $users = User::latest()->paginate(15);
@@ -23,9 +21,7 @@ class UserController extends Controller
         return view('admin.users.index', compact('users'));
     }
 
-    /**
-     * Ban user
-     */
+
     public function ban(User $user)
     {
         $user->update(['banned_at' => now()]);
@@ -33,9 +29,7 @@ class UserController extends Controller
         return back()->with('success', 'Пользователь успешно заблокирован.');
     }
 
-    /**
-     * Unban user
-     */
+
     public function unban(User $user)
     {
         $user->update(['banned_at' => null]);

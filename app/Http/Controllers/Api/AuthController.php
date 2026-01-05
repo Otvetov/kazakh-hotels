@@ -12,9 +12,7 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    /**
-     * Register new user
-     */
+
     public function register(Request $request): JsonResponse
     {
         $request->validate([
@@ -37,9 +35,7 @@ class AuthController extends Controller
         ], 201);
     }
 
-    /**
-     * Login user
-     */
+ 
     public function login(Request $request): JsonResponse
     {
         $request->validate([
@@ -61,9 +57,7 @@ class AuthController extends Controller
         ]);
     }
 
-    /**
-     * Logout user
-     */
+
     public function logout(Request $request): JsonResponse
     {
         Auth::guard('web')->logout();

@@ -10,9 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class FavoriteController extends Controller
 {
-    /**
-     * Get user favorites
-     */
+
     public function index(): JsonResponse
     {
         $favorites = Auth::user()->favorites()->with('hotel.rooms')->get();
@@ -36,9 +34,7 @@ class FavoriteController extends Controller
         ]);
     }
 
-    /**
-     * Toggle favorite
-     */
+
     public function toggle(Hotel $hotel): JsonResponse
     {
         $favorite = Favorite::where('user_id', Auth::id())
@@ -62,9 +58,7 @@ class FavoriteController extends Controller
         ]);
     }
 
-    /**
-     * Remove favorite
-     */
+
     public function remove(Hotel $hotel): JsonResponse
     {
         $favorite = Favorite::where('user_id', Auth::id())

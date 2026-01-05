@@ -16,9 +16,7 @@ class RoomController extends Controller
         $this->middleware('admin');
     }
 
-    /**
-     * Display rooms list
-     */
+
     public function index(Request $request)
     {
         $query = Room::with(['hotel', 'bookings' => function ($q) {
@@ -28,16 +26,16 @@ class RoomController extends Controller
               ->orderBy('check_in', 'asc');
         }]);
 
-        // Filter by booked status
+        // Фильтровать по статусу бронирования
         if ($request->filled('booked')) {
             if ($request->booked == '1') {
-                // Show only rooms with active bookings
+                // Показывать только номера с активными бронированиями
                 $query->whereHas('bookings', function ($q) {
                     $q->where('status', '!=', 'cancelled')
                       ->where('check_out', '>=', now());
                 });
             } else {
-                // Show only rooms without active bookings
+                // Показывать только номера без активных бронирований
                 $query->whereDoesntHave('bookings', function ($q) {
                     $q->where('status', '!=', 'cancelled')
                       ->where('check_out', '>=', now());
@@ -50,9 +48,7 @@ class RoomController extends Controller
         return view('admin.rooms.index', compact('rooms'));
     }
 
-    /**
-     * Show room form
-     */
+
     public function create()
     {
         $hotels = Hotel::orderBy('name')->get();
@@ -60,9 +56,7 @@ class RoomController extends Controller
         return view('admin.rooms.create', compact('hotels'));
     }
 
-    /**
-     * Store room
-     */
+
     public function store(StoreRoomRequest $request)
     {
         Room::create($request->validated());
@@ -70,9 +64,6 @@ class RoomController extends Controller
         return redirect()->route('admin.rooms.index')->with('success', 'Номер успешно создан.');
     }
 
-    /**
-     * Show room edit form
-     */
     public function edit(Room $room)
     {
         $hotels = Hotel::orderBy('name')->get();
@@ -80,9 +71,7 @@ class RoomController extends Controller
         return view('admin.rooms.edit', compact('room', 'hotels'));
     }
 
-    /**
-     * Update room
-     */
+
     public function update(UpdateRoomRequest $request, Room $room)
     {
         $room->update($request->validated());
@@ -90,9 +79,7 @@ class RoomController extends Controller
         return redirect()->route('admin.rooms.index')->with('success', 'Номер успешно обновлен.');
     }
 
-    /**
-     * Delete room
-     */
+
     public function destroy(Room $room)
     {
         $room->delete();

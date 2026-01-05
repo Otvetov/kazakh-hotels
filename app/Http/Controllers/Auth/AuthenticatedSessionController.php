@@ -9,17 +9,13 @@ use Illuminate\Validation\ValidationException;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Show login form
-     */
+
     public function create()
     {
         return view('auth.login');
     }
 
-    /**
-     * Handle login
-     */
+
     public function store(Request $request)
     {
         $request->validate([
@@ -29,7 +25,7 @@ class AuthenticatedSessionController extends Controller
 
         if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
             throw ValidationException::withMessages([
-                'email' => __('The provided credentials do not match our records.'),
+                'email' => __('Предоставленные учетные данные не соответствуют нашим записям.'),
             ]);
         }
 
@@ -38,9 +34,7 @@ class AuthenticatedSessionController extends Controller
         return redirect()->intended(route('home'));
     }
 
-    /**
-     * Handle logout
-     */
+
     public function destroy(Request $request)
     {
         Auth::guard('web')->logout();

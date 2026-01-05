@@ -14,7 +14,6 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
      *
      * @var list<string>
      */
@@ -27,7 +26,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Атрибуты, которые скрываются при сериализации.
      *
      * @var list<string>
      */
@@ -37,7 +36,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * Атрибуты, которые должны быть приведены к нужным типам.
      *
      * @return array<string, string>
      */
@@ -50,41 +49,31 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Check if user is admin
-     */
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
     }
 
-    /**
-     * Check if user is banned
-     */
+
     public function isBanned(): bool
     {
         return $this->banned_at !== null;
     }
 
-    /**
-     * Get user bookings
-     */
+
     public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class);
     }
 
-    /**
-     * Get user favorites
-     */
+
     public function favorites(): HasMany
     {
         return $this->hasMany(Favorite::class);
     }
 
-    /**
-     * Get user reviews
-     */
+
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);

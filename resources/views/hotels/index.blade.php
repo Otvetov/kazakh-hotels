@@ -15,11 +15,11 @@
             </p>
         </div>
 
-        <!-- Horizontal Search Panel -->
+        
         <div class="bg-white rounded-2xl shadow-xl p-6 mb-8">
             <form action="{{ route('hotels.index') }}" method="GET" id="hotelsSearchForm" class="space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <!-- City Search -->
+                   
                     <div>
                         <button type="button" onclick="openModal('searchModal')" class="search-btn w-full flex items-start gap-3 p-4 border border-gray-300 rounded-xl hover:border-[#38b000] transition-colors text-left bg-white">
                             <svg class="w-5 h-5 text-[#38b000] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -55,7 +55,7 @@
                         <input type="hidden" name="check_out" id="checkOutInputHotels" value="{{ request('check_out') }}">
                     </div>
 
-                    <!-- Guests -->
+                   
                     <div>
                         <button type="button" onclick="openModal('guestsModal')" class="search-btn w-full flex items-start gap-3 p-4 border border-gray-300 rounded-xl hover:border-[#38b000] transition-colors text-left bg-white">
                             <svg class="w-5 h-5 text-[#38b000] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -76,7 +76,7 @@
                         <input type="hidden" name="rooms" id="roomsInputHotels" value="{{ request('rooms', 1) }}">
                     </div>
 
-                    <!-- Sort & Search Button -->
+                    
                     <div class="flex gap-2">
                         <select
                             id="sort-select"
@@ -101,7 +101,7 @@
             </form>
         </div>
 
-        <!-- Hotels List -->
+       
         @if($hotels->count() === 0)
             <div class="text-center py-16">
                         <p class="text-gray-500 mb-4">Отели не найдены</p>
@@ -120,7 +120,7 @@
                                 class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all cursor-pointer overflow-hidden group"
                             >
                                 <div class="flex flex-col md:flex-row">
-                                    <!-- Image -->
+                                    
                                     <div class="relative md:w-72 h-56 md:h-auto flex-shrink-0">
                                         @if($hotel->image)
                                             <img
@@ -148,7 +148,7 @@
                                         @endauth
                                     </div>
 
-                                    <!-- Content -->
+                                    
                                     <div class="flex-1 p-6">
                                         <div class="flex items-start justify-between mb-3">
                                             <div class="flex-1">
@@ -190,7 +190,7 @@
                                             </p>
                                         @endif
 
-                                        <!-- Rooms info -->
+                                        
                                         @if($hotel->rooms->count() > 0)
                                             <div class="mb-4">
                                                 <div class="text-sm text-gray-600 mb-2">
@@ -199,7 +199,7 @@
                                             </div>
                                         @endif
 
-                                        <!-- Price -->
+                                        
                                         <div class="flex items-end justify-between">
                                             <div class="text-sm text-gray-600">
                                                 Цена за ночь от
@@ -221,7 +221,7 @@
                         @endforeach
                     </div>
 
-                    <!-- Pagination -->
+                    
                     @if($hotels->hasPages())
                         <div class="mt-8">
                             {{ $hotels->links() }}
@@ -255,7 +255,7 @@ function toggleFavorite(hotelId) {
 @endauth
 
 <script>
-// Update city value for hotels page
+/
 function selectCityAndCloseHotels(city) {
     const cityValue = document.getElementById('cityValueHotels');
     const cityInput = document.getElementById('cityInputHotels');
@@ -264,11 +264,7 @@ function selectCityAndCloseHotels(city) {
     closeModals();
 }
 
-// saveDates and selectCityAndClose are now handled in modals-js.blade.php
 
-// saveGuests now works for both pages automatically
-
-// Form validation for hotels page
 document.addEventListener('DOMContentLoaded', function() {
     const hotelsSearchForm = document.getElementById('hotelsSearchForm');
     const searchErrorHotels = document.getElementById('searchErrorHotels');
@@ -309,7 +305,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Sort select - submit form on change
+    
     const sortSelect = document.getElementById('sort-select');
     if (sortSelect) {
         sortSelect.addEventListener('change', function() {

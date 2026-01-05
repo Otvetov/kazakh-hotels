@@ -14,7 +14,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Display bookings list
+     * Отобразить список бронирований
      */
     public function index(Request $request)
     {
@@ -30,7 +30,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Update booking status
+     * Обновить статус бронирования
      */
     public function updateStatus(Request $request, Booking $booking)
     {

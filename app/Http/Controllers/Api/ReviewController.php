@@ -10,9 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
-    /**
-     * Get hotel reviews
-     */
+
     public function index(Hotel $hotel): JsonResponse
     {
         $reviews = $hotel->reviews()->with('user')->latest()->get();
@@ -30,9 +28,7 @@ class ReviewController extends Controller
         ]);
     }
 
-    /**
-     * Store review
-     */
+
     public function store(StoreReviewRequest $request, Hotel $hotel): JsonResponse
     {
         $review = \App\Models\Review::create([

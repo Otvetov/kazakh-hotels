@@ -7,7 +7,7 @@
     <h1 class="text-3xl font-bold mb-8">Мой профиль</h1>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Profile Info -->
+        
         <div class="lg:col-span-2">
             <div class="bg-white rounded-lg shadow-md p-6 border border-gray-200 mb-6">
                 <div class="flex items-center mb-6">
@@ -26,7 +26,7 @@
                 </button>
             </div>
 
-            <!-- Recent Bookings -->
+           
             <div class="bg-white rounded-lg shadow-md p-6 border border-gray-200">
                 <h3 class="text-xl font-semibold mb-4">Последние бронирования</h3>
                 <div class="space-y-4">
@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        <!-- Settings -->
+       
         <div>
             <div class="bg-white rounded-lg shadow-md p-6 border border-gray-200">
                 <h3 class="text-xl font-semibold mb-4">Настройки</h3>
@@ -59,7 +59,7 @@
     </div>
 </div>
 
-<!-- Edit Profile Modal -->
+
 <div id="edit-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4">
         <h3 class="text-2xl font-semibold mb-4">Редактировать профиль</h3>

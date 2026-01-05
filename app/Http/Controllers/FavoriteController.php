@@ -9,9 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class FavoriteController extends Controller
 {
-    /**
-     * Display favorites page
-     */
+
     public function index()
     {
         $favorites = Auth::user()->favorites()->with('hotel.rooms')->paginate(12);
@@ -19,9 +17,7 @@ class FavoriteController extends Controller
         return view('favorites.index', compact('favorites'));
     }
 
-    /**
-     * Toggle favorite
-     */
+
     public function toggle(Hotel $hotel)
     {
         $favorite = Favorite::where('user_id', Auth::id())

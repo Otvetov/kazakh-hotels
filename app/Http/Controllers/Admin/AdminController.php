@@ -18,7 +18,7 @@ class AdminController extends Controller
     }
 
     /**
-     * Display admin dashboard
+     * Отображение панели управления администратора
      */
     public function index()
     {

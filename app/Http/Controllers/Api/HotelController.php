@@ -9,9 +9,7 @@ use Illuminate\Http\Request;
 
 class HotelController extends Controller
 {
-    /**
-     * Get hotels list
-     */
+
     public function index(Request $request): JsonResponse
     {
         $query = Hotel::query();
@@ -115,7 +113,7 @@ class HotelController extends Controller
     }
 
     /**
-     * Get hotel rooms
+     * Get rooms
      */
     public function rooms(Hotel $hotel, Request $request): JsonResponse
     {

@@ -6,16 +6,14 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRoomRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
+
     public function authorize(): bool
     {
         return $this->user()?->isAdmin() ?? false;
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * правила проверки, которые применяются к запросу
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */

@@ -8,9 +8,7 @@ use Illuminate\Http\Request;
 
 class HotelController extends Controller
 {
-    /**
-     * Display hotels catalog
-     */
+
     public function index(Request $request)
     {
         $query = Hotel::query();
@@ -55,7 +53,7 @@ class HotelController extends Controller
         $hotels = $query->with('rooms')->paginate(12);
         $cities = Hotel::distinct()->pluck('city')->sort();
 
-        // Get popular cities from database (cities with most hotels)
+        // поулярные города
         $popularCities = Hotel::select('city')
             ->selectRaw('COUNT(*) as hotel_count')
             ->groupBy('city')
@@ -72,9 +70,6 @@ class HotelController extends Controller
         return view('hotels.index', compact('hotels', 'cities', 'popularCities'));
     }
 
-    /**
-     * Get city description
-     */
     private function getCityDescription(string $city): string
     {
         $descriptions = [
@@ -91,9 +86,6 @@ class HotelController extends Controller
         return $descriptions[$city] ?? 'Популярное направление';
     }
 
-    /**
-     * Display hotel details
-     */
     public function show(Hotel $hotel)
     {
         $hotel->load(['rooms', 'reviews.user']);

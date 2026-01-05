@@ -28,32 +28,30 @@ class Booking extends Model
         ];
     }
 
-    /**
-     * Get booking user
-     */
+ 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get booking room
+     /**
+     * Номер, связанный с бронированием
      */
     public function room()
     {
         return $this->belongsTo(Room::class);
     }
-
     /**
-     * Get booking hotel through room
+     * Отель, связанный с бронированием через номер
      */
+ 
     public function getHotelAttribute()
     {
         return $this->room->hotel;
     }
 
     /**
-     * Calculate number of nights
+     * Количество ночей бронирования
      */
     public function getNightsAttribute()
     {

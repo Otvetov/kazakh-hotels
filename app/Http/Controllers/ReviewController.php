@@ -9,9 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
-    /**
-     * Store review
-     */
+
     public function store(StoreReviewRequest $request)
     {
         Review::create([
@@ -22,7 +20,7 @@ class ReviewController extends Controller
             'status' => 'pending',
         ]);
 
-        return back()->with('success', 'Review submitted. It will be visible after admin approval.');
+        return back()->with('success', 'Отзыв отправлен. Он будет виден после одобрения администратором.');
     }
 }
 

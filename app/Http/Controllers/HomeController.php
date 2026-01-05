@@ -7,14 +7,12 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    /**
-     * Display home page
-     */
+
     public function index(Request $request)
     {
         $query = Hotel::query();
 
-        // Search filters
+        // Filters
         if ($request->filled('city')) {
             $query->where('city', 'like', '%' . $request->city . '%');
         }
@@ -29,7 +27,7 @@ class HomeController extends Controller
 
         $hotels = $query->with('rooms')->latest()->paginate(12);
 
-        // Get popular cities from database (cities with most hotels)
+        //популярные города
         $popularCities = Hotel::select('city')
             ->selectRaw('COUNT(*) as hotel_count')
             ->groupBy('city')
@@ -44,7 +42,7 @@ class HomeController extends Controller
             });
 
         if ($request->ajax()) {
-            // For city search AJAX
+            // ajax
             if ($request->has('ajax') && $request->ajax == 1) {
                 $searchTerm = $request->get('city', '');
                 $cities = Hotel::select('city')
@@ -70,9 +68,6 @@ class HomeController extends Controller
         return view('home', compact('hotels', 'popularCities'));
     }
 
-    /**
-     * Get city description
-     */
     private function getCityDescription(string $city): string
     {
         $descriptions = [

@@ -13,9 +13,7 @@ class ReviewController extends Controller
         $this->middleware('admin');
     }
 
-    /**
-     * Display reviews list
-     */
+
     public function index(Request $request)
     {
         $query = Review::with(['user', 'hotel']);
@@ -29,9 +27,7 @@ class ReviewController extends Controller
         return view('admin.reviews.index', compact('reviews'));
     }
 
-    /**
-     * Approve review
-     */
+
     public function approve(Review $review)
     {
         $review->update(['status' => 'approved']);
@@ -39,9 +35,7 @@ class ReviewController extends Controller
         return back()->with('success', 'Отзыв успешно одобрен.');
     }
 
-    /**
-     * Reject review
-     */
+
     public function reject(Review $review)
     {
         $review->update(['status' => 'rejected']);

@@ -25,25 +25,19 @@ class Room extends Model
         ];
     }
 
-    /**
-     * Get room hotel
-     */
+
     public function hotel()
     {
         return $this->belongsTo(Hotel::class);
     }
 
-    /**
-     * Get room bookings
-     */
+
     public function bookings()
     {
         return $this->hasMany(Booking::class);
     }
 
-    /**
-     * Check if room is available for date range
-     */
+
     public function isAvailableForDates($checkIn, $checkOut): bool
     {
         if (!$this->is_available) {

@@ -9,9 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
-    /**
-     * Get user profile
-     */
+
     public function show(): JsonResponse
     {
         $user = Auth::user();
@@ -38,9 +36,7 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * Update user profile
-     */
+
     public function update(Request $request): JsonResponse
     {
         $request->validate([

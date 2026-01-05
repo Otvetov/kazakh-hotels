@@ -5,7 +5,7 @@
 @section('content')
 <div class="min-h-screen bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 py-8">
-        <!-- Back Button -->
+       
         <button
             onclick="window.history.back()"
             class="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6"
@@ -16,7 +16,7 @@
             <span>Назад</span>
         </button>
 
-        <!-- Hotel Header -->
+       
         <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-8">
             <div class="relative h-96">
                 @if($hotel->image)
@@ -69,7 +69,7 @@
             </div>
         </div>
 
-        <!-- Available Rooms -->
+      
         <div class="mb-8">
             <h2 class="text-gray-900 mb-6 text-xl font-bold">Доступные номера</h2>
 
@@ -134,7 +134,7 @@
             @endif
         </div>
 
-        <!-- Reviews Section -->
+        
         @include('partials.review-section', ['hotel' => $hotel])
     </div>
 </div>
@@ -244,7 +244,7 @@ function proceedToBooking() {
     window.location.href = url.toString();
 }
 
-// Close modal on outside click
+
 document.getElementById('bookingDateModal')?.addEventListener('click', function(e) {
     if (e.target === this) {
         closeBookingModal();

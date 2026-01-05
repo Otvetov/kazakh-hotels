@@ -35,18 +35,19 @@ class DatabaseSeeder extends Seeder
         $hotels = [];
         foreach ($cities as $city) {
             for ($i = 0; $i < 3; $i++) {
+                $imageSeed = uniqid();
                 $hotels[] = Hotel::create([
                     'name' => fake()->company() . ' Hotel',
                     'city' => $city,
                     'address' => fake()->streetAddress(),
                     'description' => fake()->paragraph(3),
                     'rating' => fake()->randomFloat(1, 3, 5),
-                    'image' => 'https://picsum.photos/1200/600',
+                    'image' => 'https://picsum.photos/seed/' . $imageSeed . '/1200/600',
                 ]);
             }
         }
 
-        // Create rooms for each hotel
+      
         foreach ($hotels as $hotel) {
             $roomCount = fake()->numberBetween(3, 8);
             for ($i = 0; $i < $roomCount; $i++) {
@@ -60,7 +61,7 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        // Create bookings
+        
         foreach ($users->take(5) as $user) {
             $room = Room::inRandomOrder()->first();
             Booking::create([
@@ -74,7 +75,7 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // Create favorites
+       
         foreach ($users->take(5) as $user) {
             Favorite::create([
                 'user_id' => $user->id,
@@ -82,7 +83,7 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // Create reviews
+       
         foreach ($users->take(8) as $user) {
             Review::create([
                 'user_id' => $user->id,

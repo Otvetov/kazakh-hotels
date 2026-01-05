@@ -16,9 +16,7 @@ class HotelController extends Controller
         $this->middleware('admin');
     }
 
-    /**
-     * Display hotels list
-     */
+
     public function index()
     {
         $hotels = Hotel::with('rooms')->latest()->paginate(15);
@@ -26,17 +24,12 @@ class HotelController extends Controller
         return view('admin.hotels.index', compact('hotels'));
     }
 
-    /**
-     * Show hotel form
-     */
     public function create()
     {
         return view('admin.hotels.create');
     }
 
-    /**
-     * Store hotel
-     */
+
     public function store(StoreHotelRequest $request)
     {
         $data = $request->validated();
@@ -50,17 +43,13 @@ class HotelController extends Controller
         return redirect()->route('admin.hotels.index')->with('success', 'Отель успешно создан.');
     }
 
-    /**
-     * Show hotel edit form
-     */
+
     public function edit(Hotel $hotel)
     {
         return view('admin.hotels.edit', compact('hotel'));
     }
 
-    /**
-     * Update hotel
-     */
+
     public function update(UpdateHotelRequest $request, Hotel $hotel)
     {
         $data = $request->validated();
@@ -77,9 +66,7 @@ class HotelController extends Controller
         return redirect()->route('admin.hotels.index')->with('success', 'Отель успешно обновлен.');
     }
 
-    /**
-     * Delete hotel
-     */
+
     public function destroy(Hotel $hotel)
     {
         if ($hotel->image) {

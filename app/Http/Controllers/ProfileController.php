@@ -8,9 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display profile page
-     */
+
     public function show()
     {
         $user = Auth::user();
@@ -19,9 +17,7 @@ class ProfileController extends Controller
         return view('profile.show', compact('user', 'bookings'));
     }
 
-    /**
-     * Update profile
-     */
+
     public function update(Request $request)
     {
         $request->validate([

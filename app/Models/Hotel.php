@@ -26,7 +26,7 @@ class Hotel extends Model
     }
 
     /**
-     * Get hotel rooms
+     * Получить номера отеля
      */
     public function rooms()
     {
@@ -34,7 +34,7 @@ class Hotel extends Model
     }
 
     /**
-     * Get hotel bookings
+     * Получить бронирования отеля
      */
     public function bookings()
     {
@@ -42,7 +42,7 @@ class Hotel extends Model
     }
 
     /**
-     * Get hotel favorites
+     * Получить избранные отеля
      */
     public function favorites()
     {
@@ -50,7 +50,7 @@ class Hotel extends Model
     }
 
     /**
-     * Get approved reviews
+     * Получить отзывы
      */
     public function reviews()
     {
@@ -58,7 +58,7 @@ class Hotel extends Model
     }
 
     /**
-     * Get all reviews (including pending)
+     * Получить все отзывы
      */
     public function allReviews()
     {
@@ -66,7 +66,7 @@ class Hotel extends Model
     }
 
     /**
-     * Check if hotel is favorited by user
+     * Проверить, добавил ли пользователь отель в избранное
      */
     public function isFavoritedBy($userId): bool
     {
@@ -74,7 +74,7 @@ class Hotel extends Model
     }
 
     /**
-     * Get minimum room price
+     * Получить минимальную цену номера
      */
     public function getMinPriceAttribute()
     {
@@ -82,7 +82,8 @@ class Hotel extends Model
     }
 
     /**
-     * Get image URL (supports both external URLs and local storage paths)
+     * Получить URL изображения
+     * (поддерживает как внешние ссылки, так и локальные пути в storage)
      */
     public function getImageUrlAttribute()
     {
@@ -90,12 +91,12 @@ class Hotel extends Model
             return null;
         }
 
-        // Check if it's a full URL (starts with http:// or https://)
+        // Проверяем, является ли изображение внешней ссылкой
         if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
             return $this->image;
         }
 
-        // Otherwise, treat it as a local storage path
+        // В противном случае считаем, что это локальный путь в storage
         return asset('storage/' . $this->image);
     }
 }
