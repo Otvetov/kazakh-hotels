@@ -6,7 +6,7 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold">Управление отелями</h1>
-        <a href="{{ route('admin.hotels.create') }}" class="px-4 py-2 bg-[#38b000] text-white rounded-lg hover:bg-[#2d8a00] transition">
+        <a href="{{ route('admin.hotels.create') }}" class="px-4 py-2 bg-[#8ee30f] text-white rounded-lg hover:bg-[#2d8a00] transition">
             Добавить отель
         </a>
     </div>

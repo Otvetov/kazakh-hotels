@@ -14,7 +14,7 @@
                 <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Одобрено</option>
                 <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Отклонено</option>
             </select>
-            <button type="submit" class="px-4 py-2 bg-[#38b000] text-white rounded-lg hover:bg-[#2d8a00] transition">Фильтр</button>
+            <button type="submit" class="px-4 py-2 bg-[#8ee30f] text-white rounded-lg hover:bg-[#2d8a00] transition">Фильтр</button>
         </form>
     </div>
 

@@ -14,7 +14,7 @@
                 <option value="confirmed" {{ request('status') == 'confirmed' ? 'selected' : '' }}>Подтверждено</option>
                 <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Отменено</option>
             </select>
-            <button type="submit" class="px-4 py-2 bg-[#38b000] text-white rounded-lg hover:bg-[#2d8a00] transition">Фильтр</button>
+            <button type="submit" class="px-4 py-2 bg-[#8ee30f] text-white rounded-lg hover:bg-[#2d8a00] transition">Фильтр</button>
         </form>
     </div>
 
@@ -40,7 +40,7 @@
                         <td class="px-6 py-4 text-sm">
                             {{ $booking->check_in->format('d.m.Y') }} - {{ $booking->check_out->format('d.m.Y') }}
                         </td>
-                        <td class="px-6 py-4 font-semibold text-[#38b000]">{{ number_format($booking->total_price, 0) }} ₸</td>
+                        <td class="px-6 py-4 font-semibold text-[#8ee30f]">{{ number_format($booking->total_price, 0) }} ₸</td>
                         <td class="px-6 py-4">
                             <span class="px-2 py-1 rounded text-sm
                                 {{ $booking->status === 'confirmed' ? 'bg-green-100bg-green-900 text-green-800text-green-200' : 

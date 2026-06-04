@@ -26,7 +26,7 @@
                                 </div>
                                 <p class="text-sm text-gray-600 mb-2">Регистрация нового пользователя</p>
                                 <details class="text-sm">
-                                    <summary class="cursor-pointer text-[#38b000] hover:underline">Параметры</summary>
+                                    <summary class="cursor-pointer text-[#8ee30f] hover:underline">Параметры</summary>
                                     <pre class="mt-2 p-3 bg-gray-50 rounded text-xs overflow-x-auto">{
   "name": "Имя пользователя",
   "email": "email@example.com",
@@ -34,7 +34,7 @@
   "password_confirmation": "password123"
 }</pre>
                                 </details>
-                                <a href="{{ url('/api/v1/register') }}" target="_blank" class="text-sm text-[#38b000] hover:underline mt-2 inline-block">
+                                <a href="{{ url('/api/v1/register') }}" target="_blank" class="text-sm text-[#8ee30f] hover:underline mt-2 inline-block">
                                     Открыть в новой вкладке →
                                 </a>
                             </div>
@@ -46,7 +46,7 @@
                                 </div>
                                 <p class="text-sm text-gray-600 mb-2">Вход в систему</p>
                                 <details class="text-sm">
-                                    <summary class="cursor-pointer text-[#38b000] hover:underline">Параметры</summary>
+                                    <summary class="cursor-pointer text-[#8ee30f] hover:underline">Параметры</summary>
                                     <pre class="mt-2 p-3 bg-gray-50 rounded text-xs overflow-x-auto">{
   "email": "email@example.com",
   "password": "password123"
@@ -68,7 +68,7 @@
                                 </div>
                                 <p class="text-sm text-gray-600 mb-2">Список отелей</p>
                                 <p class="text-xs text-gray-500 mb-2">Параметры: <code>?city=Алматы&search=отель&min_price=1000&max_price=5000&rating=4&sort=rating&per_page=15</code></p>
-                                <a href="{{ url('/api/v1/hotels') }}" target="_blank" class="text-sm text-[#38b000] hover:underline">
+                                <a href="{{ url('/api/v1/hotels') }}" target="_blank" class="text-sm text-[#8ee30f] hover:underline">
                                     Открыть в браузере →
                                 </a>
                             </div>
@@ -79,7 +79,7 @@
                                     <code class="text-sm">{{ url('/api/v1/hotels/1') }}</code>
                                 </div>
                                 <p class="text-sm text-gray-600 mb-2">Детали отеля</p>
-                                <a href="{{ url('/api/v1/hotels/1') }}" target="_blank" class="text-sm text-[#38b000] hover:underline">
+                                <a href="{{ url('/api/v1/hotels/1') }}" target="_blank" class="text-sm text-[#8ee30f] hover:underline">
                                     Открыть в браузере →
                                 </a>
                             </div>
@@ -91,7 +91,7 @@
                                 </div>
                                 <p class="text-sm text-gray-600 mb-2">Номера отеля</p>
                                 <p class="text-xs text-gray-500 mb-2">Параметры: <code>?check_in=2024-01-15&check_out=2024-01-20</code></p>
-                                <a href="{{ url('/api/v1/hotels/1/rooms') }}" target="_blank" class="text-sm text-[#38b000] hover:underline">
+                                <a href="{{ url('/api/v1/hotels/1/rooms') }}" target="_blank" class="text-sm text-[#8ee30f] hover:underline">
                                     Открыть в браузере →
                                 </a>
                             </div>
@@ -237,7 +237,7 @@
             <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Как протестировать API</h3>
                 <ul class="list-disc list-inside space-y-2 text-sm text-gray-700">
-                    <li><strong>GET-запросы</strong> можно открыть прямо в браузере (например, <a href="{{ url('/api/v1/hotels') }}" target="_blank" class="text-[#38b000] hover:underline">{{ url('/api/v1/hotels') }}</a>)</li>
+                    <li><strong>GET-запросы</strong> можно открыть прямо в браузере (например, <a href="{{ url('/api/v1/hotels') }}" target="_blank" class="text-[#8ee30f] hover:underline">{{ url('/api/v1/hotels') }}</a>)</li>
                     <li><strong>POST/PUT/DELETE-запросы</strong> требуют использования инструментов типа Postman, Insomnia или расширений браузера (например, REST Client для VS Code)</li>
                     <li>Для <strong>защищенных эндпоинтов</strong> необходимо сначала войти через <code class="bg-white px-1 rounded">POST /api/v1/login</code></li>
                     <li>Laravel использует сессии для аутентификации, поэтому после входа через API вы будете авторизованы в браузере</li>

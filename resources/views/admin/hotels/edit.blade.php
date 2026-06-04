@@ -51,7 +51,7 @@
             </div>
 
             <div class="flex gap-4">
-                <button type="submit" class="flex-1 px-6 py-3 bg-[#38b000] text-white rounded-lg hover:bg-[#2d8a00] transition">
+                <button type="submit" class="flex-1 px-6 py-3 bg-[#8ee30f] text-white rounded-lg hover:bg-[#2d8a00] transition">
                     Update Hotel
                 </button>
                 <a href="{{ route('admin.hotels.index') }}" class="px-6 py-3 bg-gray-200bg-gray-700 rounded-lg hover:bg-gray-300hover:bg-gray-600 transition">

@@ -1,39 +1,52 @@
 <div id="dateModal" class="modal hidden" style="display: none;">
-    <div class="modal-box bg-white rounded-2xl shadow-lg p-6">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="modal-title text-xl font-bold text-gray-900">Даты поездки</h3>
-            <button onclick="closeModals()" class="text-gray-400 hover:text-gray-600 transition">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="modal-box" style="max-width: 30rem;">
+        <!-- Header -->
+        <div class="flex items-center justify-center relative p-6 border-b border-white/10">
+            <h3 class="text-white text-lg font-bold">Даты поездки</h3>
+            <button onclick="closeModals()" class="absolute right-5 top-1/2 -translate-y-1/2 p-2 bg-white/5 hover:bg-white/10 rounded-full transition-colors">
+                <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
             </button>
         </div>
 
-        <div class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Заезд</label>
-                <input 
-                    type="date" 
-                    id="checkIn" 
-                    min="{{ date('Y-m-d') }}"
-                    value="{{ request('check_in') }}"
-                    class="modal-input w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#38b000] focus:border-[#38b000] outline-none"
-                >
+        <div class="p-6">
+            {{-- Month navigation --}}
+            <div class="flex items-center justify-between mb-4">
+                <button type="button" onclick="calPrevMonth()" id="calPrev" class="p-2 rounded-full hover:bg-white/10 transition disabled:opacity-30 disabled:cursor-not-allowed">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+                <span id="calMonthLabel" class="text-white font-semibold"></span>
+                <button type="button" onclick="calNextMonth()" class="p-2 rounded-full hover:bg-white/10 transition">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
             </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Выезд</label>
-                <input 
-                    type="date" 
-                    id="checkOut" 
-                    min="{{ date('Y-m-d', strtotime('+1 day')) }}"
-                    value="{{ request('check_out') }}"
-                    class="modal-input w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#38b000] focus:border-[#38b000] outline-none"
-                >
+
+            {{-- Weekday header --}}
+            <div class="grid grid-cols-7 gap-1 mb-2 text-center text-xs text-[#7e8488]">
+                <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span>
+                <span class="text-[#f04141]/70">Сб</span><span class="text-[#f04141]/70">Вс</span>
             </div>
+
+            {{-- Days grid --}}
+            <div id="calDays" class="grid grid-cols-7 gap-1"></div>
+
+            {{-- Selected range hint --}}
+            <p id="calHint" class="text-sm text-[#7e8488] mt-4 text-center">Выберите дату заезда</p>
         </div>
 
-        <button onclick="saveDates()" class="modal-btn w-full py-3 bg-[#38b000] text-white rounded-xl hover:bg-[#2d8c00] transition font-semibold mt-6">
-            Готово
-        </button>
+        {{-- Hidden inputs consumed by saveDates() --}}
+        <input type="hidden" id="checkIn" value="{{ request('check_in') }}">
+        <input type="hidden" id="checkOut" value="{{ request('check_out') }}">
+
+        <!-- Footer -->
+        <div class="flex items-center justify-end gap-3 p-6 border-t border-white/10">
+            <button type="button" onclick="calClear()" class="btn-dark px-6 py-2.5">Очистить</button>
+            <button type="button" onclick="saveDates()" class="btn-accent px-7 py-2.5">Применить</button>
+        </div>
     </div>
 </div>

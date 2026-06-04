@@ -1,40 +1,37 @@
-<div class="bg-white rounded-2xl shadow-sm p-8">
+<div class="otl-surface p-6 md:p-8">
     <div class="flex items-center justify-between mb-6">
-        <h2 class="text-gray-900 text-xl font-bold">Отзывы гостей</h2>
+        <h2 class="text-white text-xl font-extrabold">Отзывы гостей</h2>
         @auth
-            <button
-                onclick="openReviewModal()"
-                class="px-4 py-2 bg-[#38b000] text-white rounded-lg hover:bg-[#2d8c00] transition-colors"
-            >
+            <button onclick="openReviewModal()" class="btn-accent px-5 py-2.5">
                 Оставить отзыв
             </button>
         @endauth
     </div>
 
     @if($hotel->reviews->count() === 0)
-        <div class="text-center py-8 text-gray-500">
+        <div class="text-center py-8 text-[#7e8488]">
             Отзывов пока нет. Будьте первым!
         </div>
     @else
-        <div class="space-y-6">
+        <div class="space-y-5">
             @foreach($hotel->reviews as $review)
-                <div class="border-b border-gray-200 pb-6 last:border-b-0 last:pb-0">
+                <div class="bg-[#141516] rounded-2xl p-5">
                     <div class="flex items-start justify-between mb-3">
-                        <div>
-                            <div class="text-gray-900 mb-1 font-semibold">
-                                {{ $review->user->name }}
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-[#8ee30f] text-[#0a0a0a] flex items-center justify-center font-semibold">
+                                {{ strtoupper(substr($review->user->name, 0, 1)) }}
                             </div>
-                            <div class="text-sm text-gray-500">
-                                {{ $review->created_at->format('d F Y') }}
+                            <div>
+                                <div class="text-white font-semibold">{{ $review->user->name }}</div>
+                                <div class="text-sm text-[#7e8488]">{{ $review->created_at->format('d.m.Y') }}</div>
                             </div>
                         </div>
-                        <div class="flex items-center gap-0.5">
-                            @for($i = 0; $i < 5; $i++)
-                                <span class="text-lg {{ $i < $review->rating ? '' : 'opacity-30' }}">⭐</span>
-                            @endfor
-                        </div>
+                        <span class="flex items-center gap-1 bg-[#8ee30f] text-[#0a0a0a] px-2.5 py-1 rounded-lg font-bold text-sm">
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.05 2.93c.3-.92 1.6-.92 1.9 0l1.37 4.24a1 1 0 00.95.69h4.46c.97 0 1.37 1.24.59 1.81l-3.61 2.62a1 1 0 00-.36 1.12l1.38 4.24c.3.92-.75 1.69-1.54 1.12l-3.6-2.62a1 1 0 00-1.18 0l-3.6 2.62c-.79.57-1.84-.2-1.54-1.12l1.38-4.24a1 1 0 00-.36-1.12L1.33 9.67c-.78-.57-.38-1.81.59-1.81h4.46a1 1 0 00.95-.69z"/></svg>
+                            {{ $review->rating }}
+                        </span>
                     </div>
-                    <p class="text-gray-700">{{ $review->comment }}</p>
+                    <p class="text-gray-300">{{ $review->comment }}</p>
                 </div>
             @endforeach
         </div>
@@ -43,75 +40,46 @@
 
 @auth
 <!-- Review Modal -->
-<div id="reviewModal" class="modal hidden" style="display: none;">
-    <div class="modal-box" style="max-width: 28rem;">
-        <div class="flex items-center justify-between mb-6">
-            <h3 class="text-gray-900 text-xl font-bold">Оставить отзыв</h3>
-            <button
-                onclick="closeReviewModal()"
-                class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<div id="reviewModal" class="bmodal hidden" style="display: none;">
+    <div class="bmodal-box" style="max-width: 28rem;">
+        <div class="flex items-center justify-center relative p-6 border-b border-white/10">
+            <h3 class="text-white text-lg font-bold">Оставить отзыв</h3>
+            <button onclick="closeReviewModal()" class="absolute right-5 top-1/2 -translate-y-1/2 p-2 bg-white/5 hover:bg-white/10 rounded-full transition-colors">
+                <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
             </button>
         </div>
 
-        <form action="{{ route('reviews.store') }}" method="POST" id="reviewForm">
+        <form action="{{ route('reviews.store') }}" method="POST" id="reviewForm" class="p-6">
             @csrf
             <input type="hidden" name="hotel_id" value="{{ $hotel->id }}">
-            
+
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm text-gray-700 mb-2">
-                        Оценка <span class="text-red-500">*</span>
-                    </label>
+                    <label class="block text-sm text-[#7e8488] mb-2">Оценка <span class="text-[#f04141]">*</span></label>
                     <div class="flex items-center gap-1" id="rating-stars">
                         @for($i = 1; $i <= 5; $i++)
-                            <button
-                                type="button"
-                                onclick="setRating({{ $i }})"
-                                onmouseenter="hoverRating({{ $i }})"
-                                onmouseleave="resetRating()"
-                                class="transition-transform hover:scale-110 p-1"
-                            >
-                                <span class="text-2xl rating-star" data-rating="{{ $i }}">⭐</span>
+                            <button type="button" onclick="setRating({{ $i }})" onmouseenter="hoverRating({{ $i }})" onmouseleave="resetRating()" class="transition-transform hover:scale-110 p-1">
+                                <span class="text-2xl rating-star opacity-30" data-rating="{{ $i }}">⭐</span>
                             </button>
                         @endfor
-                        <span id="rating-text" class="ml-2 text-sm text-gray-600"></span>
+                        <span id="rating-text" class="ml-2 text-sm text-[#7e8488]"></span>
                     </div>
                     <input type="hidden" name="rating" id="rating-input" required>
                 </div>
 
                 <div>
-                    <label class="block text-sm text-gray-700 mb-2">
-                        Комментарий <span class="text-red-500">*</span>
-                    </label>
-                    <textarea
-                        name="comment"
-                        required
-                        rows="5"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#38b000] focus:border-transparent resize-none bg-white text-gray-900"
-                        placeholder="Расскажите о вашем опыте пребывания в отеле..."
-                    ></textarea>
+                    <label class="block text-sm text-[#7e8488] mb-2">Комментарий <span class="text-[#f04141]">*</span></label>
+                    <textarea name="comment" required rows="5"
+                        class="w-full px-4 py-3 bg-[#141516] border border-white/10 rounded-2xl focus:outline-none focus:border-[#8ee30f] resize-none text-white placeholder-[#7e8488]"
+                        placeholder="Расскажите о вашем опыте пребывания в отеле..."></textarea>
                 </div>
 
                 <div class="flex gap-3">
-                    <button
-                        type="button"
-                        onclick="closeReviewModal()"
-                        class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                    >
-                        Отмена
-                    </button>
-                    <button
-                        type="submit"
-                        id="submit-review-btn"
-                        disabled
-                        class="flex-1 px-4 py-2 bg-[#38b000] text-white rounded-lg hover:bg-[#2d8c00] transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-                    >
-                        Отправить
-                    </button>
+                    <button type="button" onclick="closeReviewModal()" class="btn-dark flex-1 py-2.5">Отмена</button>
+                    <button type="submit" id="submit-review-btn" disabled
+                        class="btn-accent flex-1 py-2.5 disabled:opacity-40 disabled:cursor-not-allowed">Отправить</button>
                 </div>
             </div>
         </form>
@@ -136,6 +104,7 @@ function closeReviewModal() {
     hoveredRating = 0;
     updateStars();
     document.getElementById('reviewForm').reset();
+    document.getElementById('submit-review-btn').disabled = true;
 }
 
 function setRating(rating) {
@@ -145,51 +114,22 @@ function setRating(rating) {
     updateStars();
 }
 
-function hoverRating(rating) {
-    hoveredRating = rating;
-    updateStars();
-}
-
-function resetRating() {
-    hoveredRating = 0;
-    updateStars();
-}
+function hoverRating(rating) { hoveredRating = rating; updateStars(); }
+function resetRating() { hoveredRating = 0; updateStars(); }
 
 function updateStars() {
     const stars = document.querySelectorAll('.rating-star');
     const rating = hoveredRating || selectedRating;
     const ratingText = document.getElementById('rating-text');
-    
-    stars.forEach((star, index) => {
+    stars.forEach((star) => {
         const starRating = parseInt(star.getAttribute('data-rating'));
-        if (starRating <= rating) {
-            star.classList.remove('opacity-30');
-        } else {
-            star.classList.add('opacity-30');
-        }
+        if (starRating <= rating) star.classList.remove('opacity-30');
+        else star.classList.add('opacity-30');
     });
-    
-    if (selectedRating > 0) {
-        ratingText.textContent = selectedRating + ' из 5';
-    } else {
-        ratingText.textContent = '';
-    }
+    ratingText.textContent = selectedRating > 0 ? selectedRating + ' из 5' : '';
 }
 
-// Close on Escape
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeReviewModal();
-    }
-});
-
-// Close on outside click
-document.getElementById('reviewModal')?.addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeReviewModal();
-    }
-});
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeReviewModal(); });
+document.getElementById('reviewModal')?.addEventListener('click', function(e) { if (e.target === this) closeReviewModal(); });
 </script>
 @endauth
-
-
