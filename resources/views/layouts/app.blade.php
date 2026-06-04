@@ -29,18 +29,47 @@
                             <span class="text-xl font-bold text-gray-900">Kazakh Hotels</span>
                         </a>
                         <div class="hidden md:flex space-x-6">
-                            <a href="{{ route('home') }}" class="text-gray-700 hover:text-[#38b000] transition py-2">Главная</a>
-                            <a href="{{ route('hotels.index') }}" class="text-gray-700 hover:text-[#38b000] transition py-2">Отели</a>
+                            <a href="{{ route('home') }}" class="text-gray-700 hover:text-[#38b000] transition py-2">{{ __('messages.nav_home') }}</a>
+                            <a href="{{ route('hotels.index') }}" class="text-gray-700 hover:text-[#38b000] transition py-2">{{ __('messages.nav_hotels') }}</a>
                             @auth
-                                <a href="{{ route('favorites.index') }}" class="text-gray-700 hover:text-[#38b000] transition py-2">Избранное</a>
-                                <a href="{{ route('bookings.index') }}" class="text-gray-700 hover:text-[#38b000] transition py-2">Бронирования</a>
+                                <a href="{{ route('favorites.index') }}" class="text-gray-700 hover:text-[#38b000] transition py-2">{{ __('messages.nav_favorites') }}</a>
+                                <a href="{{ route('bookings.index') }}" class="text-gray-700 hover:text-[#38b000] transition py-2">{{ __('messages.nav_bookings') }}</a>
                             @endauth
                             @if(auth()->check() && auth()->user()->isAdmin())
-                                <a href="{{ route('admin.index') }}" class="text-gray-700 hover:text-[#38b000] transition py-2">Админ-панель</a>
+                                <a href="{{ route('admin.index') }}" class="text-gray-700 hover:text-[#38b000] transition py-2">{{ __('messages.nav_admin') }}</a>
                             @endif
                         </div>
                     </div>
                     <div class="flex items-center space-x-4">
+                        {{-- Переключатель языка --}}
+                        @php
+                            $localeCodes = ['ru' => 'RU', 'en' => 'EN', 'kk' => 'KZ'];
+                            $localeNames = ['ru' => __('messages.lang_ru'), 'en' => __('messages.lang_en'), 'kk' => __('messages.lang_kk')];
+                            $currentLocale = app()->getLocale();
+                        @endphp
+                        <div class="relative" id="lang-switcher">
+                            <button type="button" onclick="toggleLangMenu(event)"
+                                    class="flex items-center gap-1.5 px-3 py-2 text-gray-700 hover:text-[#38b000] transition rounded-lg"
+                                    aria-haspopup="true" aria-label="{{ __('messages.language') }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 010 18M12 3a15 15 0 000 18M12 3a9 9 0 100 18 9 9 0 000-18z"></path>
+                                </svg>
+                                <span class="text-sm font-medium">{{ $localeCodes[$currentLocale] ?? 'RU' }}</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div id="lang-menu" class="hidden absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-50">
+                                @foreach($localeNames as $code => $label)
+                                    <a href="{{ route('locale.switch', $code) }}"
+                                       class="block px-4 py-2 text-sm hover:bg-gray-50 transition {{ $currentLocale === $code ? 'text-[#38b000] font-semibold' : 'text-gray-700' }}">
+                                        {{ $label }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+
                         @auth
                             <div class="flex items-center gap-3">
                                 <a href="{{ route('profile.show') }}" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
@@ -51,12 +80,12 @@
                                 </a>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <button type="submit" class="px-4 py-2 text-gray-700 hover:text-[#38b000] transition">Выход</button>
+                                    <button type="submit" class="px-4 py-2 text-gray-700 hover:text-[#38b000] transition">{{ __('messages.logout') }}</button>
                                 </form>
                             </div>
                         @else
-                            <a href="{{ route('login') }}" class="px-6 py-2 text-gray-700 hover:text-[#38b000] transition">Войти</a>
-                            <a href="{{ route('register') }}" class="px-6 py-2 bg-[#38b000] text-white rounded-lg hover:bg-[#2d8c00] transition">Зарегистрироваться</a>
+                            <a href="{{ route('login') }}" class="px-6 py-2 text-gray-700 hover:text-[#38b000] transition">{{ __('messages.login') }}</a>
+                            <a href="{{ route('register') }}" class="px-6 py-2 bg-[#38b000] text-white rounded-lg hover:bg-[#2d8c00] transition">{{ __('messages.register') }}</a>
                         @endauth
                     </div>
                 </div>
@@ -93,32 +122,47 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
                     <div>
-                        <h3 class="font-semibold text-gray-900 mb-3">Клиентам</h3>
+                        <h3 class="font-semibold text-gray-900 mb-3">{{ __('messages.footer_customers') }}</h3>
                         <ul class="space-y-2 text-sm text-gray-600">
-                            <li><a href="#" class="hover:text-[#38b000]">Поддержка</a></li>
-                            <li><a href="{{ route('hotels.index') }}" class="hover:text-[#38b000]">Все отели</a></li>
+                            <li><a href="#" class="hover:text-[#38b000]">{{ __('messages.footer_support') }}</a></li>
+                            <li><a href="{{ route('hotels.index') }}" class="hover:text-[#38b000]">{{ __('messages.footer_all_hotels') }}</a></li>
                         </ul>
                     </div>
                     <div>
-                        <h3 class="font-semibold text-gray-900 mb-3">О проекте</h3>
+                        <h3 class="font-semibold text-gray-900 mb-3">{{ __('messages.footer_about_project') }}</h3>
                         <ul class="space-y-2 text-sm text-gray-600">
-                            <li><a href="#" class="hover:text-[#38b000]">О нас</a></li>
-                            <li><a href="#" class="hover:text-[#38b000]">Контакты</a></li>
+                            <li><a href="#" class="hover:text-[#38b000]">{{ __('messages.footer_about_us') }}</a></li>
+                            <li><a href="#" class="hover:text-[#38b000]">{{ __('messages.footer_contacts') }}</a></li>
                         </ul>
                     </div>
                     <div>
-                        <h3 class="font-semibold text-gray-900 mb-3">Правовая информация</h3>
+                        <h3 class="font-semibold text-gray-900 mb-3">{{ __('messages.footer_legal') }}</h3>
                         <ul class="space-y-2 text-sm text-gray-600">
-                            <li><a href="#" class="hover:text-[#38b000]">Политика конфиденциальности</a></li>
-                            <li><a href="#" class="hover:text-[#38b000]">Условия использования</a></li>
+                            <li><a href="#" class="hover:text-[#38b000]">{{ __('messages.footer_privacy') }}</a></li>
+                            <li><a href="#" class="hover:text-[#38b000]">{{ __('messages.footer_terms') }}</a></li>
                         </ul>
                     </div>
                 </div>
                 <div class="pt-6 border-t border-gray-200 text-center text-sm text-gray-600">
-                    <p>&copy; {{ date('Y') }} Kazakh Hotels. Все права защищены.</p>
+                    <p>&copy; {{ date('Y') }} Kazakh Hotels. {{ __('messages.footer_rights') }}</p>
                 </div>
             </div>
         </footer>
     </div>
+
+    <script>
+        function toggleLangMenu(event) {
+            event.stopPropagation();
+            document.getElementById('lang-menu').classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', function (event) {
+            const switcher = document.getElementById('lang-switcher');
+            const menu = document.getElementById('lang-menu');
+            if (switcher && menu && !switcher.contains(event.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+    </script>
 </body>
 </html>
