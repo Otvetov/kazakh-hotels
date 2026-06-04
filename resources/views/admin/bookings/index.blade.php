@@ -4,81 +4,73 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <h1 class="text-3xl font-bold mb-8">Управление бронированиями</h1>
+    <h1 class="text-2xl font-extrabold text-white mb-6">Управление бронированиями</h1>
 
-    <div class="mb-4">
-        <form method="GET" class="flex gap-4">
-            <select name="status" class="px-4 py-2 border border-gray-300border-gray-600 rounded-lg bg-whitebg-gray-700">
-                <option value="">Все статусы</option>
-                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Ожидает</option>
-                <option value="confirmed" {{ request('status') == 'confirmed' ? 'selected' : '' }}>Подтверждено</option>
-                <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Отменено</option>
-            </select>
-            <button type="submit" class="px-4 py-2 bg-[#8ee30f] text-white rounded-lg hover:bg-[#2d8a00] transition">Фильтр</button>
-        </form>
-    </div>
+    <form method="GET" class="flex gap-3 mb-5">
+        <select name="status" class="field-input max-w-xs" style="color-scheme: dark;">
+            <option value="">Все статусы</option>
+            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Ожидает</option>
+            <option value="confirmed" {{ request('status') == 'confirmed' ? 'selected' : '' }}>Подтверждено</option>
+            <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Отменено</option>
+        </select>
+        <button type="submit" class="btn-dark px-6">Фильтр</button>
+    </form>
 
-    <div class="bg-whitebg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200border-gray-700">
-        <table class="w-full">
-            <thead class="bg-gray-50bg-gray-700">
-                <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500text-gray-300 uppercase">Пользователь</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500text-gray-300 uppercase">Отель</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500text-gray-300 uppercase">Номер</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500text-gray-300 uppercase">Даты</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500text-gray-300 uppercase">Итого</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500text-gray-300 uppercase">Статус</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500text-gray-300 uppercase">Действия</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200divide-gray-700">
-                @forelse($bookings as $booking)
-                    <tr class="hover:bg-gray-50hover:bg-gray-700">
-                        <td class="px-6 py-4">{{ $booking->user->name }}</td>
-                        <td class="px-6 py-4">{{ $booking->room->hotel->name }}</td>
-                        <td class="px-6 py-4">{{ $booking->room->name }}</td>
-                        <td class="px-6 py-4 text-sm">
-                            {{ $booking->check_in->format('d.m.Y') }} - {{ $booking->check_out->format('d.m.Y') }}
-                        </td>
-                        <td class="px-6 py-4 font-semibold text-[#8ee30f]">{{ number_format($booking->total_price, 0) }} ₸</td>
-                        <td class="px-6 py-4">
-                            <span class="px-2 py-1 rounded text-sm
-                                {{ $booking->status === 'confirmed' ? 'bg-green-100bg-green-900 text-green-800text-green-200' : 
-                                   ($booking->status === 'cancelled' ? 'bg-red-100bg-red-900 text-red-800text-red-200' : 
-                                    'bg-yellow-100bg-yellow-900 text-yellow-800text-yellow-200') }}">
-                                @if($booking->status === 'confirmed')
-                                    Подтверждено
-                                @elseif($booking->status === 'cancelled')
-                                    Отменено
-                                @else
-                                    Ожидает
-                                @endif
-                            </span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <form action="{{ route('admin.bookings.update-status', $booking) }}" method="POST" class="inline">
-                                @csrf
-                                <select name="status" onchange="this.form.submit()" class="px-2 py-1 border border-gray-300border-gray-600 rounded bg-whitebg-gray-700 text-sm">
-                                    <option value="pending" {{ $booking->status == 'pending' ? 'selected' : '' }}>Ожидает</option>
-                                    <option value="confirmed" {{ $booking->status == 'confirmed' ? 'selected' : '' }}>Подтверждено</option>
-                                    <option value="cancelled" {{ $booking->status == 'cancelled' ? 'selected' : '' }}>Отменено</option>
-                                </select>
-                            </form>
-                        </td>
-                    </tr>
-                @empty
+    <div class="otl-surface overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="bg-[#141516] text-[#7e8488]">
                     <tr>
-                        <td colspan="7" class="px-6 py-4 text-center text-gray-500text-gray-400">Бронирования не найдены</td>
+                        <th class="px-6 py-3 text-left font-medium uppercase text-xs">Пользователь</th>
+                        <th class="px-6 py-3 text-left font-medium uppercase text-xs">Отель</th>
+                        <th class="px-6 py-3 text-left font-medium uppercase text-xs">Номер</th>
+                        <th class="px-6 py-3 text-left font-medium uppercase text-xs">Даты</th>
+                        <th class="px-6 py-3 text-left font-medium uppercase text-xs">Итого</th>
+                        <th class="px-6 py-3 text-left font-medium uppercase text-xs">Статус</th>
+                        <th class="px-6 py-3 text-left font-medium uppercase text-xs">Действия</th>
                     </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody class="divide-y divide-white/5">
+                    @forelse($bookings as $booking)
+                        <tr class="hover:bg-white/5 transition">
+                            <td class="px-6 py-4 text-white">{{ $booking->user->name }}</td>
+                            <td class="px-6 py-4 text-gray-300">{{ $booking->room->hotel->name }}</td>
+                            <td class="px-6 py-4 text-gray-300">{{ $booking->room->name }}</td>
+                            <td class="px-6 py-4 text-gray-300">{{ $booking->check_in->format('d.m.Y') }} – {{ $booking->check_out->format('d.m.Y') }}</td>
+                            <td class="px-6 py-4 font-semibold text-[#8ee30f]">{{ number_format($booking->total_price, 0, '.', ' ') }} ₸</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2.5 py-1 rounded-full text-xs
+                                    {{ $booking->status === 'confirmed' ? 'bg-[#8ee30f]/15 text-[#8ee30f]' :
+                                       ($booking->status === 'cancelled' ? 'bg-[#f04141]/15 text-[#ff8a8a]' :
+                                        'bg-yellow-400/15 text-yellow-300') }}">
+                                    @if($booking->status === 'confirmed') Подтверждено
+                                    @elseif($booking->status === 'cancelled') Отменено
+                                    @else Ожидает @endif
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <form action="{{ route('admin.bookings.update-status', $booking) }}" method="POST" class="inline">
+                                    @csrf
+                                    <select name="status" onchange="this.form.submit()" class="bg-[#141516] border border-white/10 rounded-lg px-2 py-1.5 text-sm text-white" style="color-scheme: dark;">
+                                        <option value="pending" {{ $booking->status == 'pending' ? 'selected' : '' }}>Ожидает</option>
+                                        <option value="confirmed" {{ $booking->status == 'confirmed' ? 'selected' : '' }}>Подтверждено</option>
+                                        <option value="cancelled" {{ $booking->status == 'cancelled' ? 'selected' : '' }}>Отменено</option>
+                                    </select>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="px-6 py-8 text-center text-[#7e8488]">Бронирования не найдены</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <div class="mt-6">
-        {{ $bookings->links() }}
-    </div>
+    @if($bookings->hasPages())
+        <div class="mt-6">{{ $bookings->links() }}</div>
+    @endif
 </div>
 @endsection
-
-

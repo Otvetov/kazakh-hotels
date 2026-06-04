@@ -1,65 +1,47 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Hotel - Admin')
+@section('title', 'Редактировать отель - Админ')
 
 @section('content')
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <h1 class="text-3xl font-bold mb-8">Edit Hotel</h1>
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-2xl font-extrabold text-white mb-6">Редактировать отель</h1>
 
-    <form action="{{ route('admin.hotels.update', $hotel) }}" method="POST" enctype="multipart/form-data" class="bg-whitebg-gray-800 rounded-lg shadow-md p-6 border border-gray-200border-gray-700">
+    <form action="{{ route('admin.hotels.update', $hotel) }}" method="POST" enctype="multipart/form-data" class="otl-surface p-6">
         @csrf
         @method('PUT')
-
-        <div class="space-y-6">
+        <div class="space-y-5">
             <div>
-                <label class="block text-sm font-medium mb-2">Name</label>
-                <input type="text" name="name" required value="{{ old('name', $hotel->name) }}"
-                       class="w-full px-4 py-2 border border-gray-300border-gray-600 rounded-lg bg-whitebg-gray-700">
+                <label class="block text-sm font-medium text-[#7e8488] mb-2">Название</label>
+                <input type="text" name="name" required value="{{ old('name', $hotel->name) }}" class="field-input">
             </div>
-
             <div>
-                <label class="block text-sm font-medium mb-2">City</label>
-                <input type="text" name="city" required value="{{ old('city', $hotel->city) }}"
-                       class="w-full px-4 py-2 border border-gray-300border-gray-600 rounded-lg bg-whitebg-gray-700">
+                <label class="block text-sm font-medium text-[#7e8488] mb-2">Город</label>
+                <input type="text" name="city" required value="{{ old('city', $hotel->city) }}" class="field-input">
             </div>
-
             <div>
-                <label class="block text-sm font-medium mb-2">Address</label>
-                <textarea name="address" required rows="3"
-                          class="w-full px-4 py-2 border border-gray-300border-gray-600 rounded-lg bg-whitebg-gray-700">{{ old('address', $hotel->address) }}</textarea>
+                <label class="block text-sm font-medium text-[#7e8488] mb-2">Адрес</label>
+                <textarea name="address" required rows="3" class="field-input resize-none">{{ old('address', $hotel->address) }}</textarea>
             </div>
-
             <div>
-                <label class="block text-sm font-medium mb-2">Description</label>
-                <textarea name="description" rows="5"
-                          class="w-full px-4 py-2 border border-gray-300border-gray-600 rounded-lg bg-whitebg-gray-700">{{ old('description', $hotel->description) }}</textarea>
+                <label class="block text-sm font-medium text-[#7e8488] mb-2">Описание</label>
+                <textarea name="description" rows="5" class="field-input resize-none">{{ old('description', $hotel->description) }}</textarea>
             </div>
-
             <div>
-                <label class="block text-sm font-medium mb-2">Rating</label>
-                <input type="number" name="rating" step="0.1" min="0" max="5" value="{{ old('rating', $hotel->rating) }}"
-                       class="w-full px-4 py-2 border border-gray-300border-gray-600 rounded-lg bg-whitebg-gray-700">
+                <label class="block text-sm font-medium text-[#7e8488] mb-2">Рейтинг</label>
+                <input type="number" name="rating" step="0.1" min="0" max="5" value="{{ old('rating', $hotel->rating) }}" class="field-input">
             </div>
-
             <div>
-                <label class="block text-sm font-medium mb-2">Current Image</label>
+                <label class="block text-sm font-medium text-[#7e8488] mb-2">Текущее изображение</label>
                 @if($hotel->image)
-                    <img src="{{ $hotel->image_url }}" alt="{{ $hotel->name }}" class="w-32 h-32 object-cover rounded mb-2">
+                    <img src="{{ $hotel->image_url }}" alt="{{ $hotel->name }}" class="w-32 h-32 object-cover rounded-xl mb-3">
                 @endif
-                <input type="file" name="image" accept="image/*"
-                       class="w-full px-4 py-2 border border-gray-300border-gray-600 rounded-lg bg-whitebg-gray-700">
+                <input type="file" name="image" accept="image/*" class="field-input" style="color-scheme: dark;">
             </div>
-
-            <div class="flex gap-4">
-                <button type="submit" class="flex-1 px-6 py-3 bg-[#8ee30f] text-white rounded-lg hover:bg-[#2d8a00] transition">
-                    Update Hotel
-                </button>
-                <a href="{{ route('admin.hotels.index') }}" class="px-6 py-3 bg-gray-200bg-gray-700 rounded-lg hover:bg-gray-300hover:bg-gray-600 transition">
-                    Cancel
-                </a>
+            <div class="flex gap-3">
+                <button type="submit" class="btn-accent flex-1 py-3">Сохранить</button>
+                <a href="{{ route('admin.hotels.index') }}" class="btn-dark px-6 py-3">Отмена</a>
             </div>
         </div>
     </form>
 </div>
 @endsection
-
