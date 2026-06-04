@@ -14,7 +14,15 @@ class ProfileController extends Controller
         $user = Auth::user();
         $bookings = $user->bookings()->with(['room.hotel'])->latest()->take(5)->get();
 
-        return view('profile.show', compact('user', 'bookings'));
+        $stats = [
+            'bookings' => $user->bookings()->count(),
+            'favorites' => $user->favorites()->count(),
+            'reviews' => $user->reviews()->count(),
+        ];
+
+        $favorites = $user->favorites()->with('hotel.rooms')->latest()->take(4)->get();
+
+        return view('profile.show', compact('user', 'bookings', 'stats', 'favorites'));
     }
 
 

@@ -30,37 +30,100 @@
                 </div>
             </div>
 
+            {{-- Stats --}}
+            <div class="grid grid-cols-3 gap-4">
+                <div class="otl-surface p-5 text-center">
+                    <div class="text-3xl font-extrabold text-[#8ee30f]">{{ $stats['bookings'] }}</div>
+                    <div class="text-sm text-[#7e8488] mt-1">{{ $stats['bookings'] == 1 ? 'бронирование' : 'броней' }}</div>
+                </div>
+                <div class="otl-surface p-5 text-center">
+                    <div class="text-3xl font-extrabold text-[#8ee30f]">{{ $stats['favorites'] }}</div>
+                    <div class="text-sm text-[#7e8488] mt-1">в избранном</div>
+                </div>
+                <div class="otl-surface p-5 text-center">
+                    <div class="text-3xl font-extrabold text-[#8ee30f]">{{ $stats['reviews'] }}</div>
+                    <div class="text-sm text-[#7e8488] mt-1">{{ $stats['reviews'] == 1 ? 'отзыв' : 'отзывов' }}</div>
+                </div>
+            </div>
+
             {{-- Recent bookings --}}
             <div class="otl-surface p-6">
                 <h3 class="text-lg font-bold text-white mb-4">Последние бронирования</h3>
                 <div class="space-y-3">
                     @forelse($bookings as $booking)
-                        <div class="flex justify-between items-start bg-[#141516] rounded-2xl p-4">
+                        <a href="{{ route('bookings.show', $booking) }}" class="flex justify-between items-center bg-[#141516] rounded-2xl p-4 hover:bg-[#1f2021] transition">
                             <div class="min-w-0">
                                 <p class="font-semibold text-white truncate">{{ $booking->room->hotel->name }}</p>
                                 <p class="text-sm text-[#7e8488]">{{ $booking->check_in->format('d.m.Y') }} – {{ $booking->check_out->format('d.m.Y') }}</p>
                             </div>
                             <span class="text-[#8ee30f] font-bold flex-shrink-0 ml-3">{{ number_format($booking->total_price, 0, '.', ' ') }} ₸</span>
-                        </div>
+                        </a>
                     @empty
                         <p class="text-[#7e8488]">Нет последних бронирований</p>
                     @endforelse
                 </div>
-                <a href="{{ route('bookings.index') }}" class="mt-4 inline-block text-[#8ee30f] hover:underline">
-                    Все бронирования →
-                </a>
+                @if($bookings->count())
+                    <a href="{{ route('bookings.index') }}" class="mt-4 inline-block text-[#8ee30f] hover:underline">Все бронирования →</a>
+                @endif
             </div>
+
+            {{-- Favorites preview --}}
+            @if($favorites->count())
+                <div class="otl-surface p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-white">Избранные отели</h3>
+                        <a href="{{ route('favorites.index') }}" class="text-sm text-[#8ee30f] hover:underline">Все →</a>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        @foreach($favorites as $favorite)
+                            @php($hotel = $favorite->hotel)
+                            <a href="{{ route('hotels.show', $hotel->id) }}" class="group block">
+                                <div class="aspect-[4/3] rounded-2xl overflow-hidden bg-[#141516] mb-2">
+                                    @if($hotel->image)
+                                        <img src="{{ $hotel->image_url }}" alt="{{ $hotel->name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                                    @endif
+                                </div>
+                                <div class="text-sm text-white font-medium truncate">{{ $hotel->name }}</div>
+                                <div class="text-xs text-[#7e8488] truncate">{{ $hotel->city }}</div>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
         </div>
 
-        {{-- Right: support --}}
-        <div>
+        {{-- Right --}}
+        <div class="space-y-6">
+            {{-- Account info --}}
+            <div class="otl-surface p-6">
+                <h3 class="text-lg font-bold text-white mb-5">Об аккаунте</h3>
+                <div class="space-y-4 text-sm">
+                    <div class="flex justify-between gap-3">
+                        <span class="text-[#7e8488]">Email</span>
+                        <span class="text-white text-right truncate">{{ $user->email }}</span>
+                    </div>
+                    <div class="flex justify-between gap-3">
+                        <span class="text-[#7e8488]">С нами с</span>
+                        <span class="text-white">{{ $user->created_at->format('d.m.Y') }}</span>
+                    </div>
+                    <div class="flex justify-between gap-3">
+                        <span class="text-[#7e8488]">Статус</span>
+                        <span class="text-white">{{ $user->isAdmin() ? 'Администратор' : 'Пользователь' }}</span>
+                    </div>
+                </div>
+                <button onclick="document.getElementById('edit-modal').classList.remove('hidden')" class="btn-dark w-full py-2.5 mt-5">
+                    Редактировать профиль
+                </button>
+            </div>
+
+            {{-- Support --}}
             <div class="otl-surface p-6">
                 <h3 class="text-lg font-bold text-white mb-5">Поддержка</h3>
                 <div class="space-y-4">
                     <div class="flex items-center gap-3">
                         <span class="w-10 h-10 rounded-full bg-[#141516] flex items-center justify-center flex-shrink-0">
                             <svg class="w-5 h-5 text-[#8ee30f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z M3 12a9 9 0 019-9"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.7 9.7 0 01-4-.85L3 20l1.35-4A7.9 7.9 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                             </svg>
                         </span>
                         <span class="text-gray-200">Онлайн-чат</span>
