@@ -1,16 +1,16 @@
 <div class="otl-surface p-6 md:p-8">
     <div class="flex items-center justify-between mb-6">
-        <h2 class="text-white text-xl font-extrabold">Отзывы гостей</h2>
+        <h2 class="text-white text-xl font-extrabold">{{ __('messages.guest_reviews') }}</h2>
         @auth
             <button onclick="openReviewModal()" class="btn-accent px-5 py-2.5">
-                Оставить отзыв
+                {{ __('messages.leave_review') }}
             </button>
         @endauth
     </div>
 
     @if($hotel->reviews->count() === 0)
         <div class="text-center py-8 text-[#7e8488]">
-            Отзывов пока нет. Будьте первым!
+            {{ __('messages.no_reviews_yet') }}
         </div>
     @else
         <div class="space-y-5">
@@ -43,7 +43,7 @@
 <div id="reviewModal" class="bmodal hidden" style="display: none;">
     <div class="bmodal-box" style="max-width: 28rem;">
         <div class="flex items-center justify-center relative p-6 border-b border-white/10">
-            <h3 class="text-white text-lg font-bold">Оставить отзыв</h3>
+            <h3 class="text-white text-lg font-bold">{{ __('messages.leave_review') }}</h3>
             <button onclick="closeReviewModal()" class="absolute right-5 top-1/2 -translate-y-1/2 p-2 bg-white/5 hover:bg-white/10 rounded-full transition-colors">
                 <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -57,7 +57,7 @@
 
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm text-[#7e8488] mb-2">Ваша оценка <span class="text-[#f04141]">*</span></label>
+                    <label class="block text-sm text-[#7e8488] mb-2">{{ __('messages.your_rating') }} <span class="text-[#f04141]">*</span></label>
                     <div class="flex items-center gap-3 bg-[#141516] rounded-2xl px-4 py-3">
                         <div class="flex items-center gap-1.5" id="rating-stars">
                             @for($i = 1; $i <= 5; $i++)
@@ -74,17 +74,17 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm text-[#7e8488] mb-2">Комментарий <span class="text-[#f04141]">*</span></label>
+                    <label class="block text-sm text-[#7e8488] mb-2">{{ __('messages.comment') }} <span class="text-[#f04141]">*</span></label>
                     <textarea name="comment" required minlength="10" rows="5"
                         class="w-full px-4 py-3 bg-[#141516] border border-white/10 rounded-2xl focus:outline-none focus:border-[#8ee30f] resize-none text-white placeholder-[#7e8488]"
-                        placeholder="Расскажите о вашем опыте пребывания в отеле..."></textarea>
-                    <p class="text-xs text-[#7e8488] mt-1.5">Минимум 10 символов</p>
+                        placeholder="{{ __('messages.review_placeholder') }}"></textarea>
+                    <p class="text-xs text-[#7e8488] mt-1.5">{{ __('messages.min_chars') }}</p>
                 </div>
 
                 <div class="flex gap-3">
-                    <button type="button" onclick="closeReviewModal()" class="btn-dark flex-1 py-2.5">Отмена</button>
+                    <button type="button" onclick="closeReviewModal()" class="btn-dark flex-1 py-2.5">{{ __('messages.cancel') }}</button>
                     <button type="submit" id="submit-review-btn" disabled
-                        class="btn-accent flex-1 py-2.5 disabled:opacity-40 disabled:cursor-not-allowed">Отправить</button>
+                        class="btn-accent flex-1 py-2.5 disabled:opacity-40 disabled:cursor-not-allowed">{{ __('messages.submit') }}</button>
                 </div>
             </div>
         </form>
@@ -122,7 +122,7 @@ function setRating(rating) {
 function hoverRating(rating) { hoveredRating = rating; updateStars(); }
 function resetRating() { hoveredRating = 0; updateStars(); }
 
-const RATING_LABELS = { 1: 'Ужасно', 2: 'Плохо', 3: 'Нормально', 4: 'Хорошо', 5: 'Отлично' };
+const RATING_LABELS = { 1: @json(__('messages.rate_1')), 2: @json(__('messages.rate_2')), 3: @json(__('messages.rate_3')), 4: @json(__('messages.rate_4')), 5: @json(__('messages.rate_5')) };
 
 function updateStars() {
     const stars = document.querySelectorAll('.rating-star');

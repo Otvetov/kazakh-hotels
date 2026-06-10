@@ -5,30 +5,30 @@
 @section('content')
 <div class="max-w-md mx-auto px-4 py-16">
     <div class="otl-surface p-8">
-        <h1 class="text-2xl font-extrabold mb-6 text-center text-white">Вход</h1>
+        <h1 class="text-2xl font-extrabold mb-6 text-center text-white">{{ __('messages.login_title') }}</h1>
 
         <form action="{{ route('login') }}" method="POST">
             @csrf
             <div class="space-y-5">
                 <div>
-                    <label class="block text-sm font-medium text-[#7e8488] mb-2">Email</label>
+                    <label class="block text-sm font-medium text-[#7e8488] mb-2">{{ __('messages.email') }}</label>
                     <input type="email" name="email" required value="{{ old('email') }}" class="field-input">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-[#7e8488] mb-2">Пароль</label>
+                    <label class="block text-sm font-medium text-[#7e8488] mb-2">{{ __('messages.password') }}</label>
                     <input type="password" name="password" required class="field-input">
                 </div>
                 <div class="flex items-center">
                     <input type="checkbox" name="remember" id="remember" class="w-4 h-4 rounded bg-[#141516] border-white/20 accent-[#8ee30f]">
-                    <label for="remember" class="ml-2 text-sm text-gray-300">Запомнить меня</label>
+                    <label for="remember" class="ml-2 text-sm text-gray-300">{{ __('messages.remember_me') }}</label>
                 </div>
-                <button type="submit" class="btn-accent w-full py-3">Войти</button>
+                <button type="submit" class="btn-accent w-full py-3">{{ __('messages.login') }}</button>
             </div>
         </form>
 
         <p class="mt-6 text-center text-sm text-[#7e8488]">
-            Нет аккаунта?
-            <a href="{{ route('register') }}" class="text-[#8ee30f] hover:underline">Зарегистрироваться</a>
+            {{ __('messages.no_account') }}
+            <a href="{{ route('register') }}" class="text-[#8ee30f] hover:underline">{{ __('messages.register') }}</a>
         </p>
     </div>
 </div>

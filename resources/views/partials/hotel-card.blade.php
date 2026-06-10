@@ -36,9 +36,9 @@
         <p class="text-sm text-[#7e8488] mb-3">{{ $hotel->city }}</p>
         <div class="flex items-end justify-between">
             <div class="text-lg font-bold text-[#8ee30f]">
-                от {{ number_format($hotel->min_price, 0, '.', ' ') }} ₸
+                {{ __('messages.from_price', ['price' => number_format($hotel->min_price, 0, '.', ' ')]) }}
             </div>
-            <div class="text-xs text-[#7e8488]">{{ $hotel->rooms->count() }} номеров</div>
+            <div class="text-xs text-[#7e8488]">{{ trans_choice('messages.rooms_count', $hotel->rooms->count(), ['count' => $hotel->rooms->count()]) }}</div>
         </div>
     </div>
 </a>

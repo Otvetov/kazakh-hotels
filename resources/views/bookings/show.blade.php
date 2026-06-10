@@ -10,39 +10,39 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
         </div>
-        <h2 class="text-white text-2xl font-extrabold mb-3">Бронирование успешно!</h2>
+        <h2 class="text-white text-2xl font-extrabold mb-3">{{ __('messages.booking_success') }}</h2>
         <p class="text-[#7e8488] mb-8">
-            Ваше бронирование принято и ожидает подтверждения. Детали доступны в разделе «Бронирования».
+            {{ __('messages.booking_success_text') }}
         </p>
 
         <div class="bg-[#141516] rounded-2xl p-5 mb-6 text-left">
             <div class="space-y-2.5 text-sm">
                 <div class="flex justify-between gap-4">
-                    <span class="text-[#7e8488]">Отель</span>
+                    <span class="text-[#7e8488]">{{ __('messages.hotel') }}</span>
                     <span class="text-white font-medium text-right">{{ $booking->room->hotel->name }}</span>
                 </div>
                 <div class="flex justify-between gap-4">
-                    <span class="text-[#7e8488]">Номер</span>
+                    <span class="text-[#7e8488]">{{ __('messages.room') }}</span>
                     <span class="text-white font-medium text-right">{{ $booking->room->name }}</span>
                 </div>
                 <div class="flex justify-between gap-4">
-                    <span class="text-[#7e8488]">Даты</span>
+                    <span class="text-[#7e8488]">{{ __('messages.dates') }}</span>
                     <span class="text-white font-medium text-right">{{ $booking->check_in->format('d.m.Y') }} – {{ $booking->check_out->format('d.m.Y') }}</span>
                 </div>
                 <div class="flex justify-between gap-4">
-                    <span class="text-[#7e8488]">Гостей</span>
+                    <span class="text-[#7e8488]">{{ __('messages.guests_label') }}</span>
                     <span class="text-white font-medium">{{ $booking->guests }}</span>
                 </div>
                 <div class="flex justify-between gap-4 pt-3 border-t border-white/10">
-                    <span class="text-white font-semibold">Итого</span>
+                    <span class="text-white font-semibold">{{ __('messages.total_label') }}</span>
                     <span class="text-[#8ee30f] font-bold text-lg">{{ number_format($booking->total_price, 0, '.', ' ') }} ₸</span>
                 </div>
             </div>
         </div>
 
         <div class="space-y-3">
-            <a href="{{ route('bookings.index') }}" class="btn-accent w-full py-3">Мои бронирования</a>
-            <a href="{{ route('home') }}" class="btn-dark w-full py-3">На главную</a>
+            <a href="{{ route('bookings.index') }}" class="btn-accent w-full py-3">{{ __('messages.my_bookings') }}</a>
+            <a href="{{ route('home') }}" class="btn-dark w-full py-3">{{ __('messages.to_home') }}</a>
         </div>
     </div>
 </div>

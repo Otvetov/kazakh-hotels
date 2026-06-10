@@ -2,7 +2,7 @@
     <div class="modal-box" style="max-width: 30rem;">
         <!-- Header -->
         <div class="flex items-center justify-center relative p-6 border-b border-white/10">
-            <h3 class="text-white text-lg font-bold">Даты поездки</h3>
+            <h3 class="text-white text-lg font-bold">{{ __('messages.trip_dates') }}</h3>
             <button onclick="closeModals()" class="absolute right-5 top-1/2 -translate-y-1/2 p-2 bg-white/5 hover:bg-white/10 rounded-full transition-colors">
                 <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -28,15 +28,15 @@
 
             {{-- Weekday header --}}
             <div class="grid grid-cols-7 gap-1 mb-2 text-center text-xs text-[#7e8488]">
-                <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span>
-                <span class="text-[#f04141]/70">Сб</span><span class="text-[#f04141]/70">Вс</span>
+                <span>{{ __('messages.wd_mon') }}</span><span>{{ __('messages.wd_tue') }}</span><span>{{ __('messages.wd_wed') }}</span><span>{{ __('messages.wd_thu') }}</span><span>{{ __('messages.wd_fri') }}</span>
+                <span class="text-[#f04141]/70">{{ __('messages.wd_sat') }}</span><span class="text-[#f04141]/70">{{ __('messages.wd_sun') }}</span>
             </div>
 
             {{-- Days grid --}}
             <div id="calDays" class="grid grid-cols-7 gap-1"></div>
 
             {{-- Selected range hint --}}
-            <p id="calHint" class="text-sm text-[#7e8488] mt-4 text-center">Выберите дату заезда</p>
+            <p id="calHint" class="text-sm text-[#7e8488] mt-4 text-center">{{ __('messages.choose_checkin') }}</p>
         </div>
 
         {{-- Hidden inputs consumed by saveDates() --}}
@@ -45,8 +45,8 @@
 
         <!-- Footer -->
         <div class="flex items-center justify-end gap-3 p-6 border-t border-white/10">
-            <button type="button" onclick="calClear()" class="btn-dark px-6 py-2.5">Очистить</button>
-            <button type="button" onclick="saveDates()" class="btn-accent px-7 py-2.5">Применить</button>
+            <button type="button" onclick="calClear()" class="btn-dark px-6 py-2.5">{{ __('messages.clear') }}</button>
+            <button type="button" onclick="saveDates()" class="btn-accent px-7 py-2.5">{{ __('messages.apply') }}</button>
         </div>
     </div>
 </div>

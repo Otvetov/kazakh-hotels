@@ -2,6 +2,37 @@
 let guestsCount = {{ request('guests', 2) }};
 let roomsCount = {{ request('rooms', 1) }};
 
+// Локализация для JS
+const APP_LOCALE = '{{ app()->getLocale() }}';
+const GUEST_FORMS = @json(explode('|', __('messages.guests_count')));
+const ROOM_FORMS = @json(explode('|', __('messages.rooms_count')));
+const T = {
+    choose_checkin: @json(__('messages.choose_checkin')),
+    choose_checkout: @json(__('messages.choose_checkout')),
+    searching: @json(__('messages.searching')),
+    nothing_found: @json(__('messages.nothing_found')),
+    search_failed: @json(__('messages.search_failed')),
+    fill_fields: @json(__('messages.fill_fields')),
+    err_destination: @json(__('messages.err_choose_destination')),
+    err_checkin: @json(__('messages.err_checkin')),
+    err_checkout: @json(__('messages.err_checkout')),
+};
+function pluralForm(n, forms) {
+    let idx;
+    if (APP_LOCALE === 'ru') {
+        const n10 = n % 10, n100 = n % 100;
+        if (n10 === 1 && n100 !== 11) idx = 0;
+        else if (n10 >= 2 && n10 <= 4 && (n100 < 12 || n100 > 14)) idx = 1;
+        else idx = 2;
+    } else if (APP_LOCALE === 'en') {
+        idx = n === 1 ? 0 : 1;
+    } else {
+        idx = 0;
+    }
+    const form = forms[Math.min(idx, forms.length - 1)] || forms[0];
+    return form.replace(':count', n);
+}
+
 function openModal(id) {
     const modal = document.getElementById(id);
     if (modal) {
@@ -143,7 +174,8 @@ function renderCalendar() {
     const prevBtn = document.getElementById('calPrev');
     if (!grid) return;
 
-    label.textContent = MONTHS_RU[calView.getMonth()] + ' ' + calView.getFullYear();
+    const ml = calView.toLocaleDateString(APP_LOCALE, { month: 'long', year: 'numeric' });
+    label.textContent = ml.charAt(0).toUpperCase() + ml.slice(1);
 
     const today = calStripTime(new Date());
     const firstOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -191,11 +223,11 @@ function renderCalendar() {
     if (hint) {
         if (calCheckIn && calCheckOut) {
             const opt = { day: 'numeric', month: 'short' };
-            hint.textContent = calCheckIn.toLocaleDateString('ru-RU', opt) + ' – ' + calCheckOut.toLocaleDateString('ru-RU', opt);
+            hint.textContent = calCheckIn.toLocaleDateString(APP_LOCALE, opt) + ' – ' + calCheckOut.toLocaleDateString(APP_LOCALE, opt);
         } else if (calCheckIn) {
-            hint.textContent = 'Выберите дату выезда';
+            hint.textContent = T.choose_checkout;
         } else {
-            hint.textContent = 'Выберите дату заезда';
+            hint.textContent = T.choose_checkin;
         }
     }
 }
@@ -214,14 +246,14 @@ function saveDates() {
         const checkOutInputHotels = document.getElementById('checkOutInputHotels');
 
         if (dateValueHotels && checkInInputHotels && checkOutInputHotels) {
-            dateValueHotels.textContent = checkInDate.toLocaleDateString('ru-RU', options) + ' – ' + checkOutDate.toLocaleDateString('ru-RU', options);
+            dateValueHotels.textContent = checkInDate.toLocaleDateString(APP_LOCALE, options) + ' – ' + checkOutDate.toLocaleDateString(APP_LOCALE, options);
             checkInInputHotels.value = checkIn;
             checkOutInputHotels.value = checkOut;
         } else {
             const dateValue = document.getElementById('dateValue');
             const checkInInput = document.getElementById('checkInInput');
             const checkOutInput = document.getElementById('checkOutInput');
-            if (dateValue) dateValue.textContent = checkInDate.toLocaleDateString('ru-RU', options) + ' – ' + checkOutDate.toLocaleDateString('ru-RU', options);
+            if (dateValue) dateValue.textContent = checkInDate.toLocaleDateString(APP_LOCALE, options) + ' – ' + checkOutDate.toLocaleDateString(APP_LOCALE, options);
             if (checkInInput) checkInInput.value = checkIn;
             if (checkOutInput) checkOutInput.value = checkOut;
         }
@@ -251,9 +283,7 @@ function changeRooms(delta) {
 }
 
 function saveGuests() {
-    const guestsText = guestsCount === 1 ? 'гость' : 'гостей';
-    const roomsText = roomsCount === 1 ? 'номер' : 'номеров';
-    const valueText = `${guestsCount} ${guestsText}, ${roomsCount} ${roomsText}`;
+    const valueText = `${pluralForm(guestsCount, GUEST_FORMS)}, ${pluralForm(roomsCount, ROOM_FORMS)}`;
 
     const guestsValue = document.getElementById('guestsValue');
     const guestsInput = document.getElementById('guestsInput');
@@ -284,13 +314,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const checkOut = document.getElementById('checkOutInput').value;
 
             const errors = [];
-            if (!city || city === 'Выберите направление') errors.push('Выберите направление');
-            if (!checkIn) errors.push('Выберите дату заезда');
-            if (!checkOut) errors.push('Выберите дату выезда');
+            if (!city) errors.push(T.err_destination);
+            if (!checkIn) errors.push(T.err_checkin);
+            if (!checkOut) errors.push(T.err_checkout);
 
             if (errors.length > 0) {
                 e.preventDefault();
-                searchError.textContent = 'Пожалуйста, заполните следующие поля: ' + errors.join(', ');
+                searchError.textContent = T.fill_fields + errors.join(', ');
                 searchError.classList.remove('hidden');
                 searchError.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 return false;
@@ -321,7 +351,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             searchTimeout = setTimeout(() => {
-                citiesListResults.innerHTML = '<div class="text-center py-4 text-[#7e8488]">Поиск...</div>';
+                citiesListResults.innerHTML = '<div class="text-center py-4 text-[#7e8488]">' + T.searching + '</div>';
                 searchResults.classList.remove('hidden');
                 popularCities.classList.add('hidden');
 
@@ -343,12 +373,12 @@ document.addEventListener('DOMContentLoaded', function() {
                             </button>
                         `).join('');
                     } else {
-                        citiesListResults.innerHTML = '<div class="text-center py-4 text-[#7e8488]">Ничего не найдено</div>';
+                        citiesListResults.innerHTML = '<div class="text-center py-4 text-[#7e8488]">' + T.nothing_found + '</div>';
                     }
                 })
                 .catch(error => {
                     console.error('Error searching cities:', error);
-                    citiesListResults.innerHTML = '<div class="text-center py-4 text-[#7e8488]">Ошибка поиска</div>';
+                    citiesListResults.innerHTML = '<div class="text-center py-4 text-[#7e8488]">' + T.search_failed + '</div>';
                 });
             }, 300);
         });

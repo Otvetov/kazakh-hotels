@@ -16,7 +16,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     </svg>
-                    <span id="cityValueHotels" class="value truncate">{{ request('city') ?: 'Выберите направление' }}</span>
+                    <span id="cityValueHotels" class="value truncate">{{ request('city') ?: __('messages.choose_destination') }}</span>
                 </button>
                 <input type="hidden" name="city" id="cityInputHotels" value="{{ request('city') }}">
 
@@ -29,7 +29,7 @@
                         @if(request('check_in') && request('check_out'))
                             {{ \Carbon\Carbon::parse(request('check_in'))->format('d M') }} – {{ \Carbon\Carbon::parse(request('check_out'))->format('d M') }}
                         @else
-                            Заезд – Выезд
+                            {{ __('messages.checkin_checkout') }}
                         @endif
                     </span>
                 </button>
@@ -43,7 +43,7 @@
                     </svg>
                     <span id="guestsValueHotels" class="value truncate">
                         @php $guests = request('guests', 2); $rooms = request('rooms', 1); @endphp
-                        {{ $guests }} {{ $guests == 1 ? 'гость' : 'гостей' }}, {{ $rooms }} {{ $rooms == 1 ? 'номер' : 'номеров' }}
+                        {{ trans_choice('messages.guests_count', $guests, ['count' => $guests]) }}, {{ trans_choice('messages.rooms_count', $rooms, ['count' => $rooms]) }}
                     </span>
                 </button>
                 <input type="hidden" name="guests" id="guestsInputHotels" value="{{ request('guests', 2) }}">
@@ -53,7 +53,7 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
-                    <span>Найти</span>
+                    <span>{{ __('messages.find') }}</span>
                 </button>
             </div>
             <div id="searchErrorHotels" class="hidden mt-3 p-3 bg-[#f04141]/10 border border-[#f04141]/30 rounded-xl text-sm text-[#ff8a8a]"></div>
@@ -63,7 +63,12 @@
     {{-- Sort chips --}}
     @php
         $currentSort = request('sort', 'popular');
-        $sorts = ['popular' => 'Популярные', 'rating' => 'По рейтингу', 'price_asc' => 'Сначала дешёвые', 'price_desc' => 'Сначала дорогие'];
+        $sorts = [
+            'popular' => __('messages.sort_popular'),
+            'rating' => __('messages.sort_rating'),
+            'price_asc' => __('messages.sort_price_asc'),
+            'price_desc' => __('messages.sort_price_desc'),
+        ];
     @endphp
     <div class="flex flex-wrap gap-2 mb-6">
         @foreach($sorts as $key => $label)
@@ -77,17 +82,17 @@
     {{-- Header --}}
     <div class="mb-5">
         <h1 class="text-white text-2xl font-extrabold mb-1">
-            {{ request('city') ? 'Отели в городе ' . request('city') : 'Все отели' }}
+            {{ request('city') ? __('messages.hotels_in_city', ['city' => request('city')]) : __('messages.all_hotels') }}
         </h1>
         <p class="text-[#7e8488]">
-            Найдено {{ $hotels->total() }} {{ $hotels->total() == 1 ? 'отель' : 'отелей' }}
+            {{ trans_choice('messages.hotels_found', $hotels->total(), ['count' => $hotels->total()]) }}
         </p>
     </div>
 
     @if($hotels->count() === 0)
         <div class="otl-surface text-center py-16 px-6">
-            <p class="text-[#7e8488] mb-4">Отели не найдены</p>
-            <a href="{{ route('hotels.index') }}" class="btn-accent px-6 py-2.5">Сбросить фильтры</a>
+            <p class="text-[#7e8488] mb-4">{{ __('messages.hotels_not_found') }}</p>
+            <a href="{{ route('hotels.index') }}" class="btn-accent px-6 py-2.5">{{ __('messages.reset_filters') }}</a>
         </div>
     @else
         @php $bkQuery = http_build_query(array_filter(request()->only(['check_in', 'check_out', 'guests', 'rooms']))); @endphp
@@ -133,7 +138,7 @@
                                 @if($hotel->rating)
                                     <div class="flex items-center gap-2 flex-shrink-0">
                                         <div class="text-right hidden sm:block">
-                                            <div class="text-sm text-white font-medium">{{ $hotel->rating >= 4.5 ? 'Отлично' : ($hotel->rating >= 4 ? 'Хорошо' : 'Неплохо') }}</div>
+                                            <div class="text-sm text-white font-medium">{{ $hotel->rating >= 4.5 ? __('messages.rating_excellent') : ($hotel->rating >= 4 ? __('messages.rating_good') : __('messages.rating_fair')) }}</div>
                                         </div>
                                         <span class="bg-[#8ee30f] text-[#0a0a0a] px-2.5 py-1 rounded-lg font-bold">{{ number_format($hotel->rating, 1) }}</span>
                                     </div>
@@ -147,13 +152,13 @@
                             <div class="mt-auto flex items-end justify-between pt-3 border-t border-white/5">
                                 <div class="text-sm text-[#7e8488]">
                                     @if($hotel->rooms->count() > 0)
-                                        {{ $hotel->rooms->count() }} {{ $hotel->rooms->count() == 1 ? 'номер' : 'номеров' }} · цена за ночь от
+                                        {{ trans_choice('messages.rooms_count', $hotel->rooms->count(), ['count' => $hotel->rooms->count()]) }} · {{ __('messages.per_night_from') }}
                                     @else
-                                        нет доступных номеров
+                                        {{ __('messages.no_rooms_available') }}
                                     @endif
                                 </div>
                                 <div class="text-2xl text-[#8ee30f] font-extrabold">
-                                    от {{ number_format($hotel->min_price, 0, '.', ' ') }} ₸
+                                    {{ __('messages.from_price', ['price' => number_format($hotel->min_price, 0, '.', ' ')]) }}
                                 </div>
                             </div>
                         </div>
@@ -209,14 +214,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const checkOut = document.getElementById('checkOutInputHotels')?.value;
 
             const errors = [];
-            if (!city || city === 'Выберите направление') errors.push('Выберите направление');
-            if (!checkIn) errors.push('Выберите дату заезда');
-            if (!checkOut) errors.push('Выберите дату выезда');
+            if (!city) errors.push(T.err_destination);
+            if (!checkIn) errors.push(T.err_checkin);
+            if (!checkOut) errors.push(T.err_checkout);
 
             if (errors.length > 0) {
                 e.preventDefault();
                 if (searchErrorHotels) {
-                    searchErrorHotels.textContent = 'Пожалуйста, заполните следующие поля: ' + errors.join(', ');
+                    searchErrorHotels.textContent = T.fill_fields + errors.join(', ');
                     searchErrorHotels.classList.remove('hidden');
                     searchErrorHotels.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }

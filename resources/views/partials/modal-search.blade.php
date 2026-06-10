@@ -2,7 +2,7 @@
     <div class="modal-box" style="max-width: 42rem;">
         <!-- Header -->
         <div class="flex items-center justify-center relative p-6 border-b border-white/10">
-            <h2 class="text-white text-lg font-bold">Где хотите остановиться?</h2>
+            <h2 class="text-white text-lg font-bold">{{ __('messages.where_stay') }}</h2>
             <button
                 onclick="closeModals()"
                 class="absolute right-5 top-1/2 -translate-y-1/2 p-2 bg-white/5 hover:bg-white/10 rounded-full transition-colors"
@@ -23,7 +23,7 @@
                     id="citySelect"
                     type="text"
                     value=""
-                    placeholder="Город, отель или направление"
+                    placeholder="{{ __('messages.destination_label') }}"
                     class="w-full pl-12 pr-4 py-3.5 bg-[#141516] border border-white/10 rounded-2xl focus:outline-none focus:border-[#8ee30f] text-white placeholder-[#7e8488]"
                     autofocus
                 />
@@ -32,13 +32,13 @@
 
         <!-- Search Results -->
         <div id="search-results" class="px-6 pb-4 hidden">
-            <p class="text-sm text-[#7e8488] mb-2">Результаты поиска</p>
+            <p class="text-sm text-[#7e8488] mb-2">{{ __('messages.search_results') }}</p>
             <div id="cities-list-results" class="space-y-1"></div>
         </div>
 
         <!-- Popular Cities -->
         <div id="popular-cities" class="px-6 pb-6">
-            <p class="text-sm font-semibold text-[#7e8488] mb-3">Популярные направления</p>
+            <p class="text-sm font-semibold text-[#7e8488] mb-3">{{ __('messages.popular_destinations') }}</p>
             <div class="space-y-1">
                 @if(isset($popularCities) && $popularCities->count() > 0)
                     @foreach($popularCities as $city)
@@ -59,7 +59,7 @@
                         </button>
                     @endforeach
                 @else
-                    <p class="text-sm text-[#7e8488]">Нет доступных направлений</p>
+                    <p class="text-sm text-[#7e8488]">{{ __('messages.no_destinations') }}</p>
                 @endif
             </div>
         </div>

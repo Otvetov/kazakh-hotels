@@ -7,19 +7,19 @@
 
     {{-- Header card with tabs --}}
     <div class="otl-surface px-6 py-5 mb-6">
-        <h1 class="text-2xl font-extrabold text-white mb-4">Бронирования</h1>
+        <h1 class="text-2xl font-extrabold text-white mb-4">{{ __('messages.bookings_title') }}</h1>
         <div class="flex gap-2 overflow-x-auto">
             <a href="{{ route('bookings.index', ['tab' => 'active']) }}"
                class="px-5 py-2 rounded-full text-sm font-medium transition whitespace-nowrap {{ $tab === 'active' ? 'bg-[#8ee30f] text-[#0a0a0a]' : 'bg-[#2a2b2c] text-gray-300 hover:bg-[#343536]' }}">
-                Активные
+                {{ __('messages.tab_active') }}
             </a>
             <a href="{{ route('bookings.index', ['tab' => 'past']) }}"
                class="px-5 py-2 rounded-full text-sm font-medium transition whitespace-nowrap {{ $tab === 'past' ? 'bg-[#8ee30f] text-[#0a0a0a]' : 'bg-[#2a2b2c] text-gray-300 hover:bg-[#343536]' }}">
-                Прошлые
+                {{ __('messages.tab_past') }}
             </a>
             <a href="{{ route('bookings.index', ['tab' => 'cancelled']) }}"
                class="px-5 py-2 rounded-full text-sm font-medium transition whitespace-nowrap {{ $tab === 'cancelled' ? 'bg-[#8ee30f] text-[#0a0a0a]' : 'bg-[#2a2b2c] text-gray-300 hover:bg-[#343536]' }}">
-                Отменённые
+                {{ __('messages.tab_cancelled') }}
             </a>
         </div>
     </div>
@@ -31,17 +31,17 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                 </svg>
             </div>
-            <h2 class="text-white text-xl font-bold mb-2">Здесь пока пусто</h2>
+            <h2 class="text-white text-xl font-bold mb-2">{{ __('messages.empty_here') }}</h2>
             <p class="text-[#7e8488] mb-6">
                 @if($tab === 'active')
-                    Пора выбрать идеальный отель и отправиться в новое путешествие
+                    {{ __('messages.empty_active') }}
                 @elseif($tab === 'past')
-                    У вас пока нет завершённых бронирований
+                    {{ __('messages.empty_past') }}
                 @else
-                    У вас нет отменённых бронирований
+                    {{ __('messages.empty_cancelled') }}
                 @endif
             </p>
-            <a href="{{ route('hotels.index') }}" class="btn-accent px-6 py-3">Выбрать отель</a>
+            <a href="{{ route('hotels.index') }}" class="btn-accent px-6 py-3">{{ __('messages.choose_hotel') }}</a>
         </div>
     @else
         <div class="space-y-4">
@@ -63,42 +63,42 @@
                             {{ $booking->status === 'confirmed' ? 'bg-[#8ee30f]/15 text-[#8ee30f]' :
                                ($booking->status === 'cancelled' ? 'bg-[#f04141]/15 text-[#ff8a8a]' :
                                 'bg-yellow-400/15 text-yellow-300') }}">
-                            @if($booking->status === 'confirmed') Подтверждено
-                            @elseif($booking->status === 'cancelled') Отменено
-                            @else Ожидает @endif
+                            @if($booking->status === 'confirmed') {{ __('messages.status_confirmed') }}
+                            @elseif($booking->status === 'cancelled') {{ __('messages.status_cancelled') }}
+                            @else {{ __('messages.status_pending') }} @endif
                         </span>
                     </div>
 
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-[#141516] rounded-2xl mb-4">
                         <div>
-                            <div class="text-xs text-[#7e8488] mb-1">Заезд</div>
-                            <div class="text-sm text-white font-medium">{{ $booking->check_in->locale('ru')->translatedFormat('d M Y') }}</div>
+                            <div class="text-xs text-[#7e8488] mb-1">{{ __('messages.checkin') }}</div>
+                            <div class="text-sm text-white font-medium">{{ $booking->check_in->locale(app()->getLocale())->translatedFormat('d M Y') }}</div>
                         </div>
                         <div>
-                            <div class="text-xs text-[#7e8488] mb-1">Выезд</div>
-                            <div class="text-sm text-white font-medium">{{ $booking->check_out->locale('ru')->translatedFormat('d M Y') }}</div>
+                            <div class="text-xs text-[#7e8488] mb-1">{{ __('messages.checkout') }}</div>
+                            <div class="text-sm text-white font-medium">{{ $booking->check_out->locale(app()->getLocale())->translatedFormat('d M Y') }}</div>
                         </div>
                         <div>
-                            <div class="text-xs text-[#7e8488] mb-1">Гостей</div>
+                            <div class="text-xs text-[#7e8488] mb-1">{{ __('messages.guests_label') }}</div>
                             <div class="text-sm text-white font-medium">{{ $booking->guests }}</div>
                         </div>
                         <div>
-                            <div class="text-xs text-[#7e8488] mb-1">Сумма</div>
+                            <div class="text-xs text-[#7e8488] mb-1">{{ __('messages.total') }}</div>
                             <div class="text-sm text-[#8ee30f] font-bold">{{ number_format($booking->total_price, 0, '.', ' ') }} ₸</div>
                         </div>
                     </div>
 
                     @if($booking->status !== 'cancelled')
                         <div class="flex gap-3">
-                            <a href="{{ route('bookings.show', $booking) }}" class="btn-dark flex-1 py-3">Подробнее</a>
+                            <a href="{{ route('bookings.show', $booking) }}" class="btn-dark flex-1 py-3">{{ __('messages.details') }}</a>
                             @if($booking->status === 'pending')
-                                <form action="{{ route('bookings.cancel', $booking) }}" method="POST" class="flex-1" onsubmit="return confirm('Вы уверены, что хотите отменить бронирование?');">
+                                <form action="{{ route('bookings.cancel', $booking) }}" method="POST" class="flex-1" onsubmit="return confirm('{{ __('messages.cancel_confirm') }}');">
                                     @csrf
                                     <button type="submit" class="w-full flex items-center justify-center gap-2 px-6 py-3 border border-[#f04141]/40 text-[#ff8a8a] rounded-full hover:bg-[#f04141]/10 transition font-medium">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                         </svg>
-                                        <span>Отменить</span>
+                                        <span>{{ __('messages.cancel_booking') }}</span>
                                     </button>
                                 </form>
                             @endif

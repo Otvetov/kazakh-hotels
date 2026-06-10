@@ -13,11 +13,11 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
                 </button>
-                <a href="#hero" class="px-3 py-2 text-sm text-gray-300 hover:text-white whitespace-nowrap transition">Главное</a>
-                <a href="#rooms" class="px-3 py-2 text-sm text-gray-300 hover:text-white whitespace-nowrap transition">Номера</a>
-                <a href="#reviews" class="px-3 py-2 text-sm text-gray-300 hover:text-white whitespace-nowrap transition">Отзывы</a>
+                <a href="#hero" class="px-3 py-2 text-sm text-gray-300 hover:text-white whitespace-nowrap transition">{{ __('messages.nav_main') }}</a>
+                <a href="#rooms" class="px-3 py-2 text-sm text-gray-300 hover:text-white whitespace-nowrap transition">{{ __('messages.rooms') }}</a>
+                <a href="#reviews" class="px-3 py-2 text-sm text-gray-300 hover:text-white whitespace-nowrap transition">{{ __('messages.nav_reviews') }}</a>
                 @if($hotel->description)
-                    <a href="#about" class="px-3 py-2 text-sm text-gray-300 hover:text-white whitespace-nowrap transition">Описание</a>
+                    <a href="#about" class="px-3 py-2 text-sm text-gray-300 hover:text-white whitespace-nowrap transition">{{ __('messages.nav_description') }}</a>
                 @endif
             </div>
             <div class="flex items-center gap-1 flex-shrink-0">
@@ -64,9 +64,9 @@
                                 <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.05 2.93c.3-.92 1.6-.92 1.9 0l1.37 4.24a1 1 0 00.95.69h4.46c.97 0 1.37 1.24.59 1.81l-3.61 2.62a1 1 0 00-.36 1.12l1.38 4.24c.3.92-.75 1.69-1.54 1.12l-3.6-2.62a1 1 0 00-1.18 0l-3.6 2.62c-.79.57-1.84-.2-1.54-1.12l1.38-4.24a1 1 0 00-.36-1.12L1.33 9.67c-.78-.57-.38-1.81.59-1.81h4.46a1 1 0 00.95-.69z"/></svg>
                                 {{ number_format($hotel->rating, 1) }}
                             </span>
-                            <span class="text-white font-medium">{{ $hotel->rating >= 4.5 ? 'Отлично' : ($hotel->rating >= 4 ? 'Хорошо' : 'Неплохо') }}</span>
+                            <span class="text-white font-medium">{{ $hotel->rating >= 4.5 ? __('messages.rating_excellent') : ($hotel->rating >= 4 ? __('messages.rating_good') : __('messages.rating_fair')) }}</span>
                             @if($hotel->reviews->count())
-                                <span class="text-[#7e8488] text-sm">· {{ $hotel->reviews->count() }} {{ $hotel->reviews->count() == 1 ? 'отзыв' : 'отзывов' }}</span>
+                                <span class="text-[#7e8488] text-sm">· {{ trans_choice('messages.reviews_count', $hotel->reviews->count(), ['count' => $hotel->reviews->count()]) }}</span>
                             @endif
                         @endif
                     </div>
@@ -83,18 +83,18 @@
                     {{-- Info chips --}}
                     <div class="flex flex-wrap gap-2">
                         <span class="chip">{{ $hotel->city }}</span>
-                        <span class="chip">{{ $hotel->rooms->count() }} {{ $hotel->rooms->count() == 1 ? 'номер' : 'номеров' }}</span>
+                        <span class="chip">{{ trans_choice('messages.rooms_count', $hotel->rooms->count(), ['count' => $hotel->rooms->count()]) }}</span>
                         @if($hotel->rooms->where('is_available', true)->count())
-                            <span class="chip">Есть свободные</span>
+                            <span class="chip">{{ __('messages.has_free_rooms') }}</span>
                         @endif
                     </div>
                 </div>
 
                 {{-- Price + CTA --}}
                 <div class="flex-shrink-0 md:text-right">
-                    <div class="text-[#7e8488] text-sm mb-1">Цена за ночь от</div>
+                    <div class="text-[#7e8488] text-sm mb-1">{{ __('messages.price_per_night_from') }}</div>
                     <div class="text-3xl font-extrabold text-[#8ee30f] mb-3">{{ number_format($hotel->min_price, 0, '.', ' ') }} ₸</div>
-                    <a href="#rooms" class="btn-accent px-8 py-3">Выбрать номер</a>
+                    <a href="#rooms" class="btn-accent px-8 py-3">{{ __('messages.choose_room') }}</a>
                 </div>
             </div>
         </div>
@@ -103,19 +103,19 @@
     {{-- AI assistant (заготовка под будущего ИИ-помощника) --}}
     <div class="otl-surface p-6 md:p-8 mb-6">
         <div class="flex items-center gap-2 mb-1">
-            <h2 class="text-white text-xl font-extrabold">Уточните до бронирования</h2>
+            <h2 class="text-white text-xl font-extrabold">{{ __('messages.ai_title') }}</h2>
             <svg class="w-5 h-5 text-[#c084fc]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l1.9 5.6L19.5 9l-4.5 3.3L16.8 18 12 14.7 7.2 18l1.8-5.7L4.5 9l5.6-1.4L12 2z"/></svg>
         </div>
-        <p class="text-[#7e8488] mb-5">ИИ-помощник подскажет за пару секунд</p>
+        <p class="text-[#7e8488] mb-5">{{ __('messages.ai_subtitle') }}</p>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             @php
                 $fluent = 'https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@main/assets';
                 $aiQuestions = [
-                    [$fluent.'/Croissant/3D/croissant_3d.png', 'В отеле есть завтраки?'],
-                    [$fluent.'/Automobile/3D/automobile_3d.png', 'Есть ли парковка?'],
-                    [$fluent.'/Alarm%20clock/3D/alarm_clock_3d.png', 'Во сколько заезд и выезд?'],
-                    [$fluent.'/Dog%20face/3D/dog_face_3d.png', 'Можно заехать с питомцем?'],
+                    [$fluent.'/Croissant/3D/croissant_3d.png', __('messages.ai_q1')],
+                    [$fluent.'/Automobile/3D/automobile_3d.png', __('messages.ai_q2')],
+                    [$fluent.'/Alarm%20clock/3D/alarm_clock_3d.png', __('messages.ai_q3')],
+                    [$fluent.'/Dog%20face/3D/dog_face_3d.png', __('messages.ai_q4')],
                 ];
             @endphp
             @foreach($aiQuestions as [$icon, $q])
@@ -130,22 +130,22 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            Спросить про другое
+            {{ __('messages.ai_ask_other') }}
         </button>
 
         <div id="aiNote" class="hidden mt-4 p-3 bg-[#c084fc]/10 border border-[#c084fc]/30 rounded-xl text-sm text-[#d8b4fe]">
-            ИИ-помощник скоро появится на сайте — следите за обновлениями ✨
+            {{ __('messages.ai_coming') }}
         </div>
     </div>
 
     {{-- Rooms --}}
     <div id="rooms" class="mb-8 scroll-mt-32">
-        <h2 class="text-white text-xl font-extrabold mb-1">Доступные номера</h2>
-        <p class="text-[#7e8488] mb-5">{{ $hotel->rooms->count() }} {{ $hotel->rooms->count() == 1 ? 'вариант размещения' : 'вариантов размещения' }}</p>
+        <h2 class="text-white text-xl font-extrabold mb-1">{{ __('messages.available_rooms') }}</h2>
+        <p class="text-[#7e8488] mb-5">{{ trans_choice('messages.room_options', $hotel->rooms->count(), ['count' => $hotel->rooms->count()]) }}</p>
 
         @if($hotel->rooms->count() === 0)
             <div class="otl-surface p-8 text-center">
-                <p class="text-[#7e8488]">Нет доступных номеров</p>
+                <p class="text-[#7e8488]">{{ __('messages.no_rooms') }}</p>
             </div>
         @else
             <div class="space-y-4">
@@ -172,10 +172,10 @@
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                                     </svg>
-                                    До {{ $room->capacity }} {{ $room->capacity == 1 ? 'гостя' : 'гостей' }}
+                                    {{ __('messages.up_to_guests', ['count' => $room->capacity]) }}
                                 </span>
                                 <span class="chip {{ $room->is_available ? '' : 'opacity-60' }}">
-                                    {{ $room->is_available ? 'Свободен' : 'Занят' }}
+                                    {{ $room->is_available ? __('messages.room_free') : __('messages.room_occupied') }}
                                 </span>
                             </div>
                         </div>
@@ -184,12 +184,12 @@
                         <div class="md:w-56 p-5 md:border-l border-white/5 flex md:flex-col items-center md:items-end justify-between gap-3">
                             <div class="md:text-right">
                                 <div class="text-xl font-bold text-[#8ee30f]">{{ number_format($room->price_per_night, 0, '.', ' ') }} ₸</div>
-                                <div class="text-sm text-[#7e8488]">за ночь</div>
+                                <div class="text-sm text-[#7e8488]">{{ __('messages.per_night') }}</div>
                             </div>
                             @auth
-                                <button onclick="openBookingModal({{ $room->id }})" class="btn-accent px-6 py-2.5 w-full md:w-auto">Забронировать</button>
+                                <button onclick="openBookingModal({{ $room->id }})" class="btn-accent px-6 py-2.5 w-full md:w-auto">{{ __('messages.book') }}</button>
                             @else
-                                <a href="{{ route('login') }}" class="btn-accent px-6 py-2.5 w-full md:w-auto text-center">Войти</a>
+                                <a href="{{ route('login') }}" class="btn-accent px-6 py-2.5 w-full md:w-auto text-center">{{ __('messages.login') }}</a>
                             @endauth
                         </div>
                     </div>
@@ -206,7 +206,7 @@
     {{-- About --}}
     @if($hotel->description)
         <div id="about" class="otl-surface p-6 md:p-8 scroll-mt-32">
-            <h2 class="text-white text-xl font-extrabold mb-4">Описание</h2>
+            <h2 class="text-white text-xl font-extrabold mb-4">{{ __('messages.description') }}</h2>
             <p class="text-gray-300 leading-relaxed">{{ $hotel->description }}</p>
         </div>
     @endif
@@ -217,7 +217,7 @@
 <div id="bookingDateModal" class="bmodal hidden" style="display: none;">
     <div class="bmodal-box">
         <div class="flex items-center justify-center relative p-6 border-b border-white/10">
-            <h2 class="text-white text-lg font-bold">Выберите даты проживания</h2>
+            <h2 class="text-white text-lg font-bold">{{ __('messages.select_stay_dates') }}</h2>
             <button onclick="closeBookingModal()" class="absolute right-5 top-1/2 -translate-y-1/2 p-2 bg-white/5 hover:bg-white/10 rounded-full transition-colors">
                 <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -242,13 +242,13 @@
             </div>
 
             <div class="grid grid-cols-7 gap-1 mb-2 text-center text-xs text-[#7e8488]">
-                <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span>
-                <span class="text-[#f04141]/70">Сб</span><span class="text-[#f04141]/70">Вс</span>
+                <span>{{ __('messages.wd_mon') }}</span><span>{{ __('messages.wd_tue') }}</span><span>{{ __('messages.wd_wed') }}</span><span>{{ __('messages.wd_thu') }}</span><span>{{ __('messages.wd_fri') }}</span>
+                <span class="text-[#f04141]/70">{{ __('messages.wd_sat') }}</span><span class="text-[#f04141]/70">{{ __('messages.wd_sun') }}</span>
             </div>
 
             <div id="bkCalDays" class="grid grid-cols-7 gap-1"></div>
 
-            <p id="bkCalHint" class="text-sm text-[#7e8488] mt-4 text-center">Выберите дату заезда</p>
+            <p id="bkCalHint" class="text-sm text-[#7e8488] mt-4 text-center">{{ __('messages.choose_checkin') }}</p>
 
             <input type="hidden" id="bookingCheckIn">
             <input type="hidden" id="bookingCheckOut">
@@ -256,8 +256,8 @@
             <div id="bookingError" class="hidden mt-4 p-3 bg-[#f04141]/10 border border-[#f04141]/30 rounded-xl text-sm text-[#ff8a8a]"></div>
 
             <div class="flex gap-3 pt-5">
-                <button onclick="proceedToBooking()" class="btn-accent flex-1 py-3">Продолжить</button>
-                <button onclick="closeBookingModal()" class="btn-dark px-6 py-3">Отмена</button>
+                <button onclick="proceedToBooking()" class="btn-accent flex-1 py-3">{{ __('messages.continue') }}</button>
+                <button onclick="closeBookingModal()" class="btn-dark px-6 py-3">{{ __('messages.cancel') }}</button>
             </div>
         </div>
     </div>
@@ -265,6 +265,18 @@
 @endauth
 
 <script>
+const APP_LOCALE = '{{ app()->getLocale() }}';
+const T = {
+    choose_checkin: @json(__('messages.choose_checkin')),
+    choose_checkout: @json(__('messages.choose_checkout')),
+    err_select_dates: @json(__('messages.err_select_dates')),
+    err_checkout_after: @json(__('messages.err_checkout_after')),
+    err_no_room: @json(__('messages.err_no_room')),
+    room_busy_until: @json(__('messages.room_busy_until')),
+    room_unavailable: @json(__('messages.room_unavailable')),
+    room_taken: @json(__('messages.room_taken')),
+};
+
 function askAI() {
     const note = document.getElementById('aiNote');
     if (note) {
@@ -319,11 +331,11 @@ function checkAndBook(roomId, checkIn, checkOut) {
         } else if (typeof showToast === 'function') {
             let msg;
             if (data.reason === 'disabled') {
-                msg = 'Этот номер сейчас недоступен для бронирования.';
+                msg = T.room_unavailable;
             } else if (data.busy_until) {
-                msg = 'Номер занят до ' + data.busy_until + '. Пожалуйста, выберите даты после этого числа.';
+                msg = T.room_busy_until.replace(':date', data.busy_until);
             } else {
-                msg = 'К сожалению, этот номер уже занят на выбранные даты. Пожалуйста, выберите другие даты.';
+                msg = T.room_taken;
             }
             showToast(msg, 'error');
         }
@@ -375,9 +387,9 @@ function proceedToBooking() {
     const checkIn = document.getElementById('bookingCheckIn').value;
     const checkOut = document.getElementById('bookingCheckOut').value;
 
-    if (!checkIn || !checkOut) { showBookingError('Пожалуйста, выберите даты заезда и выезда'); return; }
-    if (new Date(checkOut) <= new Date(checkIn)) { showBookingError('Дата выезда должна быть позже даты заезда'); return; }
-    if (!selectedRoomId) { showBookingError('Ошибка: номер не выбран'); return; }
+    if (!checkIn || !checkOut) { showBookingError(T.err_select_dates); return; }
+    if (new Date(checkOut) <= new Date(checkIn)) { showBookingError(T.err_checkout_after); return; }
+    if (!selectedRoomId) { showBookingError(T.err_no_room); return; }
 
     hideBookingError();
     checkAndBook(selectedRoomId, checkIn, checkOut);
@@ -441,7 +453,8 @@ function bkRender() {
     const prevBtn = document.getElementById('bkCalPrev');
     if (!grid) return;
 
-    label.textContent = BK_MONTHS[bkView.getMonth()] + ' ' + bkView.getFullYear();
+    const ml = bkView.toLocaleDateString(APP_LOCALE, { month: 'long', year: 'numeric' });
+    label.textContent = ml.charAt(0).toUpperCase() + ml.slice(1);
 
     const today = bkStrip(new Date());
     const firstThis = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -482,11 +495,11 @@ function bkRender() {
     if (hint) {
         if (bkCheckIn && bkCheckOut) {
             const opt = { day: 'numeric', month: 'short' };
-            hint.textContent = bkCheckIn.toLocaleDateString('ru-RU', opt) + ' – ' + bkCheckOut.toLocaleDateString('ru-RU', opt);
+            hint.textContent = bkCheckIn.toLocaleDateString(APP_LOCALE, opt) + ' – ' + bkCheckOut.toLocaleDateString(APP_LOCALE, opt);
         } else if (bkCheckIn) {
-            hint.textContent = 'Выберите дату выезда';
+            hint.textContent = T.choose_checkout;
         } else {
-            hint.textContent = 'Выберите дату заезда';
+            hint.textContent = T.choose_checkin;
         }
     }
 }

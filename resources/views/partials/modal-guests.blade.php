@@ -2,7 +2,7 @@
     <div class="modal-box" style="max-width: 30rem;">
         <!-- Header -->
         <div class="flex items-center justify-center relative p-6 border-b border-white/10">
-            <h2 class="text-white text-lg font-bold">Гости и номера</h2>
+            <h2 class="text-white text-lg font-bold">{{ __('messages.guests_and_rooms') }}</h2>
             <button
                 onclick="closeModals()"
                 class="absolute right-5 top-1/2 -translate-y-1/2 p-2 bg-white/5 hover:bg-white/10 rounded-full transition-colors"
@@ -16,8 +16,8 @@
         <div class="p-6 space-y-6">
             <div class="flex justify-between items-center">
                 <div>
-                    <div class="font-semibold text-white">Гости</div>
-                    <div class="text-sm text-[#7e8488]">Количество гостей</div>
+                    <div class="font-semibold text-white">{{ __('messages.guests') }}</div>
+                    <div class="text-sm text-[#7e8488]">{{ __('messages.guests_count_label') }}</div>
                 </div>
                 <div class="flex items-center gap-4">
                     <button
@@ -43,8 +43,8 @@
             </div>
             <div class="flex justify-between items-center">
                 <div>
-                    <div class="font-semibold text-white">Номера</div>
-                    <div class="text-sm text-[#7e8488]">Количество номеров</div>
+                    <div class="font-semibold text-white">{{ __('messages.rooms') }}</div>
+                    <div class="text-sm text-[#7e8488]">{{ __('messages.rooms_count_label') }}</div>
                 </div>
                 <div class="flex items-center gap-4">
                     <button
@@ -72,8 +72,8 @@
 
         <!-- Footer -->
         <div class="flex items-center justify-end gap-3 p-6 border-t border-white/10">
-            <button onclick="closeModals()" class="btn-dark px-6 py-2.5">Отмена</button>
-            <button onclick="saveGuests()" class="btn-accent px-7 py-2.5">Применить</button>
+            <button onclick="closeModals()" class="btn-dark px-6 py-2.5">{{ __('messages.cancel') }}</button>
+            <button onclick="saveGuests()" class="btn-accent px-7 py-2.5">{{ __('messages.apply') }}</button>
         </div>
     </div>
 </div>

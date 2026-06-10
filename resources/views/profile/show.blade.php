@@ -34,21 +34,21 @@
             <div class="grid grid-cols-3 gap-4">
                 <div class="otl-surface p-5 text-center">
                     <div class="text-3xl font-extrabold text-[#8ee30f]">{{ $stats['bookings'] }}</div>
-                    <div class="text-sm text-[#7e8488] mt-1">{{ $stats['bookings'] == 1 ? 'бронирование' : 'броней' }}</div>
+                    <div class="text-sm text-[#7e8488] mt-1">{{ __('messages.stat_bookings') }}</div>
                 </div>
                 <div class="otl-surface p-5 text-center">
                     <div class="text-3xl font-extrabold text-[#8ee30f]">{{ $stats['favorites'] }}</div>
-                    <div class="text-sm text-[#7e8488] mt-1">в избранном</div>
+                    <div class="text-sm text-[#7e8488] mt-1">{{ __('messages.stat_favorites') }}</div>
                 </div>
                 <div class="otl-surface p-5 text-center">
                     <div class="text-3xl font-extrabold text-[#8ee30f]">{{ $stats['reviews'] }}</div>
-                    <div class="text-sm text-[#7e8488] mt-1">{{ $stats['reviews'] == 1 ? 'отзыв' : 'отзывов' }}</div>
+                    <div class="text-sm text-[#7e8488] mt-1">{{ __('messages.stat_reviews') }}</div>
                 </div>
             </div>
 
             {{-- Recent bookings --}}
             <div class="otl-surface p-6">
-                <h3 class="text-lg font-bold text-white mb-4">Последние бронирования</h3>
+                <h3 class="text-lg font-bold text-white mb-4">{{ __('messages.recent_bookings') }}</h3>
                 <div class="space-y-3">
                     @forelse($bookings as $booking)
                         <a href="{{ route('bookings.show', $booking) }}" class="flex justify-between items-center bg-[#141516] rounded-2xl p-4 hover:bg-[#1f2021] transition">
@@ -59,11 +59,11 @@
                             <span class="text-[#8ee30f] font-bold flex-shrink-0 ml-3">{{ number_format($booking->total_price, 0, '.', ' ') }} ₸</span>
                         </a>
                     @empty
-                        <p class="text-[#7e8488]">Нет последних бронирований</p>
+                        <p class="text-[#7e8488]">{{ __('messages.no_recent_bookings') }}</p>
                     @endforelse
                 </div>
                 @if($bookings->count())
-                    <a href="{{ route('bookings.index') }}" class="mt-4 inline-block text-[#8ee30f] hover:underline">Все бронирования →</a>
+                    <a href="{{ route('bookings.index') }}" class="mt-4 inline-block text-[#8ee30f] hover:underline">{{ __('messages.all_bookings') }} →</a>
                 @endif
             </div>
 
@@ -71,8 +71,8 @@
             @if($favorites->count())
                 <div class="otl-surface p-6">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-bold text-white">Избранные отели</h3>
-                        <a href="{{ route('favorites.index') }}" class="text-sm text-[#8ee30f] hover:underline">Все →</a>
+                        <h3 class="text-lg font-bold text-white">{{ __('messages.favorite_hotels') }}</h3>
+                        <a href="{{ route('favorites.index') }}" class="text-sm text-[#8ee30f] hover:underline">{{ __('messages.all') }} →</a>
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
                         @foreach($favorites as $favorite)
@@ -96,29 +96,29 @@
         <div class="space-y-6">
             {{-- Account info --}}
             <div class="otl-surface p-6">
-                <h3 class="text-lg font-bold text-white mb-5">Об аккаунте</h3>
+                <h3 class="text-lg font-bold text-white mb-5">{{ __('messages.about_account') }}</h3>
                 <div class="space-y-4 text-sm">
                     <div class="flex justify-between gap-3">
-                        <span class="text-[#7e8488]">Email</span>
+                        <span class="text-[#7e8488]">{{ __('messages.email') }}</span>
                         <span class="text-white text-right truncate">{{ $user->email }}</span>
                     </div>
                     <div class="flex justify-between gap-3">
-                        <span class="text-[#7e8488]">С нами с</span>
+                        <span class="text-[#7e8488]">{{ __('messages.with_us_since') }}</span>
                         <span class="text-white">{{ $user->created_at->format('d.m.Y') }}</span>
                     </div>
                     <div class="flex justify-between gap-3">
-                        <span class="text-[#7e8488]">Статус</span>
-                        <span class="text-white">{{ $user->isAdmin() ? 'Администратор' : 'Пользователь' }}</span>
+                        <span class="text-[#7e8488]">{{ __('messages.status') }}</span>
+                        <span class="text-white">{{ $user->isAdmin() ? __('messages.role_admin') : __('messages.role_user') }}</span>
                     </div>
                 </div>
                 <button onclick="document.getElementById('edit-modal').classList.remove('hidden')" class="btn-dark w-full py-2.5 mt-5">
-                    Редактировать профиль
+                    {{ __('messages.edit_profile') }}
                 </button>
             </div>
 
             {{-- Support --}}
             <div class="otl-surface p-6">
-                <h3 class="text-lg font-bold text-white mb-5">Поддержка</h3>
+                <h3 class="text-lg font-bold text-white mb-5">{{ __('messages.support') }}</h3>
                 <div class="space-y-4">
                     <div class="flex items-center gap-3">
                         <span class="w-10 h-10 rounded-full bg-[#141516] flex items-center justify-center flex-shrink-0">
@@ -126,7 +126,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.7 9.7 0 01-4-.85L3 20l1.35-4A7.9 7.9 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                             </svg>
                         </span>
-                        <span class="text-gray-200">Онлайн-чат</span>
+                        <span class="text-gray-200">{{ __('messages.online_chat') }}</span>
                     </div>
                     <div class="flex items-center gap-3">
                         <span class="w-10 h-10 rounded-full bg-[#141516] flex items-center justify-center flex-shrink-0">
@@ -153,17 +153,17 @@
 {{-- Edit modal --}}
 <div id="edit-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
     <div class="otl-surface p-6 max-w-md w-full">
-        <h3 class="text-xl font-bold text-white mb-4">Редактировать профиль</h3>
+        <h3 class="text-xl font-bold text-white mb-4">{{ __('messages.edit_profile') }}</h3>
         <form action="{{ route('profile.update') }}" method="POST">
             @csrf
             @method('PUT')
             <div class="mb-4">
-                <label class="block text-sm font-medium text-[#7e8488] mb-2">Имя</label>
+                <label class="block text-sm font-medium text-[#7e8488] mb-2">{{ __('messages.name') }}</label>
                 <input type="text" name="name" value="{{ $user->name }}" required class="field-input">
             </div>
             <div class="flex gap-3">
-                <button type="submit" class="btn-accent flex-1 py-2.5">Сохранить</button>
-                <button type="button" onclick="document.getElementById('edit-modal').classList.add('hidden')" class="btn-dark px-6 py-2.5">Отмена</button>
+                <button type="submit" class="btn-accent flex-1 py-2.5">{{ __('messages.save') }}</button>
+                <button type="button" onclick="document.getElementById('edit-modal').classList.add('hidden')" class="btn-dark px-6 py-2.5">{{ __('messages.cancel') }}</button>
             </div>
         </form>
     </div>

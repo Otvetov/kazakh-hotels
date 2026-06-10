@@ -10,7 +10,7 @@
         <div class="lg:w-[400px] lg:order-2">
             <div class="lg:sticky lg:top-24">
                 <div class="otl-surface p-6">
-                    <h2 class="text-xl font-bold text-white mb-6">Найдите отель</h2>
+                    <h2 class="text-xl font-bold text-white mb-6">{{ __('messages.find_hotel') }}</h2>
 
                     <div class="space-y-3">
                         {{-- City button --}}
@@ -20,8 +20,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
                             <div class="flex-1 min-w-0">
-                                <span class="label text-xs text-[#7e8488] block mb-0.5">Город, отель или направление</span>
-                                <span id="cityValue" class="value text-white font-medium truncate block">{{ request('city') ?: 'Выберите направление' }}</span>
+                                <span class="label text-xs text-[#7e8488] block mb-0.5">{{ __('messages.destination_label') }}</span>
+                                <span id="cityValue" class="value text-white font-medium truncate block">{{ request('city') ?: __('messages.choose_destination') }}</span>
                             </div>
                         </button>
 
@@ -31,12 +31,12 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
                             <div class="flex-1 min-w-0">
-                                <span class="label text-xs text-[#7e8488] block mb-0.5">Даты поездки</span>
+                                <span class="label text-xs text-[#7e8488] block mb-0.5">{{ __('messages.trip_dates') }}</span>
                                 <span id="dateValue" class="value text-white font-medium truncate block">
                                     @if(request('check_in') && request('check_out'))
                                         {{ \Carbon\Carbon::parse(request('check_in'))->format('d M') }} – {{ \Carbon\Carbon::parse(request('check_out'))->format('d M') }}
                                     @else
-                                        Заезд – Выезд
+                                        {{ __('messages.checkin_checkout') }}
                                     @endif
                                 </span>
                             </div>
@@ -48,13 +48,13 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                             </svg>
                             <div class="flex-1 min-w-0">
-                                <span class="label text-xs text-[#7e8488] block mb-0.5">Гости и номера</span>
+                                <span class="label text-xs text-[#7e8488] block mb-0.5">{{ __('messages.guests_and_rooms') }}</span>
                                 <span id="guestsValue" class="value text-white font-medium truncate block">
                                     @php
                                         $guests = request('guests', 2);
                                         $rooms = request('rooms', 1);
                                     @endphp
-                                    {{ $guests }} {{ $guests == 1 ? 'гость' : 'гостей' }}, {{ $rooms }} {{ $rooms == 1 ? 'номер' : 'номеров' }}
+                                    {{ trans_choice('messages.guests_count', $guests, ['count' => $guests]) }}, {{ trans_choice('messages.rooms_count', $rooms, ['count' => $rooms]) }}
                                 </span>
                             </div>
                         </button>
@@ -73,7 +73,7 @@
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                 </svg>
-                                <span>Найти</span>
+                                <span>{{ __('messages.find') }}</span>
                             </button>
                         </form>
 
@@ -81,19 +81,19 @@
                         <div class="mt-4 pt-5 border-t border-white/10 space-y-3 text-sm">
                             <div class="flex items-start gap-2 text-gray-300">
                                 <span class="text-[#8ee30f]">✓</span>
-                                <span>Большой выбор отелей по всему Казахстану</span>
+                                <span>{{ __('messages.benefit_1') }}</span>
                             </div>
                             <div class="flex items-start gap-2 text-gray-300">
                                 <span class="text-[#8ee30f]">✓</span>
-                                <span>Честные цены без скрытых комиссий</span>
+                                <span>{{ __('messages.benefit_2') }}</span>
                             </div>
                             <div class="flex items-start gap-2 text-gray-300">
                                 <span class="text-[#8ee30f]">✓</span>
-                                <span>Отели на любой вкус и бюджет</span>
+                                <span>{{ __('messages.benefit_3') }}</span>
                             </div>
                             <div class="flex items-start gap-2 text-gray-300">
                                 <span class="text-[#8ee30f]">✓</span>
-                                <span>Поддержка 24/7</span>
+                                <span>{{ __('messages.benefit_4') }}</span>
                             </div>
                         </div>
                     </div>
@@ -104,7 +104,7 @@
         {{-- LEFT: HOTELS --}}
         <div class="flex-1 lg:order-1">
             <h1 class="text-white mb-6 text-2xl font-extrabold">
-                Идеи для путешествий по Казахстану
+                {{ __('messages.home_heading') }}
             </h1>
 
             <div id="hotels-container" class="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -117,7 +117,7 @@
             @if($hotels->hasMorePages())
                 <div class="text-center mt-8 pb-8">
                     <button id="load-more" class="btn-dark px-8 py-3">
-                        Загрузить ещё
+                        {{ __('messages.load_more') }}
                     </button>
                 </div>
             @endif
