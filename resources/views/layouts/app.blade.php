@@ -158,7 +158,34 @@
         </footer>
     </div>
 
+    {{-- Контейнер всплывающих уведомлений --}}
+    <div id="toast-container" class="fixed top-20 right-4 z-[100] flex flex-col gap-2 w-[calc(100%-2rem)] max-w-sm pointer-events-none"></div>
+
     <script>
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+
+            const colors = {
+                info:    'bg-[#1b1c1d] border-white/10 text-gray-100',
+                success: 'bg-[#1b1c1d] border-[#8ee30f]/40 text-[#8ee30f]',
+                error:   'bg-[#1b1c1d] border-[#f04141]/40 text-[#ff8a8a]',
+            };
+            const toast = document.createElement('div');
+            toast.className = 'pointer-events-auto border rounded-2xl px-4 py-3 shadow-xl text-sm transition-all duration-300 opacity-0 translate-y-[-8px] ' + (colors[type] || colors.info);
+            toast.textContent = message;
+            container.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.remove('opacity-0', 'translate-y-[-8px]');
+            });
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-[-8px]');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
         function toggleLangMenu(event) {
             event.stopPropagation();
             document.getElementById('lang-menu').classList.toggle('hidden');

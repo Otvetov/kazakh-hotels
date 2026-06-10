@@ -225,17 +225,37 @@
             </button>
         </div>
 
-        <div class="p-6 space-y-4">
-            <div>
-                <label class="block text-sm font-medium text-[#7e8488] mb-2">Дата заезда</label>
-                <input type="date" id="bookingCheckIn" min="{{ date('Y-m-d') }}" style="color-scheme: dark;" class="field-input">
+        <div class="p-6">
+            {{-- Month navigation --}}
+            <div class="flex items-center justify-between mb-4">
+                <button type="button" onclick="bkPrevMonth()" id="bkCalPrev" class="p-2 rounded-full hover:bg-white/10 transition disabled:opacity-30 disabled:cursor-not-allowed">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+                <span id="bkCalMonthLabel" class="text-white font-semibold"></span>
+                <button type="button" onclick="bkNextMonth()" class="p-2 rounded-full hover:bg-white/10 transition">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
             </div>
-            <div>
-                <label class="block text-sm font-medium text-[#7e8488] mb-2">Дата выезда</label>
-                <input type="date" id="bookingCheckOut" min="{{ date('Y-m-d', strtotime('+1 day')) }}" style="color-scheme: dark;" class="field-input">
+
+            <div class="grid grid-cols-7 gap-1 mb-2 text-center text-xs text-[#7e8488]">
+                <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span>
+                <span class="text-[#f04141]/70">Сб</span><span class="text-[#f04141]/70">Вс</span>
             </div>
-            <div id="bookingError" class="hidden p-3 bg-[#f04141]/10 border border-[#f04141]/30 rounded-xl text-sm text-[#ff8a8a]"></div>
-            <div class="flex gap-3 pt-2">
+
+            <div id="bkCalDays" class="grid grid-cols-7 gap-1"></div>
+
+            <p id="bkCalHint" class="text-sm text-[#7e8488] mt-4 text-center">Выберите дату заезда</p>
+
+            <input type="hidden" id="bookingCheckIn">
+            <input type="hidden" id="bookingCheckOut">
+
+            <div id="bookingError" class="hidden mt-4 p-3 bg-[#f04141]/10 border border-[#f04141]/30 rounded-xl text-sm text-[#ff8a8a]"></div>
+
+            <div class="flex gap-3 pt-5">
                 <button onclick="proceedToBooking()" class="btn-accent flex-1 py-3">Продолжить</button>
                 <button onclick="closeBookingModal()" class="btn-dark px-6 py-3">Отмена</button>
             </div>
@@ -275,13 +295,55 @@ function toggleFavorite(hotelId) {
 @auth
 let selectedRoomId = null;
 
+// Даты, выбранные при поиске (приходят в query-параметрах страницы)
+const BK_SEARCH_IN = @json(request('check_in'));
+const BK_SEARCH_OUT = @json(request('check_out'));
+
+function goToBooking(roomId, checkIn, checkOut) {
+    const url = new URL('{{ route("bookings.create") }}', window.location.origin);
+    url.searchParams.set('room_id', roomId);
+    url.searchParams.set('check_in', checkIn);
+    url.searchParams.set('check_out', checkOut);
+    window.location.href = url.toString();
+}
+
+// Проверяем занятость без перезагрузки: если занято — тост, иначе оформление
+function checkAndBook(roomId, checkIn, checkOut) {
+    fetch(`/room/${roomId}/availability?check_in=${encodeURIComponent(checkIn)}&check_out=${encodeURIComponent(checkOut)}`, {
+        headers: { 'Accept': 'application/json' }
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.available) {
+            goToBooking(roomId, checkIn, checkOut);
+        } else if (typeof showToast === 'function') {
+            let msg;
+            if (data.reason === 'disabled') {
+                msg = 'Этот номер сейчас недоступен для бронирования.';
+            } else if (data.busy_until) {
+                msg = 'Номер занят до ' + data.busy_until + '. Пожалуйста, выберите даты после этого числа.';
+            } else {
+                msg = 'К сожалению, этот номер уже занят на выбранные даты. Пожалуйста, выберите другие даты.';
+            }
+            showToast(msg, 'error');
+        }
+    })
+    .catch(() => goToBooking(roomId, checkIn, checkOut));
+}
+
 function openBookingModal(roomId) {
     selectedRoomId = roomId;
+    // Если даты уже выбраны при поиске — не спрашиваем повторно, но проверяем занятость
+    if (BK_SEARCH_IN && BK_SEARCH_OUT) {
+        checkAndBook(roomId, BK_SEARCH_IN, BK_SEARCH_OUT);
+        return;
+    }
     const modal = document.getElementById('bookingDateModal');
     if (modal) {
         modal.classList.remove('hidden');
         modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
+        initBkCalendar();
     }
 }
 
@@ -293,6 +355,8 @@ function closeBookingModal() {
         document.body.style.overflow = '';
     }
     selectedRoomId = null;
+    bkCheckIn = null;
+    bkCheckOut = null;
     document.getElementById('bookingCheckIn').value = '';
     document.getElementById('bookingCheckOut').value = '';
     hideBookingError();
@@ -316,26 +380,116 @@ function proceedToBooking() {
     if (!selectedRoomId) { showBookingError('Ошибка: номер не выбран'); return; }
 
     hideBookingError();
-    const url = new URL('{{ route("bookings.create") }}', window.location.origin);
-    url.searchParams.set('room_id', selectedRoomId);
-    url.searchParams.set('check_in', checkIn);
-    url.searchParams.set('check_out', checkOut);
-    window.location.href = url.toString();
+    checkAndBook(selectedRoomId, checkIn, checkOut);
 }
 
 document.getElementById('bookingDateModal')?.addEventListener('click', function(e) {
     if (e.target === this) closeBookingModal();
 });
 
-document.getElementById('bookingCheckIn')?.addEventListener('change', function() {
-    if (this.value) {
-        const minDate = new Date(this.value);
-        minDate.setDate(minDate.getDate() + 1);
-        const checkOut = document.getElementById('bookingCheckOut');
-        checkOut.min = minDate.toISOString().split('T')[0];
-        if (checkOut.value && checkOut.value <= this.value) checkOut.value = '';
+/* ---------- Календарь в модалке бронирования ---------- */
+const BK_MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+let bkView = new Date();
+let bkCheckIn = null;
+let bkCheckOut = null;
+
+function bkFmt(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+function bkStrip(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+
+function initBkCalendar() {
+    bkCheckIn = null;
+    bkCheckOut = null;
+    document.getElementById('bookingCheckIn').value = '';
+    document.getElementById('bookingCheckOut').value = '';
+    bkView = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    bkRender();
+}
+
+function bkPrevMonth() {
+    const today = bkStrip(new Date());
+    const firstThis = new Date(today.getFullYear(), today.getMonth(), 1);
+    const cand = new Date(bkView.getFullYear(), bkView.getMonth() - 1, 1);
+    if (cand >= firstThis) { bkView = cand; bkRender(); }
+}
+function bkNextMonth() {
+    bkView = new Date(bkView.getFullYear(), bkView.getMonth() + 1, 1);
+    bkRender();
+}
+
+function bkOnDay(ds) {
+    const p = ds.split('-');
+    const d = new Date(+p[0], +p[1] - 1, +p[2]);
+    if (!bkCheckIn || (bkCheckIn && bkCheckOut)) {
+        bkCheckIn = d; bkCheckOut = null;
+    } else if (d > bkCheckIn) {
+        bkCheckOut = d;
+    } else {
+        bkCheckIn = d; bkCheckOut = null;
     }
-});
+    document.getElementById('bookingCheckIn').value = bkCheckIn ? bkFmt(bkCheckIn) : '';
+    document.getElementById('bookingCheckOut').value = bkCheckOut ? bkFmt(bkCheckOut) : '';
+    hideBookingError();
+    bkRender();
+}
+
+function bkRender() {
+    const label = document.getElementById('bkCalMonthLabel');
+    const grid = document.getElementById('bkCalDays');
+    const hint = document.getElementById('bkCalHint');
+    const prevBtn = document.getElementById('bkCalPrev');
+    if (!grid) return;
+
+    label.textContent = BK_MONTHS[bkView.getMonth()] + ' ' + bkView.getFullYear();
+
+    const today = bkStrip(new Date());
+    const firstThis = new Date(today.getFullYear(), today.getMonth(), 1);
+    if (prevBtn) prevBtn.disabled = (new Date(bkView.getFullYear(), bkView.getMonth(), 1) <= firstThis);
+
+    const year = bkView.getFullYear();
+    const month = bkView.getMonth();
+    let offset = new Date(year, month, 1).getDay() - 1;
+    if (offset < 0) offset = 6;
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    let html = '';
+    for (let i = 0; i < offset; i++) html += '<span class="cal-empty"></span>';
+    for (let day = 1; day <= daysInMonth; day++) {
+        const d = new Date(year, month, day);
+        const ds = bkFmt(d);
+        const dow = d.getDay();
+        const isWeekend = (dow === 0 || dow === 6);
+        const isPast = d < today;
+
+        let cls = 'cal-day';
+        if (isPast) {
+            cls += ' cal-disabled';
+        } else {
+            if (isWeekend) cls += ' cal-weekend';
+            const isStart = bkCheckIn && d.getTime() === bkCheckIn.getTime();
+            const isEnd = bkCheckOut && d.getTime() === bkCheckOut.getTime();
+            const inRange = bkCheckIn && bkCheckOut && d > bkCheckIn && d < bkCheckOut;
+            if (isStart || isEnd) cls += ' cal-selected';
+            else if (inRange) cls += ' cal-inrange';
+        }
+
+        if (isPast) html += `<span class="${cls}">${day}</span>`;
+        else html += `<button type="button" class="${cls}" onclick="bkOnDay('${ds}')">${day}</button>`;
+    }
+    grid.innerHTML = html;
+
+    if (hint) {
+        if (bkCheckIn && bkCheckOut) {
+            const opt = { day: 'numeric', month: 'short' };
+            hint.textContent = bkCheckIn.toLocaleDateString('ru-RU', opt) + ' – ' + bkCheckOut.toLocaleDateString('ru-RU', opt);
+        } else if (bkCheckIn) {
+            hint.textContent = 'Выберите дату выезда';
+        } else {
+            hint.textContent = 'Выберите дату заезда';
+        }
+    }
+}
 @endauth
 </script>
 

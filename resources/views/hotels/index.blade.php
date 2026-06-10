@@ -90,9 +90,10 @@
             <a href="{{ route('hotels.index') }}" class="btn-accent px-6 py-2.5">Сбросить фильтры</a>
         </div>
     @else
+        @php $bkQuery = http_build_query(array_filter(request()->only(['check_in', 'check_out', 'guests', 'rooms']))); @endphp
         <div class="space-y-4">
             @foreach($hotels as $hotel)
-                <div onclick="window.location='{{ route('hotels.show', $hotel) }}'"
+                <div onclick="window.location='{{ route('hotels.show', $hotel) }}{{ $bkQuery ? '?'.$bkQuery : '' }}'"
                      class="otl-surface overflow-hidden cursor-pointer hover:ring-2 hover:ring-[#8ee30f]/40 transition group">
                     <div class="flex flex-col md:flex-row">
                         {{-- Image --}}

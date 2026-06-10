@@ -9,17 +9,6 @@
         <p class="text-[#7e8488]">Проверьте детали и завершите бронирование</p>
     </div>
 
-    @if($errors->any())
-        <div class="mb-6 bg-[#f04141]/10 border border-[#f04141]/30 text-[#ff8a8a] px-6 py-4 rounded-2xl">
-            <h3 class="font-semibold mb-2">Ошибки валидации:</h3>
-            <ul class="list-disc list-inside space-y-1">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {{-- Main --}}
         <div class="lg:col-span-2 space-y-6">

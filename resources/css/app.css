@@ -394,4 +394,26 @@
         outline: none;
         border-color: var(--primary);
     }
+
+    /* Календарь выбора дат */
+    .cal-day {
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        font-size: .9rem;
+        color: #fafafa;
+        background: transparent;
+        cursor: pointer;
+        transition: background-color .12s ease;
+    }
+    .cal-day:hover { background: rgba(255, 255, 255, 0.08); }
+    .cal-weekend { color: #f04141; }
+    .cal-disabled { color: #3a3b3c; cursor: not-allowed; }
+    .cal-disabled:hover { background: transparent; }
+    .cal-inrange { background: rgba(142, 227, 15, 0.15); border-radius: 0; }
+    .cal-selected { background: #8ee30f; color: #0a0a0a; font-weight: 600; }
+    .cal-selected:hover { background: #8ee30f; }
+    .cal-empty { height: 40px; }
 }

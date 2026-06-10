@@ -1,4 +1,5 @@
-<a href="{{ route('hotels.show', $hotel->id) }}"
+@php $bkQuery = http_build_query(array_filter(request()->only(['check_in', 'check_out', 'guests', 'rooms']))); @endphp
+<a href="{{ route('hotels.show', $hotel->id) }}{{ $bkQuery ? '?'.$bkQuery : '' }}"
    class="group block otl-surface overflow-hidden hover:ring-2 hover:ring-[#8ee30f]/40 transition">
 
     <div class="relative aspect-[4/3] overflow-hidden">

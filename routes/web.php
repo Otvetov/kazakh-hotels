@@ -35,6 +35,9 @@ Route::get('/api-docs', function () {
 Route::get('/hotels', [HotelController::class, 'index'])->name('hotels.index');
 Route::get('/hotel/{hotel}', [HotelController::class, 'show'])->name('hotels.show');
 
+// Проверка доступности номера на даты (AJAX)
+Route::get('/room/{room}/availability', [BookingController::class, 'availability'])->name('rooms.availability');
+
 // Bookings (authenticated)
 Route::middleware('auth')->group(function () {
     Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
