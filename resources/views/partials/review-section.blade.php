@@ -57,23 +57,28 @@
 
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm text-[#7e8488] mb-2">Оценка <span class="text-[#f04141]">*</span></label>
-                    <div class="flex items-center gap-1" id="rating-stars">
-                        @for($i = 1; $i <= 5; $i++)
-                            <button type="button" onclick="setRating({{ $i }})" onmouseenter="hoverRating({{ $i }})" onmouseleave="resetRating()" class="transition-transform hover:scale-110 p-1">
-                                <span class="text-2xl rating-star opacity-30" data-rating="{{ $i }}">⭐</span>
-                            </button>
-                        @endfor
-                        <span id="rating-text" class="ml-2 text-sm text-[#7e8488]"></span>
+                    <label class="block text-sm text-[#7e8488] mb-2">Ваша оценка <span class="text-[#f04141]">*</span></label>
+                    <div class="flex items-center gap-3 bg-[#141516] rounded-2xl px-4 py-3">
+                        <div class="flex items-center gap-1.5" id="rating-stars">
+                            @for($i = 1; $i <= 5; $i++)
+                                <button type="button" onclick="setRating({{ $i }})" onmouseenter="hoverRating({{ $i }})" onmouseleave="resetRating()" class="transition-transform hover:scale-125 p-0.5">
+                                    <svg class="rating-star w-8 h-8 text-[#3a3b3c] transition-colors" data-rating="{{ $i }}" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9.05 2.93c.3-.92 1.6-.92 1.9 0l1.37 4.24a1 1 0 00.95.69h4.46c.97 0 1.37 1.24.59 1.81l-3.61 2.62a1 1 0 00-.36 1.12l1.38 4.24c.3.92-.75 1.69-1.54 1.12l-3.6-2.62a1 1 0 00-1.18 0l-3.6 2.62c-.79.57-1.84-.2-1.54-1.12l1.38-4.24a1 1 0 00-.36-1.12L1.33 9.67c-.78-.57-.38-1.81.59-1.81h4.46a1 1 0 00.95-.69z"/>
+                                    </svg>
+                                </button>
+                            @endfor
+                        </div>
+                        <span id="rating-text" class="text-sm font-semibold text-[#8ee30f]"></span>
                     </div>
                     <input type="hidden" name="rating" id="rating-input" required>
                 </div>
 
                 <div>
                     <label class="block text-sm text-[#7e8488] mb-2">Комментарий <span class="text-[#f04141]">*</span></label>
-                    <textarea name="comment" required rows="5"
+                    <textarea name="comment" required minlength="10" rows="5"
                         class="w-full px-4 py-3 bg-[#141516] border border-white/10 rounded-2xl focus:outline-none focus:border-[#8ee30f] resize-none text-white placeholder-[#7e8488]"
                         placeholder="Расскажите о вашем опыте пребывания в отеле..."></textarea>
+                    <p class="text-xs text-[#7e8488] mt-1.5">Минимум 10 символов</p>
                 </div>
 
                 <div class="flex gap-3">
@@ -117,16 +122,19 @@ function setRating(rating) {
 function hoverRating(rating) { hoveredRating = rating; updateStars(); }
 function resetRating() { hoveredRating = 0; updateStars(); }
 
+const RATING_LABELS = { 1: 'Ужасно', 2: 'Плохо', 3: 'Нормально', 4: 'Хорошо', 5: 'Отлично' };
+
 function updateStars() {
     const stars = document.querySelectorAll('.rating-star');
     const rating = hoveredRating || selectedRating;
     const ratingText = document.getElementById('rating-text');
     stars.forEach((star) => {
         const starRating = parseInt(star.getAttribute('data-rating'));
-        if (starRating <= rating) star.classList.remove('opacity-30');
-        else star.classList.add('opacity-30');
+        const active = starRating <= rating;
+        star.classList.toggle('text-[#8ee30f]', active);
+        star.classList.toggle('text-[#3a3b3c]', !active);
     });
-    ratingText.textContent = selectedRating > 0 ? selectedRating + ' из 5' : '';
+    ratingText.textContent = rating > 0 ? RATING_LABELS[rating] : '';
 }
 
 document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeReviewModal(); });
