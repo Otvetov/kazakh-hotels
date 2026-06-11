@@ -417,3 +417,104 @@
     .cal-selected:hover { background: #8ee30f; }
     .cal-empty { height: 40px; }
 }
+
+/* ============================================================
+   СВЕТЛАЯ ТЕМА (по умолчанию). Тёмная — html.theme-dark (исходные классы).
+   ============================================================ */
+html.theme-light {
+    --background: #f4f5f7;
+    --foreground: #0f172a;
+    --surface: #ffffff;
+    --surface-2: #eef0f3;
+    --card: #ffffff;
+    --card-foreground: #0f172a;
+    --popover: #ffffff;
+    --popover-foreground: #0f172a;
+    --muted: #eef0f3;
+    --muted-foreground: #6b7280;
+    --secondary: #ffffff;
+    --secondary-foreground: #0f172a;
+    --accent: #ffffff;
+    --accent-foreground: #0f172a;
+    --border: rgba(0, 0, 0, 0.08);
+    --input: rgba(0, 0, 0, 0.02);
+    --input-background: #ffffff;
+}
+
+/* Компонентные классы со своими литеральными цветами */
+html.theme-light .btn-dark { background: #e5e7eb; color: #0f172a; }
+html.theme-light .btn-dark:hover { background: #d6d9de; }
+html.theme-light .cal-day { color: #0f172a; }
+html.theme-light .cal-day:hover { background: rgba(0, 0, 0, 0.05); }
+html.theme-light .cal-disabled { color: #cbd5e1; }
+html.theme-light .cal-selected { color: #0a0a0a; }
+
+/* Модальные окна (определены в <style>, не через утилиты) */
+html.theme-light .modal-box,
+html.theme-light .bmodal-box {
+    background: #ffffff;
+    color: #0f172a;
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Скроллбар */
+html.theme-light ::-webkit-scrollbar-track { background: #e9ebef; }
+html.theme-light ::-webkit-scrollbar-thumb { background: #c2c7cf; }
+html.theme-light ::-webkit-scrollbar-thumb:hover { background: #aab0ba; }
+
+/* --- Переопределение литеральных утилит под светлую тему --- */
+/* Фоны */
+html.theme-light .bg-black { background-color: #f4f5f7; }
+html.theme-light .bg-black\/95 { background-color: rgba(255, 255, 255, 0.9); }
+html.theme-light .bg-\[\#1b1c1d\] { background-color: #ffffff; }
+html.theme-light .bg-\[\#141516\] { background-color: #eef0f3; }
+html.theme-light .bg-\[\#1f2021\] { background-color: #e8eaed; }
+html.theme-light .bg-\[\#2a2b2c\] { background-color: #e5e7eb; }
+html.theme-light .bg-white\/5 { background-color: rgba(0, 0, 0, 0.04); }
+
+/* Текст */
+html.theme-light .text-white { color: #0f172a; }
+html.theme-light .text-\[\#fafafa\] { color: #0f172a; }
+html.theme-light .text-gray-100 { color: #0f172a; }
+html.theme-light .text-gray-200 { color: #1f2937; }
+html.theme-light .text-gray-300 { color: #374151; }
+html.theme-light .text-gray-400 { color: #6b7280; }
+html.theme-light .text-\[\#7e8488\] { color: #6b7280; }
+
+/* Границы */
+html.theme-light .border-white\/5 { border-color: rgba(0, 0, 0, 0.06); }
+html.theme-light .border-white\/10 { border-color: rgba(0, 0, 0, 0.1); }
+html.theme-light .border-white\/20 { border-color: rgba(0, 0, 0, 0.16); }
+html.theme-light .divide-white\/5 > :not([hidden]) ~ :not([hidden]) { border-color: rgba(0, 0, 0, 0.08); }
+
+/* Ховеры */
+html.theme-light .hover\:bg-white\/5:hover { background-color: rgba(0, 0, 0, 0.05); }
+html.theme-light .hover\:bg-white\/10:hover { background-color: rgba(0, 0, 0, 0.07); }
+html.theme-light .hover\:bg-\[\#343536\]:hover { background-color: #d6d9de; }
+html.theme-light .hover\:bg-\[\#1f2021\]:hover { background-color: #e8eaed; }
+html.theme-light .hover\:text-white:hover { color: #0f172a; }
+
+/* Подвал остаётся тёмно-зелёным — сохраняем светлый текст внутри него */
+html.theme-light footer .text-white { color: #ffffff; }
+html.theme-light footer .text-gray-300 { color: #d1d5db; }
+html.theme-light footer .text-gray-400 { color: #cbd5e1; }
+
+/* Акцентный текст: на белом фоне светлые цвета сливаются — затемняем */
+html.theme-light .text-\[\#8ee30f\] { color: #4e8f00; }
+html.theme-light .text-yellow-300 { color: #b45309; }
+html.theme-light .text-\[\#ff8a8a\] { color: #dc2626; }
+html.theme-light .text-\[\#c084fc\] { color: #9333ea; }
+html.theme-light .text-\[\#d8b4fe\] { color: #7e22ce; }
+html.theme-light .hover\:text-\[\#8ee30f\]:hover { color: #4e8f00; }
+/* В подвале (тёмно-зелёный фон) lime-текст оставляем ярким */
+html.theme-light footer .text-\[\#8ee30f\],
+html.theme-light footer .hover\:text-\[\#8ee30f\]:hover { color: #8ee30f; }
+
+/* Значение в полях поиска (.value задан #fafafa в стилях модалок) */
+html.theme-light .value { color: #0f172a; }
+
+/* Иконки переключателя темы */
+html.theme-light .icon-sun { display: none; }
+html.theme-dark .icon-moon { display: none; }
+
