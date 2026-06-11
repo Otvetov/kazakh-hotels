@@ -231,6 +231,7 @@ return [
     'no_account' => 'Нет аккаунта?',
     'have_account' => 'Уже есть аккаунт?',
     'account_banned' => 'Ваш аккаунт заблокирован. Обратитесь в поддержку.',
+    'guests_exceed_capacity' => 'Количество гостей превышает вместимость номера (до :count).',
 
     // Счётные формы (trans_choice)
     'guests_count' => ':count гость|:count гостя|:count гостей',

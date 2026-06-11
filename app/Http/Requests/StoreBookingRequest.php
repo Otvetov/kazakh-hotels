@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Room;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 class StoreBookingRequest extends FormRequest
 {
@@ -26,6 +28,23 @@ class StoreBookingRequest extends FormRequest
             'check_out' => ['required', 'date', 'after:check_in'],
             'guests' => ['required', 'integer', 'min:1'],
         ];
+    }
+
+    /**
+     * Доп. проверка: число гостей не должно превышать вместимость номера.
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator) {
+            $room = Room::find($this->input('room_id'));
+
+            if ($room && (int) $this->input('guests') > $room->capacity) {
+                $validator->errors()->add(
+                    'guests',
+                    __('messages.guests_exceed_capacity', ['count' => $room->capacity])
+                );
+            }
+        });
     }
 
     public function messages(): array

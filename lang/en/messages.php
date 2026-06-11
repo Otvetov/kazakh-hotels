@@ -231,6 +231,7 @@ return [
     'no_account' => 'No account?',
     'have_account' => 'Already have an account?',
     'account_banned' => 'Your account has been blocked. Please contact support.',
+    'guests_exceed_capacity' => 'The number of guests exceeds the room capacity (up to :count).',
 
     // Plural forms (trans_choice)
     'guests_count' => ':count guest|:count guests',
