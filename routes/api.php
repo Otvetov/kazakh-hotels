@@ -20,8 +20,8 @@ Route::prefix('v1')->group(function () {
     Route::get('/hotels/{hotel}/rooms', [HotelController::class, 'rooms']);
 });
 
-// Protected API routes (require authentication)
-Route::prefix('v1')->middleware('auth')->group(function () {
+// Protected API routes (require a Bearer token)
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     // User profile
     Route::get('/user', [ProfileController::class, 'show']);
     Route::put('/user', [ProfileController::class, 'update']);
