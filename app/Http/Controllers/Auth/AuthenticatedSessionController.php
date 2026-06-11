@@ -29,6 +29,16 @@ class AuthenticatedSessionController extends Controller
             ]);
         }
 
+        // Заблокированным пользователям вход запрещён.
+        // Только выходим (без invalidate), чтобы сообщение об ошибке не потерялось.
+        if (Auth::user()->isBanned()) {
+            Auth::guard('web')->logout();
+
+            throw ValidationException::withMessages([
+                'email' => __('messages.account_banned'),
+            ]);
+        }
+
         $request->session()->regenerate();
 
         return redirect()->intended(route('home'));

@@ -230,6 +230,7 @@ return [
     'remember_me' => 'Remember me',
     'no_account' => 'No account?',
     'have_account' => 'Already have an account?',
+    'account_banned' => 'Your account has been blocked. Please contact support.',
 
     // Plural forms (trans_choice)
     'guests_count' => ':count guest|:count guests',

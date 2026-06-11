@@ -49,6 +49,14 @@ class AuthController extends Controller
             ]);
         }
 
+        if (Auth::user()->isBanned()) {
+            Auth::guard('web')->logout();
+
+            return response()->json([
+                'message' => 'Your account has been blocked.',
+            ], 403);
+        }
+
         $user = Auth::user();
 
         return response()->json([

@@ -230,6 +230,7 @@ return [
     'remember_me' => 'Запомнить меня',
     'no_account' => 'Нет аккаунта?',
     'have_account' => 'Уже есть аккаунт?',
+    'account_banned' => 'Ваш аккаунт заблокирован. Обратитесь в поддержку.',
 
     // Счётные формы (trans_choice)
     'guests_count' => ':count гость|:count гостя|:count гостей',
