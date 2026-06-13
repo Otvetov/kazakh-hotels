@@ -26,11 +26,19 @@ class HotelImageSeeder extends Seeder
                 $images[] = ['image' => $hotel->image, 'sort_order' => $order++];
             }
 
-            // Несколько дополнительных фото (интерьеры, номера, лобби)
-            $tags = ['hotel,room', 'hotel,lobby', 'bedroom', 'resort,pool', 'hotel,bathroom'];
-            foreach ($tags as $i => $tag) {
+            // Дополнительные фото: лобби, номера, люкс, ещё один фасад
+            $h = $hotel->id;
+            $extra = [
+                HotelCatalogSeeder::LOBBIES[$h % count(HotelCatalogSeeder::LOBBIES)],
+                HotelCatalogSeeder::ROOMS[$h % count(HotelCatalogSeeder::ROOMS)],
+                HotelCatalogSeeder::SUITES[$h % count(HotelCatalogSeeder::SUITES)],
+                HotelCatalogSeeder::ROOMS[($h + 4) % count(HotelCatalogSeeder::ROOMS)],
+                HotelCatalogSeeder::EXTERIORS[($h + 1) % count(HotelCatalogSeeder::EXTERIORS)],
+            ];
+
+            foreach ($extra as $id) {
                 $images[] = [
-                    'image' => 'https://loremflickr.com/1200/800/' . $tag . '?lock=' . ($hotel->id * 10 + $i),
+                    'image' => HotelCatalogSeeder::pexels($id, 1200),
                     'sort_order' => $order++,
                 ];
             }

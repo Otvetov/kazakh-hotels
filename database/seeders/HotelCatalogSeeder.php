@@ -8,6 +8,28 @@ use Illuminate\Database\Seeder;
 class HotelCatalogSeeder extends Seeder
 {
     /**
+     * Подобранные бесплатные фото (Pexels, лицензия Pexels License) по категориям.
+     */
+    public const EXTERIORS = [28238364, 10613691, 6066400, 2394446, 8957310, 16094034,
+        30097235, 18426838, 30726924, 12041472, 11783047];
+
+    public const ROOMS = [34496701, 7745929, 14750394, 18801062, 7722164, 237371,
+        5860693, 27638174, 4493299, 7746080, 10415975];
+
+    public const LOBBIES = [7512139, 28102352, 7820327, 695193, 5378693, 2869215, 7820734];
+
+    public const SUITES = [6466496, 6467621, 2725675, 16635688, 164595, 3688261,
+        5379181, 271639, 279805, 8082217];
+
+    /**
+     * Собирает URL изображения Pexels по id.
+     */
+    public static function pexels(int $id, int $w = 1200): string
+    {
+        return "https://images.pexels.com/photos/{$id}/pexels-photo-{$id}.jpeg?auto=compress&cs=tinysrgb&w={$w}";
+    }
+
+    /**
      * Наполняет каталог реалистичными отелями по городам Казахстана.
      * Данные собственные (не из сторонних сервисов), чтобы их можно было
      * свободно использовать и объяснить на защите.
@@ -27,7 +49,7 @@ class HotelCatalogSeeder extends Seeder
                     'address' => $this->address($cfg['streets']),
                     'description' => $this->description($city),
                     'rating' => $this->rating($tier),
-                    'image' => 'https://loremflickr.com/1200/600/hotel,building?lock=' . (crc32($name) % 100000),
+                    'image' => self::pexels(self::EXTERIORS[crc32($name) % count(self::EXTERIORS)], 1200),
                 ]);
 
                 $this->seedRooms($hotel, $tier, $cfg['price_factor']);
@@ -164,17 +186,19 @@ class HotelCatalogSeeder extends Seeder
             default => ['Эконом', 'Стандарт', 'Комфорт'],
         };
 
-        $roomTags = ['Эконом' => 'hotel,room', 'Стандарт' => 'hotel,room', 'Комфорт' => 'bedroom',
-            'Полулюкс' => 'hotel,suite', 'Люкс' => 'luxury,bedroom', 'Президентский' => 'luxury,suite'];
+        // Простые номера — из набора фото номеров, люксовые — из набора люксов
+        $luxTypes = ['Полулюкс', 'Люкс', 'Президентский'];
 
         foreach ($types as $idx => $type) {
             [$base, $capacity] = $catalog[$type];
             $price = round($base * $factor / 500) * 500;
 
+            $pool = in_array($type, $luxTypes, true) ? self::SUITES : self::ROOMS;
+            $imageId = $pool[($hotel->id + $idx) % count($pool)];
+
             $hotel->rooms()->create([
                 'name' => $type,
-                'image' => 'https://loremflickr.com/800/600/' . ($roomTags[$type] ?? 'hotel,room')
-                    . '?lock=' . ($hotel->id * 100 + $idx),
+                'image' => self::pexels($imageId, 1000),
                 'price_per_night' => $price,
                 'capacity' => $capacity,
                 'is_available' => fake()->boolean(85),
