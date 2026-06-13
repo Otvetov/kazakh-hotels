@@ -172,6 +172,9 @@
     {{-- Контейнер всплывающих уведомлений --}}
     <div id="toast-container" class="fixed top-20 right-4 z-[100] flex flex-col gap-2 w-[calc(100%-2rem)] max-w-sm pointer-events-none"></div>
 
+    {{-- Плавающий чат ИИ-помощника --}}
+    @include('partials.ai-chat')
+
     <script>
         function toggleTheme() {
             const html = document.documentElement;

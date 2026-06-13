@@ -31,6 +31,11 @@ Route::get('/api-docs', function () {
     return view('api-docs');
 })->name('api.docs');
 
+// ИИ-помощник (чат)
+Route::post('/assistant/chat', [\App\Http\Controllers\AssistantController::class, 'chat'])
+    ->middleware('throttle:30,1')
+    ->name('assistant.chat');
+
 // Hotels
 Route::get('/hotels', [HotelController::class, 'index'])->name('hotels.index');
 Route::get('/hotel/{hotel}', [HotelController::class, 'show'])->name('hotels.show');

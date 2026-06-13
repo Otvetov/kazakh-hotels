@@ -138,23 +138,19 @@
                 ];
             @endphp
             @foreach($aiQuestions as [$icon, $q])
-                <button type="button" onclick="askAI()" class="text-left bg-[#141516] rounded-2xl p-4 hover:bg-[#1f2021] transition">
+                <button type="button" onclick="aiAsk(@js($q))" class="text-left bg-[#141516] rounded-2xl p-4 hover:bg-[#1f2021] transition">
                     <img src="{{ $icon }}" alt="" class="w-10 h-10 mb-3" loading="lazy">
                     <div class="text-sm text-white">{{ $q }}</div>
                 </button>
             @endforeach
         </div>
 
-        <button type="button" onclick="askAI()" class="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#c084fc]/15 text-[#c084fc] hover:bg-[#c084fc]/25 transition font-medium">
+        <button type="button" onclick="openAiChat()" class="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#c084fc]/15 text-[#c084fc] hover:bg-[#c084fc]/25 transition font-medium">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
             {{ __('messages.ai_ask_other') }}
         </button>
-
-        <div id="aiNote" class="hidden mt-4 p-3 bg-[#c084fc]/10 border border-[#c084fc]/30 rounded-xl text-sm text-[#d8b4fe]">
-            {{ __('messages.ai_coming') }}
-        </div>
     </div>
 
     {{-- Rooms --}}
@@ -347,13 +343,11 @@ document.getElementById('galleryLightbox')?.addEventListener('click', function (
     if (e.target === this) closeGallery();
 });
 
-function askAI() {
-    const note = document.getElementById('aiNote');
-    if (note) {
-        note.classList.remove('hidden');
-        note.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-}
+// Контекст текущего отеля для ИИ-помощника
+window.AI_PAGE_CONTEXT = {
+    hotel: @json($hotel->name),
+    city: @json($hotel->city),
+};
 
 function shareHotel() {
     const url = window.location.href;

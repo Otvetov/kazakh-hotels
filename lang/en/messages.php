@@ -134,6 +134,14 @@ return [
     'ai_q4' => 'Are pets allowed?',
     'ai_ask_other' => 'Ask something else',
     'ai_coming' => 'The AI assistant is coming soon — stay tuned ✨',
+    'ai_widget_title' => 'AI assistant',
+    'ai_widget_subtitle' => 'Ask about hotels and booking',
+    'ai_widget_greeting' => 'Hi! I can help you choose a hotel and answer questions about booking and stay conditions. How can I help?',
+    'ai_widget_placeholder' => 'Type a message…',
+    'ai_widget_open' => 'Open chat with the AI assistant',
+    'ai_widget_close' => 'Close chat',
+    'ai_widget_send' => 'Send',
+    'ai_widget_error' => 'Could not get a response. Please try again.',
 
     // Reviews
     'guest_reviews' => 'Guest reviews',
