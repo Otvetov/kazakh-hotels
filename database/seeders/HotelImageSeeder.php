@@ -26,10 +26,11 @@ class HotelImageSeeder extends Seeder
                 $images[] = ['image' => $hotel->image, 'sort_order' => $order++];
             }
 
-            // Несколько дополнительных фото
-            for ($i = 0; $i < 5; $i++) {
+            // Несколько дополнительных фото (интерьеры, номера, лобби)
+            $tags = ['hotel,room', 'hotel,lobby', 'bedroom', 'resort,pool', 'hotel,bathroom'];
+            foreach ($tags as $i => $tag) {
                 $images[] = [
-                    'image' => 'https://picsum.photos/seed/hotel' . $hotel->id . '_' . $i . '/1200/800',
+                    'image' => 'https://loremflickr.com/1200/800/' . $tag . '?lock=' . ($hotel->id * 10 + $i),
                     'sort_order' => $order++,
                 ];
             }

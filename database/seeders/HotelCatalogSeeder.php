@@ -27,7 +27,7 @@ class HotelCatalogSeeder extends Seeder
                     'address' => $this->address($cfg['streets']),
                     'description' => $this->description($city),
                     'rating' => $this->rating($tier),
-                    'image' => 'https://picsum.photos/seed/kzhotel' . md5($name) . '/1200/600',
+                    'image' => 'https://loremflickr.com/1200/600/hotel,building?lock=' . (crc32($name) % 100000),
                 ]);
 
                 $this->seedRooms($hotel, $tier, $cfg['price_factor']);
