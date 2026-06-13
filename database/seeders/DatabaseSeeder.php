@@ -18,80 +18,73 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create admin user
-        $admin = User::create([
+        // Администратор
+        User::create([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
             'password' => Hash::make('password'),
             'role' => 'admin',
         ]);
 
-        // Create regular users
+        // Обычные пользователи
         $users = User::factory(10)->create();
 
-        // Create hotels
-        $cities = ['Алматы', 'Астана', 'Шымкент', 'Караганда', 'Актобе', 'Тараз', 'Павлодар', 'Усть-Каменогорск'];
-        
-        $hotels = [];
-        foreach ($cities as $city) {
-            for ($i = 0; $i < 3; $i++) {
-                $imageSeed = uniqid();
-                $hotels[] = Hotel::create([
-                    'name' => fake()->company() . ' Hotel',
-                    'city' => $city,
-                    'address' => fake()->streetAddress(),
-                    'description' => fake()->paragraph(3),
-                    'rating' => fake()->randomFloat(1, 3, 5),
-                    'image' => 'https://picsum.photos/seed/' . $imageSeed . '/1200/600',
-                ]);
-            }
-        }
+        // Каталог отелей по городам Казахстана + номера
+        $this->call(HotelCatalogSeeder::class);
 
-      
-        foreach ($hotels as $hotel) {
-            $roomCount = fake()->numberBetween(3, 8);
-            for ($i = 0; $i < $roomCount; $i++) {
-                Room::create([
-                    'hotel_id' => $hotel->id,
-                    'name' => fake()->randomElement(['Standard', 'Deluxe', 'Suite', 'Executive', 'Presidential']) . ' Room',
-                    'price_per_night' => fake()->numberBetween(5000, 50000),
-                    'capacity' => fake()->numberBetween(1, 4),
-                    'is_available' => fake()->boolean(80),
-                ]);
-            }
-        }
+        $hotels = Hotel::all();
 
-        
-        foreach ($users->take(5) as $user) {
+        // Бронирования
+        foreach ($users->take(6) as $user) {
             $room = Room::inRandomOrder()->first();
+            $nights = fake()->numberBetween(1, 7);
+            $checkIn = now()->addDays(fake()->numberBetween(1, 30));
+
             Booking::create([
                 'user_id' => $user->id,
                 'room_id' => $room->id,
-                'check_in' => now()->addDays(fake()->numberBetween(1, 30)),
-                'check_out' => now()->addDays(fake()->numberBetween(31, 60)),
+                'check_in' => $checkIn,
+                'check_out' => (clone $checkIn)->addDays($nights),
                 'guests' => fake()->numberBetween(1, $room->capacity),
-                'total_price' => $room->price_per_night * fake()->numberBetween(1, 7),
-                'status' => fake()->randomElement(['pending', 'confirmed', 'cancelled']),
+                'total_price' => $room->price_per_night * $nights,
+                'status' => fake()->randomElement(['pending', 'confirmed', 'confirmed', 'cancelled']),
             ]);
         }
 
-       
-        foreach ($users->take(5) as $user) {
-            Favorite::create([
+        // Избранное
+        foreach ($users->take(6) as $user) {
+            Favorite::firstOrCreate([
                 'user_id' => $user->id,
-                'hotel_id' => $hotels[array_rand($hotels)]->id,
+                'hotel_id' => $hotels->random()->id,
             ]);
         }
 
-       
-        foreach ($users->take(8) as $user) {
-            Review::create([
-                'user_id' => $user->id,
-                'hotel_id' => $hotels[array_rand($hotels)]->id,
-                'rating' => fake()->numberBetween(1, 5),
-                'comment' => fake()->paragraph(2),
-                'status' => fake()->randomElement(['pending', 'approved', 'rejected']),
-            ]);
+        // Отзывы с реальными русскими комментариями
+        $comments = [
+            'Отличный отель, чисто и уютно. Персонал вежливый, заселили быстро.',
+            'Хорошее расположение, рядом много кафе. Завтрак вкусный, рекомендую.',
+            'Номер просторный, кровать удобная. Wi-Fi работал без нареканий.',
+            'Всё понравилось, кроме шумной улицы по ночам. В остальном на высоте.',
+            'Приятный отель за свои деньги. Вернёмся ещё раз.',
+            'Сервис на уровне, помогли с трансфером. Спасибо за гостеприимство!',
+            'Чистые номера, приветливый персонал. Соотношение цены и качества хорошее.',
+            'Останавливались по работе — удобно, есть конференц-зал и быстрый интернет.',
+        ];
+
+        foreach ($hotels->random(min(40, $hotels->count())) as $hotel) {
+            $count = fake()->numberBetween(1, 3);
+            for ($i = 0; $i < $count; $i++) {
+                Review::create([
+                    'user_id' => $users->random()->id,
+                    'hotel_id' => $hotel->id,
+                    'rating' => fake()->numberBetween(3, 5),
+                    'comment' => fake()->randomElement($comments),
+                    'status' => fake()->randomElement(['approved', 'approved', 'approved', 'pending']),
+                ]);
+            }
         }
+
+        // Галерея фотографий для всех отелей
+        $this->call(HotelImageSeeder::class);
     }
 }
