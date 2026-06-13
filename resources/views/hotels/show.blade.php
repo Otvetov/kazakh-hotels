@@ -168,8 +168,8 @@
                     <div class="otl-surface overflow-hidden flex flex-col md:flex-row">
                         {{-- Image --}}
                         <div class="md:w-64 h-48 md:h-auto flex-shrink-0 bg-[#141516]">
-                            @if($room->image)
-                                <img src="{{ asset('storage/' . $room->image) }}" alt="{{ $room->name }}" class="w-full h-full object-cover">
+                            @if($room->image_url)
+                                <img src="{{ $room->image_url }}" alt="{{ $room->name }}" class="w-full h-full object-cover" loading="lazy">
                             @else
                                 <div class="w-full h-full flex items-center justify-center">
                                     <svg class="w-12 h-12 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

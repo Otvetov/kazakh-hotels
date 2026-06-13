@@ -164,12 +164,17 @@ class HotelCatalogSeeder extends Seeder
             default => ['Эконом', 'Стандарт', 'Комфорт'],
         };
 
-        foreach ($types as $type) {
+        $roomTags = ['Эконом' => 'hotel,room', 'Стандарт' => 'hotel,room', 'Комфорт' => 'bedroom',
+            'Полулюкс' => 'hotel,suite', 'Люкс' => 'luxury,bedroom', 'Президентский' => 'luxury,suite'];
+
+        foreach ($types as $idx => $type) {
             [$base, $capacity] = $catalog[$type];
             $price = round($base * $factor / 500) * 500;
 
             $hotel->rooms()->create([
                 'name' => $type,
+                'image' => 'https://loremflickr.com/800/600/' . ($roomTags[$type] ?? 'hotel,room')
+                    . '?lock=' . ($hotel->id * 100 + $idx),
                 'price_per_night' => $price,
                 'capacity' => $capacity,
                 'is_available' => fake()->boolean(85),
