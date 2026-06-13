@@ -8,6 +8,9 @@
     {{-- Horizontal search bar --}}
     <form action="{{ route('hotels.index') }}" method="GET" id="hotelsSearchForm">
         <input type="hidden" name="sort" id="sortInput" value="{{ request('sort', 'popular') }}">
+        <input type="hidden" name="min_price" value="{{ request('min_price') }}">
+        <input type="hidden" name="max_price" value="{{ request('max_price') }}">
+        <input type="hidden" name="rating" value="{{ request('rating') }}">
         <div class="otl-surface p-3 mb-4">
             <div class="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_auto] gap-2">
                 {{-- City --}}
@@ -70,13 +73,54 @@
             'price_desc' => __('messages.sort_price_desc'),
         ];
     @endphp
-    <div class="flex flex-wrap gap-2 mb-6">
+    <div class="flex flex-wrap gap-2 mb-4">
         @foreach($sorts as $key => $label)
             <button type="button" onclick="applySort('{{ $key }}')"
                 class="px-4 py-2 rounded-full text-sm font-medium transition {{ $currentSort === $key ? 'bg-[#8ee30f] text-[#0a0a0a]' : 'bg-[#1b1c1d] text-gray-300 hover:bg-[#2a2b2c]' }}">
                 {{ $label }}
             </button>
         @endforeach
+    </div>
+
+    {{-- Filters --}}
+    @php
+        $currentRating = request('rating');
+        $ratings = ['' => __('messages.rating_any'), '3' => '3+', '4' => '4+', '4.5' => '4.5+'];
+    @endphp
+    <div class="otl-surface p-4 mb-6 flex flex-col lg:flex-row lg:items-end gap-5">
+        {{-- Rating --}}
+        <div>
+            <div class="text-xs text-[#7e8488] mb-2">{{ __('messages.rating_label') }}</div>
+            <div class="flex flex-wrap gap-2">
+                @foreach($ratings as $val => $label)
+                    <button type="button" onclick="applyFilter('rating', '{{ $val }}')"
+                        class="px-3.5 py-1.5 rounded-full text-sm font-medium transition {{ (string) $currentRating === (string) $val ? 'bg-[#8ee30f] text-[#0a0a0a]' : 'bg-[#141516] text-gray-300 hover:bg-[#2a2b2c]' }}">
+                        {{ $label }}
+                    </button>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- Price --}}
+        <div>
+            <div class="text-xs text-[#7e8488] mb-2">{{ __('messages.price_label') }}</div>
+            <div class="flex items-center gap-2">
+                <input type="number" id="priceMin" min="{{ $priceMin }}" max="{{ $priceMax }}"
+                       placeholder="{{ number_format($priceMin, 0, '.', ' ') }}"
+                       value="{{ request('min_price', $priceMin) }}" class="field-input w-28 py-2">
+                <span class="text-[#7e8488]">—</span>
+                <input type="number" id="priceMax" min="{{ $priceMin }}" max="{{ $priceMax }}"
+                       placeholder="{{ number_format($priceMax, 0, '.', ' ') }}"
+                       value="{{ request('max_price', $priceMax) }}" class="field-input w-28 py-2">
+                <button type="button" onclick="applyPrice()" class="btn-accent px-5 py-2">{{ __('messages.apply') }}</button>
+            </div>
+        </div>
+
+        @if(request('rating') || request('min_price') || request('max_price'))
+            <div class="lg:ml-auto">
+                <button type="button" onclick="resetFilters()" class="btn-dark px-5 py-2 text-sm">{{ __('messages.reset_filters') }}</button>
+            </div>
+        @endif
     </div>
 
     {{-- Header --}}
@@ -200,6 +244,35 @@ function toggleFavorite(hotelId) {
 function applySort(sort) {
     const params = new URLSearchParams(window.location.search);
     params.set('sort', sort);
+    params.delete('page');
+    window.location.search = params.toString();
+}
+
+function applyFilter(key, value) {
+    const params = new URLSearchParams(window.location.search);
+    if (value === '' || value === null) params.delete(key);
+    else params.set(key, value);
+    params.delete('page');
+    window.location.search = params.toString();
+}
+
+const PRICE_MIN = {{ $priceMin }};
+const PRICE_MAX = {{ $priceMax }};
+
+function applyPrice() {
+    const params = new URLSearchParams(window.location.search);
+    const min = document.getElementById('priceMin').value.trim();
+    const max = document.getElementById('priceMax').value.trim();
+    // Отправляем только если значение отличается от границы диапазона
+    if (min && Number(min) > PRICE_MIN) params.set('min_price', min); else params.delete('min_price');
+    if (max && Number(max) < PRICE_MAX) params.set('max_price', max); else params.delete('max_price');
+    params.delete('page');
+    window.location.search = params.toString();
+}
+
+function resetFilters() {
+    const params = new URLSearchParams(window.location.search);
+    ['rating', 'min_price', 'max_price', 'page'].forEach(k => params.delete(k));
     window.location.search = params.toString();
 }
 

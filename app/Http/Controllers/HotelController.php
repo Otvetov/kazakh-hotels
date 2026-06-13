@@ -52,13 +52,17 @@ class HotelController extends Controller
                 $query->latest();
         }
 
-        $hotels = $query->with('rooms')->paginate(12);
+        $hotels = $query->with('rooms')->paginate(12)->withQueryString();
         $cities = Hotel::distinct()->pluck('city')->sort();
+
+        // Диапазон цен для подсказок в фильтре
+        $priceMin = (int) Room::min('price_per_night');
+        $priceMax = (int) Room::max('price_per_night');
 
         // Популярные города
         $popularCities = $this->popularCities();
 
-        return view('hotels.index', compact('hotels', 'cities', 'popularCities'));
+        return view('hotels.index', compact('hotels', 'cities', 'popularCities', 'priceMin', 'priceMax'));
     }
 
     public function show(Hotel $hotel)
