@@ -40,20 +40,39 @@
 
 <div class="max-w-7xl mx-auto px-4 py-8">
 
-    {{-- Hero --}}
-    <div id="hero" class="otl-surface overflow-hidden mb-6 scroll-mt-32">
-        <div class="relative h-72 md:h-[26rem]">
-            @if($hotel->image)
-                <img src="{{ $hotel->image_url }}" alt="{{ $hotel->name }}" class="w-full h-full object-cover">
-            @else
-                <div class="w-full h-full flex items-center justify-center bg-[#141516]">
-                    <svg class="w-24 h-24 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                    </svg>
-                </div>
+    {{-- Gallery --}}
+    @php $gallery = $hotel->gallery; $photoCount = count($gallery); @endphp
+    <div id="hero" class="mb-6 scroll-mt-32">
+        @if($photoCount === 0)
+            <div class="otl-surface h-72 md:h-[24rem] flex items-center justify-center">
+                <svg class="w-24 h-24 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+            </div>
+        @else
+            <div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-2 md:h-[24rem]">
+                <button type="button" onclick="openGallery(0)" class="md:col-span-2 md:row-span-2 h-64 md:h-auto overflow-hidden rounded-2xl group">
+                    <img src="{{ $gallery[0] }}" alt="{{ $hotel->name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                </button>
+                @for($i = 1; $i <= 4; $i++)
+                    @if(isset($gallery[$i]))
+                        <button type="button" onclick="openGallery({{ $i }})" class="relative hidden md:block overflow-hidden rounded-2xl group">
+                            <img src="{{ $gallery[$i] }}" alt="{{ $hotel->name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            @if($i === 4 && $photoCount > 5)
+                                <span class="absolute inset-0 bg-black/55 flex items-center justify-center text-white text-lg font-semibold">+{{ $photoCount - 5 }} {{ __('messages.photos') }}</span>
+                            @endif
+                        </button>
+                    @endif
+                @endfor
+            </div>
+            @if($photoCount > 1)
+                <button type="button" onclick="openGallery(0)" class="mt-2 md:hidden btn-dark px-4 py-2 text-sm">{{ $photoCount }} {{ __('messages.photos') }}</button>
             @endif
-        </div>
+        @endif
+    </div>
 
+    {{-- Info --}}
+    <div class="otl-surface mb-6">
         <div class="p-6 md:p-8">
             <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
                 <div class="min-w-0">
@@ -212,6 +231,25 @@
     @endif
 </div>
 
+{{-- Gallery lightbox --}}
+@if($photoCount > 0)
+<div id="galleryLightbox" class="glb hidden">
+    <button type="button" onclick="closeGallery()" class="glb-close" aria-label="Закрыть">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </button>
+    @if($photoCount > 1)
+        <button type="button" onclick="galleryPrev()" class="glb-nav glb-prev" aria-label="Назад">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </button>
+        <button type="button" onclick="galleryNext()" class="glb-nav glb-next" aria-label="Вперёд">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+    @endif
+    <img id="glbImg" class="glb-img" src="" alt="">
+    <div id="glbCounter" class="glb-counter"></div>
+</div>
+@endif
+
 {{-- Booking Date Modal --}}
 @auth
 <div id="bookingDateModal" class="bmodal hidden" style="display: none;">
@@ -276,6 +314,38 @@ const T = {
     room_unavailable: @json(__('messages.room_unavailable')),
     room_taken: @json(__('messages.room_taken')),
 };
+
+// --- Галерея (лайтбокс) ---
+const GALLERY = @json($gallery ?? []);
+let glbIndex = 0;
+
+function openGallery(i) {
+    if (!GALLERY.length) return;
+    glbIndex = i;
+    renderGlb();
+    document.getElementById('galleryLightbox').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+function closeGallery() {
+    document.getElementById('galleryLightbox').classList.add('hidden');
+    document.body.style.overflow = '';
+}
+function galleryPrev() { glbIndex = (glbIndex - 1 + GALLERY.length) % GALLERY.length; renderGlb(); }
+function galleryNext() { glbIndex = (glbIndex + 1) % GALLERY.length; renderGlb(); }
+function renderGlb() {
+    document.getElementById('glbImg').src = GALLERY[glbIndex];
+    document.getElementById('glbCounter').textContent = (glbIndex + 1) + ' / ' + GALLERY.length;
+}
+document.addEventListener('keydown', function (e) {
+    const lb = document.getElementById('galleryLightbox');
+    if (!lb || lb.classList.contains('hidden')) return;
+    if (e.key === 'Escape') closeGallery();
+    else if (e.key === 'ArrowLeft') galleryPrev();
+    else if (e.key === 'ArrowRight') galleryNext();
+});
+document.getElementById('galleryLightbox')?.addEventListener('click', function (e) {
+    if (e.target === this) closeGallery();
+});
 
 function askAI() {
     const note = document.getElementById('aiNote');
@@ -533,6 +603,61 @@ function bkRender() {
 @keyframes bmodalIn {
     from { opacity: 0; transform: scale(0.97); }
     to { opacity: 1; transform: scale(1); }
+}
+
+/* Лайтбокс галереи */
+.glb {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    z-index: 70;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+.glb.hidden { display: none !important; }
+.glb:not(.hidden) { display: flex; }
+.glb-img {
+    max-width: 92vw;
+    max-height: 86vh;
+    object-fit: contain;
+    border-radius: 12px;
+    user-select: none;
+}
+.glb-close {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.5rem;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 9999px;
+    padding: .6rem;
+    transition: background-color .15s ease;
+}
+.glb-close:hover { background: rgba(255, 255, 255, 0.22); }
+.glb-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 9999px;
+    padding: .75rem;
+    transition: background-color .15s ease;
+}
+.glb-nav:hover { background: rgba(255, 255, 255, 0.22); }
+.glb-prev { left: 1.5rem; }
+.glb-next { right: 1.5rem; }
+.glb-counter {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    background: rgba(0, 0, 0, 0.5);
+    padding: .35rem .9rem;
+    border-radius: 9999px;
+    font-size: .875rem;
 }
 </style>
 @endsection

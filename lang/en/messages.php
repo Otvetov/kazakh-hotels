@@ -238,5 +238,6 @@ return [
     'rooms_count' => ':count room|:count rooms',
     'hotels_found' => 'Found :count hotel|Found :count hotels',
     'reviews_count' => ':count review|:count reviews',
+    'photos' => 'photos',
     'room_options' => ':count option|:count options',
 ];

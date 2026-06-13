@@ -63,7 +63,7 @@ class HotelController extends Controller
 
     public function show(Hotel $hotel)
     {
-        $hotel->load(['rooms', 'reviews.user']);
+        $hotel->load(['rooms', 'reviews.user', 'images']);
         $isFavorited = auth()->check() && $hotel->isFavoritedBy(auth()->id());
 
         return view('hotels.show', compact('hotel', 'isFavorited'));

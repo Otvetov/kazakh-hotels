@@ -30,8 +30,13 @@
                 <input type="number" name="rating" step="0.1" min="0" max="5" value="{{ old('rating') }}" class="field-input">
             </div>
             <div>
-                <label class="block text-sm font-medium text-[#7e8488] mb-2">Изображение</label>
+                <label class="block text-sm font-medium text-[#7e8488] mb-2">Обложка (главное фото)</label>
                 <input type="file" name="image" accept="image/*" class="field-input" style="color-scheme: dark;">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-[#7e8488] mb-2">Фотографии галереи</label>
+                <input type="file" name="gallery_images[]" accept="image/*" multiple class="field-input" style="color-scheme: dark;">
+                <p class="text-xs text-[#7e8488] mt-1.5">Можно выбрать несколько файлов</p>
             </div>
             <div class="flex gap-3">
                 <button type="submit" class="btn-accent flex-1 py-3">Создать отель</button>

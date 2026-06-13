@@ -238,5 +238,6 @@ return [
     'rooms_count' => ':count номер|:count номера|:count номеров',
     'hotels_found' => 'Найдено :count отель|Найдено :count отеля|Найдено :count отелей',
     'reviews_count' => ':count отзыв|:count отзыва|:count отзывов',
+    'photos' => 'фото',
     'room_options' => ':count вариант размещения|:count варианта размещения|:count вариантов размещения',
 ];

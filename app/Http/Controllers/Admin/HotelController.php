@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreHotelRequest;
 use App\Http\Requests\UpdateHotelRequest;
 use App\Models\Hotel;
+use App\Models\HotelImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -38,7 +39,9 @@ class HotelController extends Controller
             $data['image'] = $request->file('image')->store('hotels', 'public');
         }
 
-        Hotel::create($data);
+        $hotel = Hotel::create($data);
+
+        $this->storeGalleryImages($request, $hotel);
 
         return redirect()->route('admin.hotels.index')->with('success', 'Отель успешно создан.');
     }
@@ -63,6 +66,8 @@ class HotelController extends Controller
 
         $hotel->update($data);
 
+        $this->storeGalleryImages($request, $hotel);
+
         return redirect()->route('admin.hotels.index')->with('success', 'Отель успешно обновлен.');
     }
 
@@ -73,9 +78,51 @@ class HotelController extends Controller
             Storage::disk('public')->delete($hotel->image);
         }
 
+        // Удаляем файлы галереи (записи удалятся каскадом)
+        foreach ($hotel->images as $img) {
+            if (!str_starts_with($img->image, 'http')) {
+                Storage::disk('public')->delete($img->image);
+            }
+        }
+
         $hotel->delete();
 
         return redirect()->route('admin.hotels.index')->with('success', 'Отель успешно удален.');
+    }
+
+    /**
+     * Удалить одно изображение галереи.
+     */
+    public function deleteImage(Hotel $hotel, HotelImage $image)
+    {
+        abort_unless($image->hotel_id === $hotel->id, 404);
+
+        if (!str_starts_with($image->image, 'http')) {
+            Storage::disk('public')->delete($image->image);
+        }
+
+        $image->delete();
+
+        return back()->with('success', 'Фото удалено.');
+    }
+
+    /**
+     * Сохранить загруженные изображения галереи.
+     */
+    private function storeGalleryImages(Request $request, Hotel $hotel): void
+    {
+        if (!$request->hasFile('gallery_images')) {
+            return;
+        }
+
+        $order = (int) $hotel->images()->max('sort_order') + 1;
+
+        foreach ($request->file('gallery_images') as $file) {
+            $hotel->images()->create([
+                'image' => $file->store('hotels', 'public'),
+                'sort_order' => $order++,
+            ]);
+        }
     }
 }
 

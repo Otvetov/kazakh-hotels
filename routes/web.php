@@ -69,6 +69,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::get('/', [AdminController::class, 'index'])->name('index');
     
     Route::resource('hotels', AdminHotelController::class);
+    Route::delete('/hotels/{hotel}/images/{image}', [AdminHotelController::class, 'deleteImage'])->name('hotels.images.destroy');
     Route::resource('rooms', AdminRoomController::class);
     Route::resource('users', AdminUserController::class)->only(['index']);
     Route::post('/users/{user}/ban', [AdminUserController::class, 'ban'])->name('users.ban');

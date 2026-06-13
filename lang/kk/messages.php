@@ -238,5 +238,6 @@ return [
     'rooms_count' => ':count бөлме',
     'hotels_found' => ':count қонақ үй табылды',
     'reviews_count' => ':count пікір',
+    'photos' => 'фото',
     'room_options' => ':count орналастыру нұсқасы',
 ];

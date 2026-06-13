@@ -50,6 +50,29 @@ class Hotel extends Model
     }
 
     /**
+     * Изображения галереи отеля
+     */
+    public function images()
+    {
+        return $this->hasMany(HotelImage::class)->orderBy('sort_order');
+    }
+
+    /**
+     * Список URL изображений для галереи.
+     * Если галерея пуста — берём основное изображение отеля.
+     */
+    public function getGalleryAttribute(): array
+    {
+        $gallery = $this->images->map(fn ($img) => $img->image_url)->filter()->values()->all();
+
+        if (empty($gallery) && $this->image_url) {
+            $gallery = [$this->image_url];
+        }
+
+        return $gallery;
+    }
+
+    /**
      * Получить отзывы
      */
     public function reviews()
