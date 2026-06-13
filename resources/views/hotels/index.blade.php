@@ -30,7 +30,7 @@
                     </svg>
                     <span id="dateValueHotels" class="value truncate">
                         @if(request('check_in') && request('check_out'))
-                            {{ \Carbon\Carbon::parse(request('check_in'))->format('d M') }} – {{ \Carbon\Carbon::parse(request('check_out'))->format('d M') }}
+                            {{ \Carbon\Carbon::parse(request('check_in'))->locale(app()->getLocale())->translatedFormat('j M') }} – {{ \Carbon\Carbon::parse(request('check_out'))->locale(app()->getLocale())->translatedFormat('j M') }}
                         @else
                             {{ __('messages.checkin_checkout') }}
                         @endif

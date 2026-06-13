@@ -34,7 +34,7 @@
                                 <span class="label text-xs text-[#7e8488] block mb-0.5">{{ __('messages.trip_dates') }}</span>
                                 <span id="dateValue" class="value text-white font-medium truncate block">
                                     @if(request('check_in') && request('check_out'))
-                                        {{ \Carbon\Carbon::parse(request('check_in'))->format('d M') }} – {{ \Carbon\Carbon::parse(request('check_out'))->format('d M') }}
+                                        {{ \Carbon\Carbon::parse(request('check_in'))->locale(app()->getLocale())->translatedFormat('j M') }} – {{ \Carbon\Carbon::parse(request('check_out'))->locale(app()->getLocale())->translatedFormat('j M') }}
                                     @else
                                         {{ __('messages.checkin_checkout') }}
                                     @endif
