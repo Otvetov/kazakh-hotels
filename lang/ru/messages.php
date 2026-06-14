@@ -147,6 +147,11 @@ return [
     'showing_results' => 'Показано :first–:last из :total',
     'fav_added' => 'Добавлено в избранное',
     'fav_removed' => 'Удалено из избранного',
+    'profile_updated' => 'Профиль обновлён',
+    'change_password' => 'Смена пароля',
+    'password_optional_hint' => 'Оставьте поля пустыми, если не хотите менять пароль',
+    'current_password' => 'Текущий пароль',
+    'new_password' => 'Новый пароль',
 
     // Оплата
     'pay_title' => 'Оплата бронирования',

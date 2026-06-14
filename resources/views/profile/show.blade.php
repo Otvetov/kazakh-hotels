@@ -152,20 +152,59 @@
 
 {{-- Edit modal --}}
 <div id="edit-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-    <div class="otl-surface p-6 max-w-md w-full">
-        <h3 class="text-xl font-bold text-white mb-4">{{ __('messages.edit_profile') }}</h3>
-        <form action="{{ route('profile.update') }}" method="POST">
+    <div class="otl-surface p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <h3 class="text-xl font-bold text-white mb-5">{{ __('messages.edit_profile') }}</h3>
+        <form action="{{ route('profile.update') }}" method="POST" class="space-y-4">
             @csrf
             @method('PUT')
-            <div class="mb-4">
+
+            <div>
                 <label class="block text-sm font-medium text-[#7e8488] mb-2">{{ __('messages.name') }}</label>
-                <input type="text" name="name" value="{{ $user->name }}" required class="field-input">
+                <input type="text" name="name" value="{{ old('name', $user->name) }}" required class="field-input @error('name') border-[#f04141] @enderror">
+                @error('name') <p class="text-xs text-[#ff8a8a] mt-1.5">{{ $message }}</p> @enderror
             </div>
-            <div class="flex gap-3">
+
+            <div>
+                <label class="block text-sm font-medium text-[#7e8488] mb-2">{{ __('messages.email') }}</label>
+                <input type="email" name="email" value="{{ old('email', $user->email) }}" required class="field-input @error('email') border-[#f04141] @enderror">
+                @error('email') <p class="text-xs text-[#ff8a8a] mt-1.5">{{ $message }}</p> @enderror
+            </div>
+
+            <div class="pt-4 mt-2 border-t border-white/10">
+                <h4 class="text-white font-semibold mb-1">{{ __('messages.change_password') }}</h4>
+                <p class="text-xs text-[#7e8488] mb-4">{{ __('messages.password_optional_hint') }}</p>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-[#7e8488] mb-2">{{ __('messages.current_password') }}</label>
+                        <input type="password" name="current_password" autocomplete="current-password" class="field-input @error('current_password') border-[#f04141] @enderror">
+                        @error('current_password') <p class="text-xs text-[#ff8a8a] mt-1.5">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-[#7e8488] mb-2">{{ __('messages.new_password') }}</label>
+                        <input type="password" name="password" autocomplete="new-password" class="field-input @error('password') border-[#f04141] @enderror">
+                        @error('password') <p class="text-xs text-[#ff8a8a] mt-1.5">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-[#7e8488] mb-2">{{ __('messages.confirm_password') }}</label>
+                        <input type="password" name="password_confirmation" autocomplete="new-password" class="field-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-3 pt-2">
                 <button type="submit" class="btn-accent flex-1 py-2.5">{{ __('messages.save') }}</button>
                 <button type="button" onclick="document.getElementById('edit-modal').classList.add('hidden')" class="btn-dark px-6 py-2.5">{{ __('messages.cancel') }}</button>
             </div>
         </form>
     </div>
 </div>
+
+@if($errors->any())
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('edit-modal')?.classList.remove('hidden');
+    });
+</script>
+@endif
 @endsection

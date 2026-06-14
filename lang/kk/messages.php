@@ -147,6 +147,11 @@ return [
     'showing_results' => ':total ішінен :first–:last көрсетілген',
     'fav_added' => 'Таңдаулыларға қосылды',
     'fav_removed' => 'Таңдаулылардан жойылды',
+    'profile_updated' => 'Профиль жаңартылды',
+    'change_password' => 'Құпиясөзді өзгерту',
+    'password_optional_hint' => 'Құпиясөзді өзгерткіңіз келмесе, өрістерді бос қалдырыңыз',
+    'current_password' => 'Ағымдағы құпиясөз',
+    'new_password' => 'Жаңа құпиясөз',
 
     // Төлем
     'pay_title' => 'Брондауды төлеу',

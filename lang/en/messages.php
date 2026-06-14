@@ -147,6 +147,11 @@ return [
     'showing_results' => 'Showing :first–:last of :total',
     'fav_added' => 'Added to favorites',
     'fav_removed' => 'Removed from favorites',
+    'profile_updated' => 'Profile updated',
+    'change_password' => 'Change password',
+    'password_optional_hint' => 'Leave the fields blank if you don\'t want to change your password',
+    'current_password' => 'Current password',
+    'new_password' => 'New password',
 
     // Payment
     'pay_title' => 'Payment',
