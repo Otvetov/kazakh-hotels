@@ -144,6 +144,7 @@ return [
     'ai_widget_error' => 'Could not get a response. Please try again.',
     'review_submitted' => 'Your review has been submitted. It will be visible after the administrator approves it.',
     'review_error' => 'Could not submit the review. Please try again.',
+    'showing_results' => 'Showing :first–:last of :total',
 
     // Reviews
     'guest_reviews' => 'Guest reviews',

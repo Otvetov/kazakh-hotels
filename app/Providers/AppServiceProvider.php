@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Booking;
 use App\Policies\BookingPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,5 +32,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerPolicies();
+
+        // Своё оформление пагинации под стиль сайта
+        Paginator::defaultView('vendor.pagination.site');
+        Paginator::defaultSimpleView('vendor.pagination.site');
     }
 }
