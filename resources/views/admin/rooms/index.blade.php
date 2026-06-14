@@ -20,7 +20,7 @@
 
     <div class="otl-surface overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full text-sm">
+            <table class="w-full text-sm resp-table">
                 <thead class="bg-[#141516] text-[#7e8488]">
                     <tr>
                         <th class="px-6 py-3 text-left font-medium uppercase text-xs">{{ __('messages.hotel') }}</th>
@@ -40,16 +40,16 @@
                             });
                         @endphp
                         <tr class="hover:bg-white/5 transition align-top">
-                            <td class="px-6 py-4 text-gray-300">{{ $room->hotel->name }}</td>
-                            <td class="px-6 py-4 font-semibold text-white">{{ $room->name }}</td>
-                            <td class="px-6 py-4 text-gray-300">{{ $room->capacity }}</td>
-                            <td class="px-6 py-4 text-[#8ee30f] font-semibold">{{ number_format($room->price_per_night, 0, '.', ' ') }} ₸</td>
-                            <td class="px-6 py-4">
+                            <td data-label="{{ __('messages.hotel') }}" class="px-6 py-4 text-gray-300">{{ $room->hotel->name }}</td>
+                            <td data-label="{{ __('messages.room') }}" class="px-6 py-4 font-semibold text-white">{{ $room->name }}</td>
+                            <td data-label="{{ __('messages.admin_capacity') }}" class="px-6 py-4 text-gray-300">{{ $room->capacity }}</td>
+                            <td data-label="{{ __('messages.admin_price_night') }}" class="px-6 py-4 text-[#8ee30f] font-semibold">{{ number_format($room->price_per_night, 0, '.', ' ') }} ₸</td>
+                            <td data-label="{{ __('messages.admin_available') }}" class="px-6 py-4">
                                 <span class="px-2.5 py-1 rounded-full text-xs {{ $room->is_available ? 'bg-[#8ee30f]/15 text-[#8ee30f]' : 'bg-[#f04141]/15 text-[#ff8a8a]' }}">
                                     {{ $room->is_available ? __('messages.admin_yes') : __('messages.admin_no') }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4">
+                            <td data-label="{{ __('messages.admin_bookings_col') }}" class="px-6 py-4">
                                 @if($activeBookings->count() > 0)
                                     <div class="space-y-1">
                                         @foreach($activeBookings->take(2) as $booking)
@@ -66,7 +66,7 @@
                                     <span class="text-[#7e8488] text-sm">{{ __('messages.admin_no_active') }}</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4">
+                            <td data-label="{{ __('messages.admin_actions') }}" class="px-6 py-4">
                                 <div class="flex gap-2">
                                     <a href="{{ route('admin.rooms.edit', $room) }}" class="px-3 py-1.5 bg-[#2a2b2c] text-gray-200 rounded-full hover:bg-[#343536] transition text-xs">{{ __('messages.admin_edit') }}</a>
                                     <form action="{{ route('admin.rooms.destroy', $room) }}" method="POST" class="inline" onsubmit="return confirm('{{ __('messages.admin_delete_room_confirm') }}');">

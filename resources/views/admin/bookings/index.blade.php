@@ -18,7 +18,7 @@
 
     <div class="otl-surface overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full text-sm">
+            <table class="w-full text-sm resp-table">
                 <thead class="bg-[#141516] text-[#7e8488]">
                     <tr>
                         <th class="px-6 py-3 text-left font-medium uppercase text-xs">{{ __('messages.admin_user_col') }}</th>
@@ -33,12 +33,12 @@
                 <tbody class="divide-y divide-white/5">
                     @forelse($bookings as $booking)
                         <tr class="hover:bg-white/5 transition">
-                            <td class="px-6 py-4 text-white">{{ $booking->user->name }}</td>
-                            <td class="px-6 py-4 text-gray-300">{{ $booking->room->hotel->name }}</td>
-                            <td class="px-6 py-4 text-gray-300">{{ $booking->room->name }}</td>
-                            <td class="px-6 py-4 text-gray-300">{{ $booking->check_in->format('d.m.Y') }} – {{ $booking->check_out->format('d.m.Y') }}</td>
-                            <td class="px-6 py-4 font-semibold text-[#8ee30f]">{{ number_format($booking->total_price, 0, '.', ' ') }} ₸</td>
-                            <td class="px-6 py-4">
+                            <td data-label="{{ __('messages.admin_user_col') }}" class="px-6 py-4 text-white">{{ $booking->user->name }}</td>
+                            <td data-label="{{ __('messages.hotel') }}" class="px-6 py-4 text-gray-300">{{ $booking->room->hotel->name }}</td>
+                            <td data-label="{{ __('messages.room') }}" class="px-6 py-4 text-gray-300">{{ $booking->room->name }}</td>
+                            <td data-label="{{ __('messages.dates') }}" class="px-6 py-4 text-gray-300">{{ $booking->check_in->format('d.m.Y') }} – {{ $booking->check_out->format('d.m.Y') }}</td>
+                            <td data-label="{{ __('messages.admin_total_col') }}" class="px-6 py-4 font-semibold text-[#8ee30f]">{{ number_format($booking->total_price, 0, '.', ' ') }} ₸</td>
+                            <td data-label="{{ __('messages.status') }}" class="px-6 py-4">
                                 <span class="px-2.5 py-1 rounded-full text-xs
                                     {{ $booking->status === 'confirmed' ? 'bg-[#8ee30f]/15 text-[#8ee30f]' :
                                        ($booking->status === 'cancelled' ? 'bg-[#f04141]/15 text-[#ff8a8a]' :
@@ -48,7 +48,7 @@
                                     @else {{ __('messages.admin_status_pending') }} @endif
                                 </span>
                             </td>
-                            <td class="px-6 py-4">
+                            <td data-label="{{ __('messages.admin_actions') }}" class="px-6 py-4">
                                 <form action="{{ route('admin.bookings.update-status', $booking) }}" method="POST" class="inline">
                                     @csrf
                                     <select name="status" onchange="this.form.submit()" class="bg-[#141516] border border-white/10 rounded-lg px-2 py-1.5 text-sm text-white" style="color-scheme: dark;">

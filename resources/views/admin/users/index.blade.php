@@ -8,7 +8,7 @@
 
     <div class="otl-surface overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full text-sm">
+            <table class="w-full text-sm resp-table">
                 <thead class="bg-[#141516] text-[#7e8488]">
                     <tr>
                         <th class="px-6 py-3 text-left font-medium uppercase text-xs">{{ __('messages.admin_name_col') }}</th>
@@ -22,22 +22,22 @@
                 <tbody class="divide-y divide-white/5">
                     @forelse($users as $user)
                         <tr class="hover:bg-white/5 transition">
-                            <td class="px-6 py-4 font-semibold text-white">{{ $user->name }}</td>
-                            <td class="px-6 py-4 text-gray-300">{{ $user->email }}</td>
-                            <td class="px-6 py-4">
+                            <td data-label="{{ __('messages.admin_name_col') }}" class="px-6 py-4 font-semibold text-white">{{ $user->name }}</td>
+                            <td data-label="{{ __('messages.email') }}" class="px-6 py-4 text-gray-300">{{ $user->email }}</td>
+                            <td data-label="{{ __('messages.admin_role') }}" class="px-6 py-4">
                                 <span class="px-2.5 py-1 rounded-full text-xs {{ $user->isAdmin() ? 'bg-[#8ee30f]/15 text-[#8ee30f]' : 'bg-[#2a2b2c] text-gray-300' }}">
                                     {{ $user->isAdmin() ? __('messages.role_admin') : __('messages.role_user') }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4">
+                            <td data-label="{{ __('messages.status') }}" class="px-6 py-4">
                                 @if($user->isBanned())
                                     <span class="px-2.5 py-1 rounded-full text-xs bg-[#f04141]/15 text-[#ff8a8a]">{{ __('messages.admin_banned') }}</span>
                                 @else
                                     <span class="px-2.5 py-1 rounded-full text-xs bg-[#8ee30f]/15 text-[#8ee30f]">{{ __('messages.admin_active') }}</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-gray-300">{{ $user->created_at->format('d.m.Y') }}</td>
-                            <td class="px-6 py-4">
+                            <td data-label="{{ __('messages.admin_created') }}" class="px-6 py-4 text-gray-300">{{ $user->created_at->format('d.m.Y') }}</td>
+                            <td data-label="{{ __('messages.admin_actions') }}" class="px-6 py-4">
                                 @if($user->isBanned())
                                     <form action="{{ route('admin.users.unban', $user) }}" method="POST" class="inline">
                                         @csrf

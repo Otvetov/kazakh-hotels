@@ -518,3 +518,19 @@ html.theme-light .value { color: #0f172a; }
 html.theme-light .icon-sun { display: none; }
 html.theme-dark .icon-moon { display: none; }
 
+/* Адаптивные таблицы админки: на телефоне строки превращаются в карточки */
+@media (max-width: 767px) {
+    .resp-table { display: block; width: 100%; }
+    .resp-table thead { display: none; }
+    .resp-table tbody { display: block; }
+    .resp-table tr { display: block; margin: 0 0 0.75rem; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 1rem; overflow: hidden; }
+    .resp-table tr:last-child { margin-bottom: 0; }
+    .resp-table td { display: flex; align-items: center; justify-content: space-between; gap: 1rem; width: 100%; padding: 0.6rem 0.9rem; text-align: right; border-bottom: 1px solid rgba(255, 255, 255, 0.07); }
+    .resp-table td:last-child { border-bottom: 0; }
+    .resp-table td::before { content: attr(data-label); font-weight: 600; color: #7e8488; text-align: left; flex: 0 0 auto; }
+    .resp-table td:not([data-label])::before { content: none; }
+    .resp-table td[colspan] { justify-content: center; text-align: center; }
+}
+html.theme-light .resp-table tr { border-color: rgba(0, 0, 0, 0.12); }
+html.theme-light .resp-table td { border-color: rgba(0, 0, 0, 0.07); }
+

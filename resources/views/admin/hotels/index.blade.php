@@ -11,7 +11,7 @@
 
     <div class="otl-surface overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full text-sm">
+            <table class="w-full text-sm resp-table">
                 <thead class="bg-[#141516] text-[#7e8488]">
                     <tr>
                         <th class="px-6 py-3 text-left font-medium uppercase text-xs">{{ __('messages.admin_image') }}</th>
@@ -25,24 +25,24 @@
                 <tbody class="divide-y divide-white/5">
                     @forelse($hotels as $hotel)
                         <tr class="hover:bg-white/5 transition">
-                            <td class="px-6 py-4">
+                            <td data-label="{{ __('messages.admin_image') }}" class="px-6 py-4">
                                 @if($hotel->image)
                                     <img src="{{ $hotel->image_url }}" alt="{{ $hotel->name }}" class="w-16 h-16 object-cover rounded-xl">
                                 @else
                                     <div class="w-16 h-16 bg-[#141516] rounded-xl"></div>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 font-semibold text-white">{{ $hotel->name }}</td>
-                            <td class="px-6 py-4 text-gray-300">{{ $hotel->city }}</td>
-                            <td class="px-6 py-4">
+                            <td data-label="{{ __('messages.admin_name_col') }}" class="px-6 py-4 font-semibold text-white">{{ $hotel->name }}</td>
+                            <td data-label="{{ __('messages.admin_city') }}" class="px-6 py-4 text-gray-300">{{ $hotel->city }}</td>
+                            <td data-label="{{ __('messages.admin_rating') }}" class="px-6 py-4">
                                 @if($hotel->rating)
                                     <span class="text-[#8ee30f] font-semibold">{{ number_format($hotel->rating, 1) }}</span>
                                 @else
                                     <span class="text-[#7e8488]">—</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-gray-300">{{ $hotel->rooms->count() }}</td>
-                            <td class="px-6 py-4">
+                            <td data-label="{{ __('messages.admin_rooms_col') }}" class="px-6 py-4 text-gray-300">{{ $hotel->rooms->count() }}</td>
+                            <td data-label="{{ __('messages.admin_actions') }}" class="px-6 py-4">
                                 <div class="flex gap-2">
                                     <a href="{{ route('admin.hotels.edit', $hotel) }}" class="px-3 py-1.5 bg-[#2a2b2c] text-gray-200 rounded-full hover:bg-[#343536] transition text-xs">{{ __('messages.admin_edit') }}</a>
                                     <form action="{{ route('admin.hotels.destroy', $hotel) }}" method="POST" class="inline" onsubmit="return confirm('{{ __('messages.admin_delete_hotel_confirm') }}');">
