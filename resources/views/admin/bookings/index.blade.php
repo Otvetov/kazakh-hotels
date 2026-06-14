@@ -1,19 +1,19 @@
 @extends('layouts.app')
 
-@section('title', 'Управление бронированиями - Админ')
+@section('title', __('messages.admin_manage_bookings') . ' - Kazakh Hotels')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <h1 class="text-2xl font-extrabold text-white mb-6">Управление бронированиями</h1>
+    <h1 class="text-2xl font-extrabold text-white mb-6">{{ __('messages.admin_manage_bookings') }}</h1>
 
     <form method="GET" class="flex gap-3 mb-5">
         <select name="status" class="field-input max-w-xs" style="color-scheme: dark;">
-            <option value="">Все статусы</option>
-            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Ожидает</option>
-            <option value="confirmed" {{ request('status') == 'confirmed' ? 'selected' : '' }}>Подтверждено</option>
-            <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Отменено</option>
+            <option value="">{{ __('messages.admin_all_statuses') }}</option>
+            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>{{ __('messages.admin_status_pending') }}</option>
+            <option value="confirmed" {{ request('status') == 'confirmed' ? 'selected' : '' }}>{{ __('messages.admin_status_confirmed') }}</option>
+            <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>{{ __('messages.admin_status_cancelled') }}</option>
         </select>
-        <button type="submit" class="btn-dark px-6">Фильтр</button>
+        <button type="submit" class="btn-dark px-6">{{ __('messages.admin_filter') }}</button>
     </form>
 
     <div class="otl-surface overflow-hidden">
@@ -21,13 +21,13 @@
             <table class="w-full text-sm">
                 <thead class="bg-[#141516] text-[#7e8488]">
                     <tr>
-                        <th class="px-6 py-3 text-left font-medium uppercase text-xs">Пользователь</th>
-                        <th class="px-6 py-3 text-left font-medium uppercase text-xs">Отель</th>
-                        <th class="px-6 py-3 text-left font-medium uppercase text-xs">Номер</th>
-                        <th class="px-6 py-3 text-left font-medium uppercase text-xs">Даты</th>
-                        <th class="px-6 py-3 text-left font-medium uppercase text-xs">Итого</th>
-                        <th class="px-6 py-3 text-left font-medium uppercase text-xs">Статус</th>
-                        <th class="px-6 py-3 text-left font-medium uppercase text-xs">Действия</th>
+                        <th class="px-6 py-3 text-left font-medium uppercase text-xs">{{ __('messages.admin_user_col') }}</th>
+                        <th class="px-6 py-3 text-left font-medium uppercase text-xs">{{ __('messages.hotel') }}</th>
+                        <th class="px-6 py-3 text-left font-medium uppercase text-xs">{{ __('messages.room') }}</th>
+                        <th class="px-6 py-3 text-left font-medium uppercase text-xs">{{ __('messages.dates') }}</th>
+                        <th class="px-6 py-3 text-left font-medium uppercase text-xs">{{ __('messages.admin_total_col') }}</th>
+                        <th class="px-6 py-3 text-left font-medium uppercase text-xs">{{ __('messages.status') }}</th>
+                        <th class="px-6 py-3 text-left font-medium uppercase text-xs">{{ __('messages.admin_actions') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-white/5">
@@ -43,25 +43,25 @@
                                     {{ $booking->status === 'confirmed' ? 'bg-[#8ee30f]/15 text-[#8ee30f]' :
                                        ($booking->status === 'cancelled' ? 'bg-[#f04141]/15 text-[#ff8a8a]' :
                                         'bg-yellow-400/15 text-yellow-300') }}">
-                                    @if($booking->status === 'confirmed') Подтверждено
-                                    @elseif($booking->status === 'cancelled') Отменено
-                                    @else Ожидает @endif
+                                    @if($booking->status === 'confirmed') {{ __('messages.admin_status_confirmed') }}
+                                    @elseif($booking->status === 'cancelled') {{ __('messages.admin_status_cancelled') }}
+                                    @else {{ __('messages.admin_status_pending') }} @endif
                                 </span>
                             </td>
                             <td class="px-6 py-4">
                                 <form action="{{ route('admin.bookings.update-status', $booking) }}" method="POST" class="inline">
                                     @csrf
                                     <select name="status" onchange="this.form.submit()" class="bg-[#141516] border border-white/10 rounded-lg px-2 py-1.5 text-sm text-white" style="color-scheme: dark;">
-                                        <option value="pending" {{ $booking->status == 'pending' ? 'selected' : '' }}>Ожидает</option>
-                                        <option value="confirmed" {{ $booking->status == 'confirmed' ? 'selected' : '' }}>Подтверждено</option>
-                                        <option value="cancelled" {{ $booking->status == 'cancelled' ? 'selected' : '' }}>Отменено</option>
+                                        <option value="pending" {{ $booking->status == 'pending' ? 'selected' : '' }}>{{ __('messages.admin_status_pending') }}</option>
+                                        <option value="confirmed" {{ $booking->status == 'confirmed' ? 'selected' : '' }}>{{ __('messages.admin_status_confirmed') }}</option>
+                                        <option value="cancelled" {{ $booking->status == 'cancelled' ? 'selected' : '' }}>{{ __('messages.admin_status_cancelled') }}</option>
                                     </select>
                                 </form>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-8 text-center text-[#7e8488]">Бронирования не найдены</td>
+                            <td colspan="7" class="px-6 py-8 text-center text-[#7e8488]">{{ __('messages.admin_no_bookings') }}</td>
                         </tr>
                     @endforelse
                 </tbody>

@@ -1,19 +1,19 @@
 @extends('layouts.app')
 
-@section('title', 'Модерация отзывов - Админ')
+@section('title', __('messages.admin_moderate_reviews') . ' - Kazakh Hotels')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <h1 class="text-2xl font-extrabold text-white mb-6">Модерация отзывов</h1>
+    <h1 class="text-2xl font-extrabold text-white mb-6">{{ __('messages.admin_moderate_reviews') }}</h1>
 
     <form method="GET" class="flex gap-3 mb-5">
         <select name="status" class="field-input max-w-xs" style="color-scheme: dark;">
-            <option value="">Все статусы</option>
-            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Ожидает</option>
-            <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Одобрено</option>
-            <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Отклонено</option>
+            <option value="">{{ __('messages.admin_all_statuses') }}</option>
+            <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>{{ __('messages.admin_status_pending') }}</option>
+            <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>{{ __('messages.admin_approved') }}</option>
+            <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>{{ __('messages.admin_rejected') }}</option>
         </select>
-        <button type="submit" class="btn-dark px-6">Фильтр</button>
+        <button type="submit" class="btn-dark px-6">{{ __('messages.admin_filter') }}</button>
     </form>
 
     <div class="space-y-4">
@@ -34,9 +34,9 @@
                         {{ $review->status === 'approved' ? 'bg-[#8ee30f]/15 text-[#8ee30f]' :
                            ($review->status === 'rejected' ? 'bg-[#f04141]/15 text-[#ff8a8a]' :
                             'bg-yellow-400/15 text-yellow-300') }}">
-                        @if($review->status === 'approved') Одобрено
-                        @elseif($review->status === 'rejected') Отклонено
-                        @else Ожидает @endif
+                        @if($review->status === 'approved') {{ __('messages.admin_approved') }}
+                        @elseif($review->status === 'rejected') {{ __('messages.admin_rejected') }}
+                        @else {{ __('messages.admin_status_pending') }} @endif
                     </span>
                 </div>
                 <p class="text-gray-300 mb-4">{{ $review->comment }}</p>
@@ -44,20 +44,20 @@
                     @if($review->status !== 'approved')
                         <form action="{{ route('admin.reviews.approve', $review) }}" method="POST" class="inline">
                             @csrf
-                            <button type="submit" class="px-5 py-2 bg-[#8ee30f]/15 text-[#8ee30f] rounded-full hover:bg-[#8ee30f]/25 transition text-sm font-medium">Одобрить</button>
+                            <button type="submit" class="px-5 py-2 bg-[#8ee30f]/15 text-[#8ee30f] rounded-full hover:bg-[#8ee30f]/25 transition text-sm font-medium">{{ __('messages.admin_approve') }}</button>
                         </form>
                     @endif
                     @if($review->status !== 'rejected')
                         <form action="{{ route('admin.reviews.reject', $review) }}" method="POST" class="inline">
                             @csrf
-                            <button type="submit" class="px-5 py-2 bg-[#f04141]/15 text-[#ff8a8a] rounded-full hover:bg-[#f04141]/25 transition text-sm font-medium">Отклонить</button>
+                            <button type="submit" class="px-5 py-2 bg-[#f04141]/15 text-[#ff8a8a] rounded-full hover:bg-[#f04141]/25 transition text-sm font-medium">{{ __('messages.admin_reject') }}</button>
                         </form>
                     @endif
                 </div>
             </div>
         @empty
             <div class="otl-surface p-12 text-center">
-                <p class="text-[#7e8488]">Отзывы не найдены</p>
+                <p class="text-[#7e8488]">{{ __('messages.admin_no_reviews') }}</p>
             </div>
         @endforelse
     </div>
