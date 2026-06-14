@@ -146,6 +146,26 @@ return [
     'review_error' => 'Пікірді жіберу мүмкін болмады. Қайталап көріңіз.',
     'showing_results' => ':total ішінен :first–:last көрсетілген',
 
+    // Төлем
+    'pay_title' => 'Брондауды төлеу',
+    'pay_subtitle' => 'Төлеу әдісін таңдаңыз',
+    'pay_method_card' => 'Банк картасы',
+    'pay_method_card_desc' => 'Visa, Mastercard, МИР',
+    'pay_method_kaspi' => 'Kaspi.kz',
+    'pay_method_kaspi_desc' => 'Kaspi арқылы төлеу',
+    'pay_method_cash' => 'Тіркелу кезінде',
+    'pay_method_cash_desc' => 'Қонақ үйде қолма-қол немесе картамен',
+    'pay_card_number' => 'Карта нөмірі',
+    'pay_card_expiry' => 'Жарамдылық мерзімі',
+    'pay_card_cvv' => 'CVV',
+    'pay_card_holder' => 'Картадағы аты',
+    'pay_kaspi_note' => 'Растағаннан кейін төлеу үшін Kaspi-ге бағытталасыз.',
+    'pay_cash_note' => 'Қонақ үйге тіркелу кезінде қолма-қол немесе картамен төлеңіз.',
+    'pay_demo_note' => 'Демо-төлем. Ақша алынбайды; карта деректері ешқайда жіберілмейді және сақталмайды.',
+    'pay_button' => 'Төлеу',
+    'pay_order' => 'Сіздің тапсырысыңыз',
+    'pay_success' => 'Төлем сәтті өтті! Брондау расталды.',
+
     // Пікірлер
     'guest_reviews' => 'Қонақтардың пікірлері',
     'leave_review' => 'Пікір қалдыру',

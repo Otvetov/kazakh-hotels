@@ -117,13 +117,50 @@ class BookingController extends Controller
                 'status' => 'pending',
             ]);
 
-            return redirect()->route('bookings.show', $booking)
-                ->with('success', 'Бронирование успешно создано!');
+            return redirect()->route('bookings.payment', $booking);
         } catch (\Exception $e) {
             return back()
                 ->withInput()
                 ->withErrors(['error' => 'Произошла ошибка при создании бронирования: ' . $e->getMessage()]);
         }
+    }
+
+    /**
+     * Страница оплаты бронирования (демонстрационная).
+     */
+    public function payment(Booking $booking)
+    {
+        $this->authorize('view', $booking);
+
+        // Уже оплачено или отменено — на страницу брони
+        if ($booking->status !== 'pending') {
+            return redirect()->route('bookings.show', $booking);
+        }
+
+        $booking->load('room.hotel');
+        $nights = $booking->check_in->diffInDays($booking->check_out);
+
+        return view('bookings.payment', compact('booking', 'nights'));
+    }
+
+    /**
+     * Подтверждение оплаты (демо: реальная оплата не выполняется,
+     * данные карты не принимаются и не сохраняются).
+     */
+    public function pay(Request $request, Booking $booking)
+    {
+        $this->authorize('update', $booking);
+
+        $request->validate([
+            'payment_method' => 'required|in:card,kaspi,cash',
+        ]);
+
+        if ($booking->status === 'pending') {
+            $booking->update(['status' => 'confirmed']);
+        }
+
+        return redirect()->route('bookings.show', $booking)
+            ->with('success', __('messages.pay_success'));
     }
 
     /**

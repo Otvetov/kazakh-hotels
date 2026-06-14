@@ -146,6 +146,26 @@ return [
     'review_error' => 'Could not submit the review. Please try again.',
     'showing_results' => 'Showing :first–:last of :total',
 
+    // Payment
+    'pay_title' => 'Payment',
+    'pay_subtitle' => 'Choose a payment method',
+    'pay_method_card' => 'Bank card',
+    'pay_method_card_desc' => 'Visa, Mastercard, MIR',
+    'pay_method_kaspi' => 'Kaspi.kz',
+    'pay_method_kaspi_desc' => 'Pay via Kaspi',
+    'pay_method_cash' => 'At check-in',
+    'pay_method_cash_desc' => 'Cash or card at the hotel',
+    'pay_card_number' => 'Card number',
+    'pay_card_expiry' => 'Expiry',
+    'pay_card_cvv' => 'CVV',
+    'pay_card_holder' => 'Name on card',
+    'pay_kaspi_note' => 'After confirmation you will be redirected to Kaspi to pay.',
+    'pay_cash_note' => 'Pay with cash or card when you check in at the hotel.',
+    'pay_demo_note' => 'Demo payment. No money is charged; card details are not sent or stored anywhere.',
+    'pay_button' => 'Pay',
+    'pay_order' => 'Your order',
+    'pay_success' => 'Payment successful! Your booking is confirmed.',
+
     // Reviews
     'guest_reviews' => 'Guest reviews',
     'leave_review' => 'Leave a review',

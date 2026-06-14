@@ -48,6 +48,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
     Route::get('/booking/create', [BookingController::class, 'create'])->name('bookings.create');
     Route::post('/booking', [BookingController::class, 'store'])->name('bookings.store');
+    Route::get('/booking/{booking}/payment', [BookingController::class, 'payment'])->name('bookings.payment');
+    Route::post('/booking/{booking}/pay', [BookingController::class, 'pay'])->name('bookings.pay');
     Route::get('/booking/{booking}', [BookingController::class, 'show'])->name('bookings.show');
     Route::post('/booking/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
 });

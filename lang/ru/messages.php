@@ -146,6 +146,26 @@ return [
     'review_error' => 'Не удалось отправить отзыв. Попробуйте ещё раз.',
     'showing_results' => 'Показано :first–:last из :total',
 
+    // Оплата
+    'pay_title' => 'Оплата бронирования',
+    'pay_subtitle' => 'Выберите способ оплаты',
+    'pay_method_card' => 'Банковская карта',
+    'pay_method_card_desc' => 'Visa, Mastercard, МИР',
+    'pay_method_kaspi' => 'Kaspi.kz',
+    'pay_method_kaspi_desc' => 'Оплата через Kaspi',
+    'pay_method_cash' => 'При заселении',
+    'pay_method_cash_desc' => 'Наличными или картой в отеле',
+    'pay_card_number' => 'Номер карты',
+    'pay_card_expiry' => 'Срок действия',
+    'pay_card_cvv' => 'CVV',
+    'pay_card_holder' => 'Имя на карте',
+    'pay_kaspi_note' => 'После подтверждения вы будете перенаправлены в Kaspi для оплаты.',
+    'pay_cash_note' => 'Оплатите наличными или картой при заселении в отель.',
+    'pay_demo_note' => 'Демонстрационная оплата. Деньги не списываются, данные карты никуда не передаются и не сохраняются.',
+    'pay_button' => 'Оплатить',
+    'pay_order' => 'Ваш заказ',
+    'pay_success' => 'Оплата прошла успешно! Бронирование подтверждено.',
+
     // Отзывы
     'guest_reviews' => 'Отзывы гостей',
     'leave_review' => 'Оставить отзыв',
