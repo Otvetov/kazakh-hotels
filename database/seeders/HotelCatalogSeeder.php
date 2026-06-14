@@ -30,149 +30,155 @@ class HotelCatalogSeeder extends Seeder
     }
 
     /**
-     * Наполняет каталог реалистичными отелями по городам Казахстана.
-     * Данные собственные (не из сторонних сервисов), чтобы их можно было
-     * свободно использовать и объяснить на защите.
+     * Наполняет каталог реальными отелями Казахстана.
+     * Названия и адреса — публичная справочная информация; фотографии —
+     * иллюстративные из бесплатного банка Pexels (не принадлежат отелям).
      */
     public function run(): void
     {
-        $usedNames = [];
-
-        foreach ($this->cities() as $city => $cfg) {
-            for ($i = 0; $i < $cfg['count']; $i++) {
-                $name = $this->uniqueName($city, $usedNames);
-                $tier = $this->pickTier();
-
+        foreach ($this->catalog() as $city => $cfg) {
+            foreach ($cfg['hotels'] as [$name, $address, $tier]) {
                 $hotel = Hotel::create([
                     'name' => $name,
                     'city' => $city,
-                    'address' => $this->address($cfg['streets']),
-                    'description' => $this->description($city),
+                    'address' => $address,
+                    'description' => $this->description($city, $tier),
                     'rating' => $this->rating($tier),
                     'image' => self::pexels(self::EXTERIORS[crc32($name) % count(self::EXTERIORS)], 1200),
                 ]);
 
-                $this->seedRooms($hotel, $tier, $cfg['price_factor']);
+                $this->seedRooms($hotel, $tier, $cfg['factor']);
             }
         }
     }
 
     /**
-     * Города Казахстана: количество отелей, ценовой коэффициент и улицы.
+     * Реальные отели по городам: ценовой коэффициент и список [название, адрес, класс].
      */
-    private function cities(): array
+    private function catalog(): array
     {
-        $common = ['проспект Абая', 'улица Достық', 'проспект Назарбаева', 'улица Толе би',
-            'проспект Республики', 'улица Кунаева', 'улица Сатпаева', 'улица Желтоқсан',
-            'улица Бөгенбай батыра', 'проспект Тәуелсіздік'];
-
         return [
-            'Алматы'              => ['count' => 8, 'price_factor' => 1.00, 'streets' => $common],
-            'Астана'              => ['count' => 7, 'price_factor' => 1.00, 'streets' => $common],
-            'Шымкент'             => ['count' => 5, 'price_factor' => 0.75, 'streets' => $common],
-            'Караганда'           => ['count' => 4, 'price_factor' => 0.70, 'streets' => $common],
-            'Актау'               => ['count' => 4, 'price_factor' => 0.90, 'streets' => ['микрорайон 3', 'микрорайон 14', 'набережная', 'микрорайон 11']],
-            'Туркестан'           => ['count' => 4, 'price_factor' => 0.70, 'streets' => ['улица Тәуке хана', 'проспект Тәуке хана', 'улица Қожа Ахмет Ясауи', 'улица Айтеке би']],
-            'Бурабай'             => ['count' => 4, 'price_factor' => 0.90, 'streets' => ['улица Кенесары', 'озеро Боровое', 'улица Абылай хана', 'курортная зона']],
-            'Атырау'              => ['count' => 3, 'price_factor' => 0.90, 'streets' => ['проспект Азаттық', 'улица Сатпаева', 'проспект Абулхаир хана']],
-            'Актобе'              => ['count' => 3, 'price_factor' => 0.70, 'streets' => $common],
-            'Тараз'               => ['count' => 3, 'price_factor' => 0.65, 'streets' => $common],
-            'Павлодар'            => ['count' => 3, 'price_factor' => 0.65, 'streets' => $common],
-            'Усть-Каменогорск'    => ['count' => 3, 'price_factor' => 0.65, 'streets' => $common],
-            'Семей'               => ['count' => 3, 'price_factor' => 0.60, 'streets' => $common],
-            'Кызылорда'           => ['count' => 3, 'price_factor' => 0.60, 'streets' => $common],
-            'Костанай'            => ['count' => 3, 'price_factor' => 0.60, 'streets' => $common],
-            'Петропавловск'       => ['count' => 3, 'price_factor' => 0.60, 'streets' => $common],
-            'Уральск'             => ['count' => 3, 'price_factor' => 0.65, 'streets' => $common],
-            'Кокшетау'            => ['count' => 2, 'price_factor' => 0.60, 'streets' => $common],
-            'Талдыкорган'         => ['count' => 2, 'price_factor' => 0.60, 'streets' => $common],
-            'Темиртау'            => ['count' => 2, 'price_factor' => 0.60, 'streets' => $common],
+            'Алматы' => ['factor' => 1.00, 'hotels' => [
+                ['Rixos Almaty', 'проспект Сейфуллина, 506', 'premium'],
+                ['The Ritz-Carlton, Almaty', 'проспект Аль-Фараби, 77/7', 'premium'],
+                ['InterContinental Almaty', 'улица Желтоксан, 181', 'premium'],
+                ['Rahat Palace Hotel', 'проспект Сатпаева, 29/6', 'premium'],
+                ['Dostyk Hotel', 'улица Курмангазы, 36', 'premium'],
+                ['Hotel Kazakhstan', 'проспект Достык, 52', 'standard'],
+                ['Almaty Hotel', 'проспект Кабанбай батыра, 85', 'standard'],
+            ]],
+            'Астана' => ['factor' => 1.00, 'hotels' => [
+                ['Rixos President Astana', 'улица Кунаева, 7', 'premium'],
+                ['The St. Regis Astana', 'проспект Кабанбай батыра, 1', 'premium'],
+                ['The Ritz-Carlton, Astana', 'проспект Достык, 16', 'premium'],
+                ['Hilton Astana', 'проспект Кабанбай батыра, 14/1', 'premium'],
+                ['Hilton Garden Inn Astana', 'проспект Кабанбай батыра, 15', 'standard'],
+                ['Ramada by Wyndham Astana', 'улица Бейбитшилик, 8', 'standard'],
+            ]],
+            'Шымкент' => ['factor' => 0.80, 'hotels' => [
+                ['Rixos Khadisha Shymkent', 'улица Желтоксан, 17', 'premium'],
+                ['Sapar Hotel', 'проспект Тауке хана, 9', 'standard'],
+                ['Diplomat Hotel Shymkent', 'улица Казыбек би, 24', 'standard'],
+            ]],
+            'Караганда' => ['factor' => 0.75, 'hotels' => [
+                ['Cosmonaut Hotel', 'улица Аманжолова, 162а', 'premium'],
+                ['Dedeman Park Hotel Karaganda', 'проспект Бухар жырау, 50', 'premium'],
+                ['Chayka Hotel', 'улица Ерубаева, 27', 'standard'],
+            ]],
+            'Актау' => ['factor' => 0.95, 'hotels' => [
+                ['Rixos Water World Aktau', 'База отдыха Тёплый пляж, 34', 'premium'],
+                ['Caspian Riviera Grand Palace', '4-й микрорайон, 1', 'premium'],
+                ['Renaissance Aktau Hotel', '9-й микрорайон, 1', 'premium'],
+                ['Grand Nur Plaza', 'микрорайон 29А, 5/13', 'premium'],
+            ]],
+            'Атырау' => ['factor' => 0.95, 'hotels' => [
+                ['Renaissance Atyrau Hotel', 'улица Сатпаева, 15Б', 'premium'],
+                ['River Palace Hotel', 'улица Айтеке би, 55', 'premium'],
+                ['Ak Zhaik Hotel', 'проспект Азаттык, 24', 'standard'],
+            ]],
+            'Туркестан' => ['factor' => 0.80, 'hotels' => [
+                ['Rixos Turkistan', 'проспект Бекзата Саттарханова, 33а', 'premium'],
+                ['Karavansaray Turkistan', 'проспект Бекзата Саттарханова, 25а', 'premium'],
+                ['Hanaka Hotel', 'улица Байбурт, 3А', 'standard'],
+            ]],
+            'Бурабай' => ['factor' => 0.95, 'hotels' => [
+                ['Rixos Borovoe', 'озеро Щучье, юго-восточный берег, 50', 'premium'],
+                ['Cronwell Resort Borovoe', 'улица Кенесары, 1', 'premium'],
+            ]],
+            'Павлодар' => ['factor' => 0.70, 'hotels' => [
+                ['Hotel Saryarka', 'улица Торайгырова, 1', 'standard'],
+                ['Irtysh Hotel', 'улица Бектурова, 79', 'standard'],
+            ]],
+            'Усть-Каменогорск' => ['factor' => 0.70, 'hotels' => [
+                ['Hotel Ust-Kamenogorsk', 'улица Кабанбай батыра, 158', 'standard'],
+                ['Shangri-La Oskemen', 'улица Пермитина, 11/1', 'standard'],
+            ]],
+            'Семей' => ['factor' => 0.65, 'hotels' => [
+                ['NomAD Hotel', 'улица Ибраева, 149', 'standard'],
+                ['Binom Hotel', 'улица Шакарима, 20', 'standard'],
+            ]],
+            'Кызылорда' => ['factor' => 0.65, 'hotels' => [
+                ['Bayterek Hotel', 'улица Панфилова, 72', 'standard'],
+                ['Akmeshit Hotel', 'проспект Абая, 27', 'standard'],
+            ]],
+            'Костанай' => ['factor' => 0.65, 'hotels' => [
+                ['Medeu Hotel', 'улица Баймагамбетова, 166а', 'premium'],
+                ['Tobol Hotel', 'улица 5 Апреля, 64', 'standard'],
+            ]],
+            'Петропавловск' => ['factor' => 0.65, 'hotels' => [
+                ['Skif Hotel & SPA', 'улица Парковая, 118', 'premium'],
+                ['Kyzyl Zhar Hotel', 'улица Конституции Казахстана, 54', 'standard'],
+            ]],
+            'Уральск' => ['factor' => 0.70, 'hotels' => [
+                ['Pushkin Hotel', 'проспект Нурсултана Назарбаева, 148Б', 'standard'],
+            ]],
+            'Тараз' => ['factor' => 0.65, 'hotels' => [
+                ['Zhambyl Hotel', 'проспект Толе би, 42', 'standard'],
+            ]],
+            'Актобе' => ['factor' => 0.75, 'hotels' => [
+                ['Ilek Hotel', 'улица Айтеке би, 44', 'standard'],
+            ]],
+            'Кокшетау' => ['factor' => 0.65, 'hotels' => [
+                ['Dostyq Hotel', 'улица Абая, 89', 'standard'],
+            ]],
+            'Талдыкорган' => ['factor' => 0.65, 'hotels' => [
+                ['Aiser Hotel', 'улица Акын Сара, 128', 'standard'],
+            ]],
+            'Темиртау' => ['factor' => 0.60, 'hotels' => [
+                ['Hotel Temirtau', 'проспект Республики, 1/2', 'standard'],
+            ]],
         ];
     }
 
     /**
-     * Генерирует уникальное правдоподобное название отеля.
+     * Нейтральное описание (без утверждений о конкретных удобствах).
      */
-    private function uniqueName(string $city, array &$used): string
+    private function description(string $city, string $tier): string
     {
-        $brands = ['Grand', 'Royal', 'Plaza', 'Premier', 'City', 'Comfort', 'Astoria',
-            'Riviera', 'Continental', 'Imperial', 'Palace', 'Aurora', 'Nomad', 'Caspian',
-            'Алтын Орда', 'Жібек Жолы', 'Достық', 'Самал', 'Керуен', 'Тұран', 'Шаңырақ',
-            'Ордабасы', 'Алатау', 'Сарыарқа', 'Тұмар', 'Ақ Бота', 'Жайлау', 'Көктем'];
+        if ($tier === 'premium') {
+            return "Отель высокого уровня в городе {$city}. Просторные номера, ресторан и "
+                . 'современный сервис — удобно как для отдыха, так и для деловых поездок.';
+        }
 
-        $patterns = [
-            fn ($b, $c) => "{$b} Hotel",
-            fn ($b, $c) => "{$b} {$c}",
-            fn ($b, $c) => "Отель «{$b}»",
-            fn ($b, $c) => "{$b} Plaza",
-        ];
-
-        do {
-            $brand = $brands[array_rand($brands)];
-            $pattern = $patterns[array_rand($patterns)];
-            $name = $pattern($brand, $city);
-        } while (isset($used[$name]));
-
-        $used[$name] = true;
-
-        return $name;
-    }
-
-    private function address(array $streets): string
-    {
-        return $streets[array_rand($streets)] . ', ' . fake()->numberBetween(1, 120);
-    }
-
-    /**
-     * Собирает естественное русскоязычное описание отеля.
-     */
-    private function description(string $city): string
-    {
-        $intro = ['Современный отель', 'Уютная гостиница', 'Комфортабельный отель',
-            'Стильный отель бизнес-класса', 'Семейный отель', 'Новый отель'];
-
-        $location = [
-            "в центре города {$city}",
-            "в деловом районе города {$city}",
-            "недалеко от главных достопримечательностей {$city}",
-            "в тихом районе {$city}",
-            "рядом с центральной площадью {$city}",
-        ];
-
-        $amenities = [
-            'К услугам гостей бесплатный Wi-Fi, завтрак «шведский стол» и круглосуточная стойка регистрации.',
-            'В отеле есть ресторан, фитнес-зал и бесплатная парковка.',
-            'Конференц-зал, ресторан и room-service делают отель удобным для деловых поездок.',
-            'Просторные номера, бесплатный Wi-Fi и охраняемая парковка.',
-            'Кафе, прачечная и трансфер от аэропорта по запросу.',
-        ];
-
-        return $intro[array_rand($intro)] . ' ' . $location[array_rand($location)] . '. '
-            . $amenities[array_rand($amenities)];
-    }
-
-    private function pickTier(): string
-    {
-        return ['budget', 'standard', 'standard', 'premium'][array_rand([0, 1, 2, 3])];
+        return "Комфортабельный отель в городе {$city}. Удобное расположение и уютные "
+            . 'номера для гостей города.';
     }
 
     private function rating(string $tier): float
     {
         return match ($tier) {
             'premium' => fake()->randomFloat(1, 4.3, 4.9),
-            'standard' => fake()->randomFloat(1, 3.9, 4.6),
-            default => fake()->randomFloat(1, 3.4, 4.3),
+            default => fake()->randomFloat(1, 3.9, 4.6),
         };
     }
 
     /**
-     * Создаёт набор номеров под уровень отеля с ценами по городу.
+     * Создаёт набор номеров под класс отеля с ценами по городу.
      */
     private function seedRooms(Hotel $hotel, string $tier, float $factor): void
     {
         // [название, базовая цена ₸, вместимость]
         $catalog = [
-            'Эконом'         => [9000, 2],
             'Стандарт'       => [15000, 2],
             'Комфорт'        => [22000, 3],
             'Полулюкс'       => [32000, 3],
@@ -180,13 +186,10 @@ class HotelCatalogSeeder extends Seeder
             'Президентский'  => [95000, 5],
         ];
 
-        $types = match ($tier) {
-            'premium' => ['Комфорт', 'Полулюкс', 'Люкс', 'Президентский'],
-            'standard' => ['Стандарт', 'Комфорт', 'Полулюкс'],
-            default => ['Эконом', 'Стандарт', 'Комфорт'],
-        };
+        $types = $tier === 'premium'
+            ? ['Комфорт', 'Полулюкс', 'Люкс', 'Президентский']
+            : ['Стандарт', 'Комфорт', 'Полулюкс'];
 
-        // Простые номера — из набора фото номеров, люксовые — из набора люксов
         $luxTypes = ['Полулюкс', 'Люкс', 'Президентский'];
 
         foreach ($types as $idx => $type) {
