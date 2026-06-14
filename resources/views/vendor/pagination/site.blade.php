@@ -7,17 +7,7 @@
 @endphp
 
 @if ($paginator->hasPages())
-    <nav role="navigation" aria-label="Pagination" class="flex flex-col sm:flex-row items-center justify-between gap-4">
-        @if (method_exists($paginator, 'total'))
-            <p class="text-sm text-[#7e8488]">
-                {{ __('messages.showing_results', [
-                    'first' => $paginator->firstItem(),
-                    'last' => $paginator->lastItem(),
-                    'total' => $paginator->total(),
-                ]) }}
-            </p>
-        @endif
-
+    <nav role="navigation" aria-label="Pagination" class="flex items-center justify-center">
         <div class="flex items-center gap-1.5 flex-wrap justify-center">
             {{-- Назад --}}
             @if ($paginator->onFirstPage())
