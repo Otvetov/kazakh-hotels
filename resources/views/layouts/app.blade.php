@@ -194,6 +194,39 @@
             }
         });
 
+        // Добавление/удаление из избранного без перезагрузки страницы
+        @auth
+        const FAV_T = { added: @json(__('messages.fav_added')), removed: @json(__('messages.fav_removed')) };
+
+        function toggleFavorite(hotelId, btn) {
+            fetch(`/favorite/${hotelId}/toggle`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json',
+                },
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (btn) {
+                    const svg = btn.querySelector('svg');
+                    const inactive = btn.dataset.inactive || 'text-white';
+                    if (data.is_favorited) {
+                        svg.classList.remove(inactive);
+                        svg.classList.add('fill-current', 'text-[#f04141]');
+                    } else {
+                        svg.classList.remove('fill-current', 'text-[#f04141]');
+                        svg.classList.add(inactive);
+                    }
+                }
+                if (typeof showToast === 'function') {
+                    showToast(data.is_favorited ? FAV_T.added : FAV_T.removed, 'success');
+                }
+            })
+            .catch(() => console.error('favorite toggle failed'));
+        }
+        @endauth
+
         // Flash-сообщения показываем как уведомления справа сверху
         document.addEventListener('DOMContentLoaded', function () {
             @if(session('success')) showToast(@json(session('success')), 'success'); @endif

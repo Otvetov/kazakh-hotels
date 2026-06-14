@@ -15,7 +15,8 @@
             </div>
         @endif
         @auth
-            <button onclick="event.stopPropagation(); event.preventDefault(); toggleFavorite({{ $hotel->id }})"
+            <button type="button" data-inactive="text-white"
+                    onclick="event.stopPropagation(); event.preventDefault(); toggleFavorite({{ $hotel->id }}, this)"
                     class="absolute top-3 right-3 p-2 bg-black/40 backdrop-blur-sm rounded-full hover:bg-black/60 transition">
                 <svg class="w-5 h-5 {{ $hotel->isFavoritedBy(auth()->id()) ? 'text-[#f04141] fill-current' : 'text-white' }}"
                      fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -43,20 +44,3 @@
     </div>
 </a>
 
-@auth
-<script>
-function toggleFavorite(hotelId) {
-    fetch(`/favorite/${hotelId}/toggle`, {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        location.reload();
-    });
-}
-</script>
-@endauth

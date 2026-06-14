@@ -145,6 +145,8 @@ return [
     'review_submitted' => 'Your review has been submitted. It will be visible after the administrator approves it.',
     'review_error' => 'Could not submit the review. Please try again.',
     'showing_results' => 'Showing :first–:last of :total',
+    'fav_added' => 'Added to favorites',
+    'fav_removed' => 'Removed from favorites',
 
     // Payment
     'pay_title' => 'Payment',

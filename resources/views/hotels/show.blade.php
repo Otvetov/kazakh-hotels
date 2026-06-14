@@ -27,7 +27,7 @@
                     </svg>
                 </button>
                 @auth
-                    <button onclick="toggleFavorite({{ $hotel->id }})" class="p-2 rounded-full hover:bg-white/10 transition" aria-label="В избранное">
+                    <button type="button" data-inactive="text-gray-300" onclick="toggleFavorite({{ $hotel->id }}, this)" class="p-2 rounded-full hover:bg-white/10 transition" aria-label="В избранное">
                         <svg class="w-5 h-5 {{ $isFavorited ? 'fill-current text-[#f04141]' : 'text-gray-300' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                         </svg>
@@ -358,15 +358,6 @@ function shareHotel() {
     }
 }
 
-function toggleFavorite(hotelId) {
-    fetch(`/favorite/${hotelId}/toggle`, {
-        method: 'POST',
-        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }
-    })
-    .then(response => response.json())
-    .then(() => location.reload())
-    .catch(error => { console.error('Error:', error); location.reload(); });
-}
 
 @auth
 let selectedRoomId = null;
