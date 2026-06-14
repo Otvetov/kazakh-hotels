@@ -103,34 +103,6 @@
         </header>
 
         <main class="flex-1">
-            @if(session('success'))
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-                    <div class="bg-[#8ee30f]/10 border border-[#8ee30f]/30 text-[#8ee30f] px-4 py-3 rounded-2xl">
-                        {{ session('success') }}
-                    </div>
-                </div>
-            @endif
-
-            @if(session('info'))
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-                    <div class="bg-white/5 border border-white/10 text-gray-200 px-4 py-3 rounded-2xl">
-                        {{ session('info') }}
-                    </div>
-                </div>
-            @endif
-
-            @if($errors->any())
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-                    <div class="bg-[#f04141]/10 border border-[#f04141]/30 text-[#ff8a8a] px-4 py-3 rounded-2xl">
-                        <ul class="list-disc list-inside space-y-1">
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-            @endif
-
             @yield('content')
         </main>
 
@@ -220,6 +192,17 @@
             if (switcher && menu && !switcher.contains(event.target)) {
                 menu.classList.add('hidden');
             }
+        });
+
+        // Flash-сообщения показываем как уведомления справа сверху
+        document.addEventListener('DOMContentLoaded', function () {
+            @if(session('success')) showToast(@json(session('success')), 'success'); @endif
+            @if(session('info')) showToast(@json(session('info')), 'info'); @endif
+            @if($errors->any())
+                @foreach($errors->all() as $error)
+                    showToast(@json($error), 'error');
+                @endforeach
+            @endif
         });
     </script>
 </body>

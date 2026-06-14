@@ -20,7 +20,13 @@ class ReviewController extends Controller
             'status' => 'pending',
         ]);
 
-        return back()->with('success', 'Отзыв отправлен. Он будет виден после одобрения администратором.');
+        $message = __('messages.review_submitted');
+
+        if ($request->wantsJson()) {
+            return response()->json(['message' => $message]);
+        }
+
+        return back()->with('success', $message);
     }
 }
 

@@ -139,5 +139,40 @@ function updateStars() {
 
 document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeReviewModal(); });
 document.getElementById('reviewModal')?.addEventListener('click', function(e) { if (e.target === this) closeReviewModal(); });
+
+// Отправка отзыва без перезагрузки страницы
+const REVIEW_T = { error: @json(__('messages.review_error')) };
+
+document.getElementById('reviewForm')?.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const btn = document.getElementById('submit-review-btn');
+    btn.disabled = true;
+
+    try {
+        const res = await fetch(this.action, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json',
+            },
+            body: new FormData(this),
+        });
+        const data = await res.json().catch(() => ({}));
+
+        if (res.ok) {
+            closeReviewModal();
+            showToast(data.message || '', 'success');
+        } else if (res.status === 422 && data.errors) {
+            showToast(Object.values(data.errors)[0][0], 'error');
+            btn.disabled = false;
+        } else {
+            showToast(data.message || REVIEW_T.error, 'error');
+            btn.disabled = false;
+        }
+    } catch (err) {
+        showToast(REVIEW_T.error, 'error');
+        btn.disabled = false;
+    }
+});
 </script>
 @endauth
