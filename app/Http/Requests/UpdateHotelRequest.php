@@ -26,6 +26,8 @@ class UpdateHotelRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'rating' => ['nullable', 'numeric', 'min:0', 'max:5'],
             'image' => ['nullable', 'image', 'max:2048'],
+            'gallery_images' => ['nullable', 'array'],
+            'gallery_images.*' => ['image', 'max:2048'],
         ];
     }
 }

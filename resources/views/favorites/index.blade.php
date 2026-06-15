@@ -3,36 +3,34 @@
 @section('title', 'Избранное - Kazakh Hotels')
 
 @section('content')
-<div class="min-h-screen bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 class="text-3xl font-bold mb-8 text-gray-900">Избранное</h1>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            @forelse($favorites as $favorite)
+    <div class="otl-surface px-6 py-5 mb-6">
+        <h1 class="text-2xl font-extrabold text-white">{{ __('messages.favorites_title') }}</h1>
+    </div>
+
+    @if($favorites->count() === 0)
+        <div class="otl-surface py-16 px-6 text-center">
+            <svg class="w-20 h-20 mx-auto text-[#f04141] fill-current mb-5" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+            <h2 class="text-white text-xl font-bold mb-2">{{ __('messages.empty_here') }}</h2>
+            <p class="text-[#7e8488] mb-6">{{ __('messages.empty_fav_text') }}</p>
+            <a href="{{ route('hotels.index') }}" class="btn-accent px-6 py-3">{{ __('messages.for_inspiration') }}</a>
+        </div>
+    @else
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            @foreach($favorites as $favorite)
                 @php($hotel = $favorite->hotel)
                 @include('partials.hotel-card', ['hotel' => $hotel])
-            @empty
-                <div class="col-span-full bg-white rounded-2xl shadow-sm p-12 text-center">
-                    <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                    </svg>
-                    <p class="text-gray-500 text-lg mb-2">Пока нет избранных отелей</p>
-                    <p class="text-gray-400 text-sm">Начните добавлять отели в избранное!</p>
-                    <a href="{{ route('hotels.index') }}" class="inline-block mt-4 px-6 py-3 bg-[#0066cc] text-white rounded-xl hover:bg-[#0052a3] transition font-semibold">
-                        Найти отели
-                    </a>
-                </div>
-            @endforelse
+            @endforeach
         </div>
 
-        <!-- Pagination -->
         @if($favorites->hasPages())
             <div class="mt-8">
                 {{ $favorites->links() }}
             </div>
         @endif
-    </div>
+    @endif
 </div>
-
 @endsection
-

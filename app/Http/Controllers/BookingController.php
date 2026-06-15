@@ -11,6 +11,49 @@ use Illuminate\Support\Facades\Auth;
 class BookingController extends Controller
 {
 
+    /**
+     * Проверка доступности номера на выбранные даты (AJAX).
+     */
+    public function availability(Room $room, Request $request)
+    {
+        $checkIn = $request->get('check_in');
+        $checkOut = $request->get('check_out');
+
+        if (!$checkIn || !$checkOut) {
+            return response()->json(['available' => false, 'reason' => 'no_dates']);
+        }
+
+        if (!$room->is_available) {
+            return response()->json(['available' => false, 'reason' => 'disabled']);
+        }
+
+        // Бронирования, пересекающиеся с выбранными датами
+        $conflicting = $room->bookings()
+            ->where('status', '!=', 'cancelled')
+            ->where(function ($query) use ($checkIn, $checkOut) {
+                $query->whereBetween('check_in', [$checkIn, $checkOut])
+                    ->orWhereBetween('check_out', [$checkIn, $checkOut])
+                    ->orWhere(function ($q) use ($checkIn, $checkOut) {
+                        $q->where('check_in', '<=', $checkIn)
+                          ->where('check_out', '>=', $checkOut);
+                    });
+            })
+            ->get();
+
+        if ($conflicting->isEmpty()) {
+            return response()->json(['available' => true]);
+        }
+
+        // Дата, до которой номер занят (последняя дата выезда среди пересечений)
+        $busyUntil = $conflicting->max('check_out');
+
+        return response()->json([
+            'available' => false,
+            'reason' => 'booked',
+            'busy_until' => $busyUntil ? $busyUntil->format('d.m.Y') : null,
+        ]);
+    }
+
     public function create(Request $request)
     {
         if (!$request->filled('room_id')) {
@@ -25,8 +68,15 @@ class BookingController extends Controller
         // Если даты не указаны, перенаправьте на страницу отеля
         if (!$checkIn || !$checkOut) {
             return redirect()->route('hotels.show', $room->hotel->id)
-                ->with('info', 'Please select check-in and check-out dates to proceed with booking.')
+                ->with('info', 'Пожалуйста, выберите даты заезда и выезда.')
                 ->withInput(['room_id' => $room->id]);
+        }
+
+        // Проверяем доступность ещё до страницы оформления,
+        // чтобы пользователь не узнавал о занятости на чекауте
+        if (!$room->isAvailableForDates($checkIn, $checkOut)) {
+            return redirect()->route('hotels.show', $room->hotel->id)
+                ->with('info', 'К сожалению, этот номер уже занят на выбранные даты. Пожалуйста, выберите другие даты.');
         }
 
         // Вычислить количество ночей и общую цену
@@ -44,11 +94,11 @@ class BookingController extends Controller
         try {
             $room = Room::with('hotel')->findOrFail($request->room_id);
 
-            // Проверить доступность номера на выбранные даты
+            // Проверить доступность номера на выбранные даты.
+            // Если занято — возвращаем на страницу отеля, а не на чекаут.
             if (!$room->isAvailableForDates($request->check_in, $request->check_out)) {
-                return back()
-                    ->withInput()
-                    ->withErrors(['error' => 'Номер недоступен на выбранные даты. Пожалуйста, выберите другие даты.']);
+                return redirect()->route('hotels.show', $room->hotel->id)
+                    ->with('info', 'К сожалению, этот номер уже занят на выбранные даты. Пожалуйста, выберите другие даты.');
             }
 
             // Вычислить общую цену
@@ -67,13 +117,50 @@ class BookingController extends Controller
                 'status' => 'pending',
             ]);
 
-            return redirect()->route('bookings.show', $booking)
-                ->with('success', 'Бронирование успешно создано!');
+            return redirect()->route('bookings.payment', $booking);
         } catch (\Exception $e) {
             return back()
                 ->withInput()
                 ->withErrors(['error' => 'Произошла ошибка при создании бронирования: ' . $e->getMessage()]);
         }
+    }
+
+    /**
+     * Страница оплаты бронирования (демонстрационная).
+     */
+    public function payment(Booking $booking)
+    {
+        $this->authorize('view', $booking);
+
+        // Уже оплачено или отменено — на страницу брони
+        if ($booking->status !== 'pending') {
+            return redirect()->route('bookings.show', $booking);
+        }
+
+        $booking->load('room.hotel');
+        $nights = $booking->check_in->diffInDays($booking->check_out);
+
+        return view('bookings.payment', compact('booking', 'nights'));
+    }
+
+    /**
+     * Подтверждение оплаты (демо: реальная оплата не выполняется,
+     * данные карты не принимаются и не сохраняются).
+     */
+    public function pay(Request $request, Booking $booking)
+    {
+        $this->authorize('update', $booking);
+
+        $request->validate([
+            'payment_method' => 'required|in:card,kaspi,cash',
+        ]);
+
+        if ($booking->status === 'pending') {
+            $booking->update(['status' => 'confirmed']);
+        }
+
+        return redirect()->route('bookings.show', $booking)
+            ->with('success', __('messages.pay_success'));
     }
 
     /**

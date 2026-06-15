@@ -17,20 +17,39 @@ use Illuminate\Support\Facades\Route;
 // Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// Смена языка интерфейса
+Route::get('/locale/{locale}', function (string $locale) {
+    if (in_array($locale, \App\Http\Middleware\SetLocale::SUPPORTED, true)) {
+        session(['locale' => $locale]);
+    }
+
+    return redirect()->back();
+})->name('locale.switch');
+
 // API Documentation
 Route::get('/api-docs', function () {
     return view('api-docs');
 })->name('api.docs');
 
+// ИИ-помощник (чат)
+Route::post('/assistant/chat', [\App\Http\Controllers\AssistantController::class, 'chat'])
+    ->middleware('throttle:30,1')
+    ->name('assistant.chat');
+
 // Hotels
 Route::get('/hotels', [HotelController::class, 'index'])->name('hotels.index');
 Route::get('/hotel/{hotel}', [HotelController::class, 'show'])->name('hotels.show');
+
+// Проверка доступности номера на даты (AJAX)
+Route::get('/room/{room}/availability', [BookingController::class, 'availability'])->name('rooms.availability');
 
 // Bookings (authenticated)
 Route::middleware('auth')->group(function () {
     Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
     Route::get('/booking/create', [BookingController::class, 'create'])->name('bookings.create');
     Route::post('/booking', [BookingController::class, 'store'])->name('bookings.store');
+    Route::get('/booking/{booking}/payment', [BookingController::class, 'payment'])->name('bookings.payment');
+    Route::post('/booking/{booking}/pay', [BookingController::class, 'pay'])->name('bookings.pay');
     Route::get('/booking/{booking}', [BookingController::class, 'show'])->name('bookings.show');
     Route::post('/booking/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
 });
@@ -57,6 +76,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::get('/', [AdminController::class, 'index'])->name('index');
     
     Route::resource('hotels', AdminHotelController::class);
+    Route::delete('/hotels/{hotel}/images/{image}', [AdminHotelController::class, 'deleteImage'])->name('hotels.images.destroy');
     Route::resource('rooms', AdminRoomController::class);
     Route::resource('users', AdminUserController::class)->only(['index']);
     Route::post('/users/{user}/ban', [AdminUserController::class, 'ban'])->name('users.ban');

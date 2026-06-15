@@ -12,6 +12,7 @@ class Room extends Model
     protected $fillable = [
         'hotel_id',
         'name',
+        'image',
         'price_per_night',
         'capacity',
         'is_available',
@@ -29,6 +30,22 @@ class Room extends Model
     public function hotel()
     {
         return $this->belongsTo(Hotel::class);
+    }
+
+    /**
+     * URL изображения номера (поддерживает внешние ссылки и пути в storage).
+     */
+    public function getImageUrlAttribute(): ?string
+    {
+        if (!$this->image) {
+            return null;
+        }
+
+        if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
+            return $this->image;
+        }
+
+        return asset('storage/' . $this->image);
     }
 
 

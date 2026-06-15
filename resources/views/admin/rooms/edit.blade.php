@@ -1,62 +1,44 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Room - Admin')
+@section('title', __('messages.admin_edit_room') . ' - Kazakh Hotels')
 
 @section('content')
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <h1 class="text-3xl font-bold mb-8">Edit Room</h1>
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-2xl font-extrabold text-white mb-6">{{ __('messages.admin_edit_room') }}</h1>
 
-    <form action="{{ route('admin.rooms.update', $room) }}" method="POST" class="bg-whitebg-gray-800 rounded-lg shadow-md p-6 border border-gray-200border-gray-700">
+    <form action="{{ route('admin.rooms.update', $room) }}" method="POST" class="otl-surface p-6">
         @csrf
         @method('PUT')
-
-        <div class="space-y-6">
+        <div class="space-y-5">
             <div>
-                <label class="block text-sm font-medium mb-2">Hotel</label>
-                <select name="hotel_id" required class="w-full px-4 py-2 border border-gray-300border-gray-600 rounded-lg bg-whitebg-gray-700">
+                <label class="block text-sm font-medium text-[#7e8488] mb-2">{{ __('messages.hotel') }}</label>
+                <select name="hotel_id" required class="field-input" style="color-scheme: dark;">
                     @foreach($hotels as $hotel)
                         <option value="{{ $hotel->id }}" {{ old('hotel_id', $room->hotel_id) == $hotel->id ? 'selected' : '' }}>{{ $hotel->name }}</option>
                     @endforeach
                 </select>
             </div>
-
             <div>
-                <label class="block text-sm font-medium mb-2">Room Name</label>
-                <input type="text" name="name" required value="{{ old('name', $room->name) }}"
-                       class="w-full px-4 py-2 border border-gray-300border-gray-600 rounded-lg bg-whitebg-gray-700">
+                <label class="block text-sm font-medium text-[#7e8488] mb-2">{{ __('messages.admin_room_name') }}</label>
+                <input type="text" name="name" required value="{{ old('name', $room->name) }}" class="field-input">
             </div>
-
             <div>
-                <label class="block text-sm font-medium mb-2">Price per Night (₸)</label>
-                <input type="number" name="price_per_night" required step="0.01" min="0" value="{{ old('price_per_night', $room->price_per_night) }}"
-                       class="w-full px-4 py-2 border border-gray-300border-gray-600 rounded-lg bg-whitebg-gray-700">
+                <label class="block text-sm font-medium text-[#7e8488] mb-2">{{ __('messages.admin_price_per_night') }}</label>
+                <input type="number" name="price_per_night" required step="0.01" min="0" value="{{ old('price_per_night', $room->price_per_night) }}" class="field-input">
             </div>
-
             <div>
-                <label class="block text-sm font-medium mb-2">Capacity</label>
-                <input type="number" name="capacity" required min="1" value="{{ old('capacity', $room->capacity) }}"
-                       class="w-full px-4 py-2 border border-gray-300border-gray-600 rounded-lg bg-whitebg-gray-700">
+                <label class="block text-sm font-medium text-[#7e8488] mb-2">{{ __('messages.admin_capacity') }}</label>
+                <input type="number" name="capacity" required min="1" value="{{ old('capacity', $room->capacity) }}" class="field-input">
             </div>
-
-            <div>
-                <label class="flex items-center">
-                    <input type="checkbox" name="is_available" value="1" {{ old('is_available', $room->is_available) ? 'checked' : '' }}
-                           class="rounded border-gray-300border-gray-600">
-                    <span class="ml-2">Available</span>
-                </label>
-            </div>
-
-            <div class="flex gap-4">
-                <button type="submit" class="flex-1 px-6 py-3 bg-[#38b000] text-white rounded-lg hover:bg-[#2d8a00] transition">
-                    Update Room
-                </button>
-                <a href="{{ route('admin.rooms.index') }}" class="px-6 py-3 bg-gray-200bg-gray-700 rounded-lg hover:bg-gray-300hover:bg-gray-600 transition">
-                    Cancel
-                </a>
+            <label class="flex items-center gap-2 text-gray-200">
+                <input type="checkbox" name="is_available" value="1" {{ old('is_available', $room->is_available) ? 'checked' : '' }} class="w-4 h-4 rounded bg-[#141516] border-white/20 accent-[#8ee30f]">
+                <span>{{ __('messages.admin_available_for_booking') }}</span>
+            </label>
+            <div class="flex gap-3">
+                <button type="submit" class="btn-accent flex-1 py-3">{{ __('messages.save') }}</button>
+                <a href="{{ route('admin.rooms.index') }}" class="btn-dark px-6 py-3">{{ __('messages.cancel') }}</a>
             </div>
         </div>
     </form>
 </div>
 @endsection
-
-
