@@ -70,7 +70,10 @@ class HotelController extends Controller
         $hotel->load(['rooms', 'reviews.user', 'images']);
         $isFavorited = auth()->check() && $hotel->isFavoritedBy(auth()->id());
 
-        return view('hotels.show', compact('hotel', 'isFavorited'));
+        // Отзыв доступен только гостю, прожившему полный срок
+        $canReview = auth()->check() && $hotel->hasCompletedStayBy(auth()->id());
+
+        return view('hotels.show', compact('hotel', 'isFavorited', 'canReview'));
     }
 }
 

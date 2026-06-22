@@ -259,6 +259,7 @@ return [
     // Reviews
     'guest_reviews' => 'Guest reviews',
     'leave_review' => 'Leave a review',
+    'review_requires_stay' => 'You can leave a review only after your stay at this hotel is completed.',
     'no_reviews_yet' => 'No reviews yet. Be the first!',
     'your_rating' => 'Your rating',
     'comment' => 'Comment',

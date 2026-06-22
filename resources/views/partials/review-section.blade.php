@@ -1,11 +1,13 @@
 <div class="otl-surface p-6 md:p-8">
     <div class="flex items-center justify-between mb-6">
         <h2 class="text-white text-xl font-extrabold">{{ __('messages.guest_reviews') }}</h2>
-        @auth
+        @if($canReview)
             <button onclick="openReviewModal()" class="btn-accent px-5 py-2.5">
                 {{ __('messages.leave_review') }}
             </button>
-        @endauth
+        @elseif(auth()->check())
+            <span class="text-sm text-[#7e8488] text-right max-w-[16rem]">{{ __('messages.review_requires_stay') }}</span>
+        @endif
     </div>
 
     @if($hotel->reviews->count() === 0)
@@ -38,7 +40,7 @@
     @endif
 </div>
 
-@auth
+@if($canReview)
 <!-- Review Modal -->
 <div id="reviewModal" class="bmodal hidden" style="display: none;">
     <div class="bmodal-box" style="max-width: 28rem;">
@@ -175,4 +177,4 @@ document.getElementById('reviewForm')?.addEventListener('submit', async function
     }
 });
 </script>
-@endauth
+@endif

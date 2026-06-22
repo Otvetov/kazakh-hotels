@@ -215,7 +215,7 @@
 
     {{-- Reviews --}}
     <div id="reviews" class="scroll-mt-32 mb-6">
-        @include('partials.review-section', ['hotel' => $hotel])
+        @include('partials.review-section', ['hotel' => $hotel, 'canReview' => $canReview ?? false])
     </div>
 
     {{-- About --}}

@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Hotel;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
 class StoreReviewRequest extends FormRequest
 {
@@ -24,6 +26,23 @@ class StoreReviewRequest extends FormRequest
             'rating' => ['required', 'integer', 'min:1', 'max:5'],
             'comment' => ['required', 'string', 'min:10', 'max:1000'],
         ];
+    }
+
+    /**
+     * Доп. проверка: отзыв может оставить только гость,
+     * который реально прожил в отеле полный срок (бронь
+     * не отменена, дата выезда уже прошла).
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator) {
+            $hotel = Hotel::find($this->input('hotel_id'));
+            $userId = $this->user()?->id;
+
+            if ($hotel && $userId && !$hotel->hasCompletedStayBy($userId)) {
+                $validator->errors()->add('hotel_id', __('messages.review_requires_stay'));
+            }
+        });
     }
 
     public function messages(): array
