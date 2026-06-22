@@ -97,6 +97,25 @@ class Hotel extends Model
     }
 
     /**
+     * Проверить, проживал ли пользователь в этом отеле полный срок:
+     * есть бронирование на номер отеля, которое не отменено
+     * и дата выезда по которому уже прошла. Только такой гость
+     * имеет право оставить отзыв.
+     */
+    public function hasCompletedStayBy($userId): bool
+    {
+        if (!$userId) {
+            return false;
+        }
+
+        return Booking::where('user_id', $userId)
+            ->where('status', '!=', 'cancelled')
+            ->whereDate('check_out', '<', now()->toDateString())
+            ->whereHas('room', fn ($q) => $q->where('hotel_id', $this->id))
+            ->exists();
+    }
+
+    /**
      * Получить минимальную цену номера
      */
     public function getMinPriceAttribute()

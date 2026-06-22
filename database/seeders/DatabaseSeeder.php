@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Администратор
-        User::create([
+        $admin = User::create([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
             'password' => Hash::make('password'),
@@ -86,5 +86,8 @@ class DatabaseSeeder extends Seeder
 
         // Галерея фотографий для всех отелей
         $this->call(HotelImageSeeder::class);
+
+        // Завершённая демо-бронь администратора (можно оставить отзыв)
+        $this->call(AdminDemoBookingSeeder::class);
     }
 }
